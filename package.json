@@ -1,0 +1,34 @@
+{
+  "name": "numero",
+  "version": "0.0.1",
+  "description": "A friendly and intuitive math library for p5.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha-chrome test/test.html",
+    "build": "webpack --config webpack.config.js"
+  },
+  "repository": "https://github.com/nickmcintyre/numero.git",
+  "author": "Nick McIntyre <nick@mcintyre.io>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.2.3",
+    "@types/mocha": "^5.2.7",
+    "@types/p5": "^0.9.0",
+    "@typescript-eslint/eslint-plugin": "^2.3.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^6.2.0",
+    "mocha-chrome": "^2.0.0",
+    "p5": "^0.9.0",
+    "ts-loader": "^6.1.0",
+    "typescript": "^3.6.3",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-core": "^1.2.9"
+  }
+}
