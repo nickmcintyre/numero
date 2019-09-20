@@ -4,7 +4,7 @@
 This project aims to bring the mathematical chops of [NumPy](https://numpy.org/) and [SymPy](https://www.sympy.org/en/index.html) to the [p5.js](https://p5js.org/) ecosystem. A few guiding principles are:
 
 - Focus on beginners.
-- Extend core p5.js math functions and play nicely with p5.Vector.
+- Complement core p5.js math functions and play nicely with p5.Vector.
 - Make the API familiar (e.g., `createTensor()`).
 - Let [ml5.js](https://ml5js.org/) handle machine learning.
 - Encourage all kinds of contributions.
