@@ -106,6 +106,13 @@ class Tensor {
     });
   }
 
+  /**
+   * Calculates the dot product of two matrices and/or vectors.
+   * Note: Only works when both operands are rank 1 or 2.
+   * 
+   * @param b the matrix or vector to be dotted
+   * @param dim (optional) the number of dimensions in a p5.Vector
+   */
   dot(b: any, dim?: number) {
     tfc.tidy(() => {
       let result: tfc.Tensor;
