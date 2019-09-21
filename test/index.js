@@ -9,6 +9,7 @@ describe('hello, número', function () {
   });
 
   afterEach(function () {
+    pInst.tfc.disposeVariables();
     pInst.remove();
   });
 

@@ -12,14 +12,19 @@ import p5 from './index';
 class Tensor {
   public tensor: tfc.Variable;
 
-  constructor(obj: any) {
+  constructor(obj: any, dim?: number) {
     tfc.tidy(() => {
       if (typeof obj === 'number') {
         this.tensor = tfc.variable(tfc.scalar(obj));
       } else if (obj instanceof Array) {
         this.tensor = tfc.variable(tfc.tensor(obj));
       } else if (obj instanceof p5.Vector) {
-        this.tensor = tfc.variable(tfc.tensor(obj.array()));
+        if (!(dim >= 2 && dim <= 3)) {
+          throw new Error('p5.Vectors must be 2 or 3-dimensional.');
+        }
+
+        const v = obj.array().slice(0, dim);
+        this.tensor = tfc.variable(tfc.tensor(v));
       } else {
         throw new Error('Tensors must be created from Numbers, Arrays, or p5.Vectors.');
       }
@@ -27,16 +32,42 @@ class Tensor {
   }
 
   /**
-   * Equality check against a Tensor.
+   * Handle any necessary conversions from Number or p5.Vector.
+   * 
+   * @param b the input Number, p5.Vector, or Tensor to be made compatible
+   * @param dim (optional) the number of dimenions in a p5.Vector
+   */
+  private handleType(b: any, dim?: number): Tensor {
+    let b_: Tensor;
+    if (typeof b === 'number') {
+      b_ = createTensor(b);
+    } else if (b instanceof p5.Vector) {
+      b_ = createTensor(b, dim);
+    } else if (b instanceof Tensor) {
+      b_ = b;
+    } else {
+      throw new Error('Operation only defined on Numbers, p5.Vectors, or Tensors.');
+    }
+
+    return b_;
+  }
+
+  /**
+   * Equality check against a Number, p5.Vector, or Tensor.
    * 
    * @param b the tensor to be compared
    */
-  equals(b: Tensor): boolean {
+  equals(b: any, dim?: number): boolean {
     let result: boolean = false;
     tfc.tidy(() => {
-      const check: tfc.Tensor = tfc.all(this.tensor.equal(b.tensor));
-      if (check.arraySync() === 1) {
-        result = true;
+      const b_: Tensor = this.handleType(b, dim);
+      if (this.tensor.rank !== b_.tensor.rank) {
+        result = false;
+      } else {
+        const check: tfc.Tensor = tfc.all(this.tensor.equal(b_.tensor));
+        if (check.arraySync() === 1) {
+          result = true;
+        }
       };
     });
 
@@ -62,10 +93,12 @@ class Tensor {
    * Adds two tensors.
    * 
    * @param b the tensor to be added
+   * 
    */
-  add(b: Tensor) {
+  add(b: any, dim?: number) {
     tfc.tidy(() => {
-      const result: tfc.Tensor = this.tensor.add(b.tensor);
+      const b_: Tensor = this.handleType(b, dim);
+      const result: tfc.Tensor = this.tensor.add(b_.tensor);
       this.handleRank(result);
     });
   }
@@ -74,10 +107,12 @@ class Tensor {
    * Subtracts two tensors.
    * 
    * @param b the tensor to be subtracted
+   * @param dim (optional) the number of dimensions in a p5.Vector
    */
-  sub(b: Tensor) {
+  sub(b: any, dim?: number) {
     tfc.tidy(() => {
-      const result: tfc.Tensor = this.tensor.sub(b.tensor);
+      const b_: Tensor = this.handleType(b, dim);
+      const result: tfc.Tensor = this.tensor.sub(b_.tensor);
       this.handleRank(result);
     });
   }
@@ -87,9 +122,10 @@ class Tensor {
    * 
    * @param b the tensor to be multiplied
    */
-  mul(b: Tensor) {
+  mul(b: any, dim?: number) {
     tfc.tidy(() => {
-      const result: tfc.Tensor = this.tensor.mul(b.tensor);
+      const b_: Tensor = this.handleType(b, dim);
+      const result: tfc.Tensor = this.tensor.mul(b_.tensor);
       this.handleRank(result);
     });
   }
@@ -98,10 +134,12 @@ class Tensor {
    * Divides two tensors.
    * 
    * @param b the tensor to be divided by
+   * @param dim (optional) the number of dimensions in a p5.Vector
    */
-  div(b: Tensor) {
+  div(b: any, dim?: number) {
     tfc.tidy(() => {
-      const result: tfc.Tensor = this.tensor.div(b.tensor);
+      const b_ = this.handleType(b, dim);
+      const result: tfc.Tensor = this.tensor.div(b_.tensor);
       this.handleRank(result);
     });
   }
@@ -115,27 +153,8 @@ class Tensor {
    */
   dot(b: any, dim?: number) {
     tfc.tidy(() => {
-      let result: tfc.Tensor;
-      if (b instanceof Tensor) {
-        result = this.tensor.dot(b.tensor);
-      } else if (b instanceof p5.Vector) {
-        let b_: number[];
-        let t2: Tensor;
-        if (dim === 2) {
-          b_ = b.array().slice(0, 2);
-        } else if (dim === 3) {
-          b_ = b.array().slice(0, 3);
-        } else {
-          throw new Error('p5.Vectors must be 2 or 3-dimensional.');
-        }
-
-        t2 = createTensor(b_);
-        result = this.tensor.dot(t2.tensor);
-        t2.tensor.dispose();
-      } else {
-        throw new Error('Tensors must be dotted with Tensors or p5.Vectors.');
-      }
-
+      const b_ = this.handleType(b, dim);
+      const result: tfc.Tensor = this.tensor.dot(b_.tensor);
       this.handleRank(result);
     });
   }
@@ -146,8 +165,8 @@ class Tensor {
  *
  * @param obj the reference Number, Array, or p5.Vector
  */
-const createTensor = function createTensorObject(obj: any): Tensor {
-  return new Tensor(obj);
+const createTensor = function createTensorObject(obj: any, dim?: number): Tensor {
+  return new Tensor(obj, dim);
 };
 
 export {
