@@ -25,6 +25,8 @@ class Tensor {
 
         const v = obj.array().slice(0, dim);
         this.tensor = tfc.variable(tfc.tensor(v));
+      } else if (obj instanceof tfc.Tensor) {
+        this.tensor = tfc.variable(obj);
       } else {
         throw new Error('Tensors must be created from Numbers, Arrays, or p5.Vectors.');
       }
@@ -158,12 +160,55 @@ class Tensor {
       this.handleRank(result);
     });
   }
+
+  /**
+   * Calculates the absolute value (magniutde) of each tensor element.
+   * The absolute value of a number is always positive.
+   */
+  abs(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.abs();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Calculates the closest int value that is greater than or equal to
+   * the value of each tensor element. For example, ceil(9.03) returns
+   * the value 10.
+   */
+  ceil(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.ceil();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Constrains the value of each tensor element between a minimum and
+   * maximum value.
+   */
+  constrain(low: number, high: number): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.clipByValue(low, high);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
 };
 
 /**
  * Creates a new Tensor (the datatype for storing tensors).
  *
- * @param obj the reference Number, Array, or p5.Vector
+ * @param obj the reference Number, Array, p5.Vector, or tfc.Tensor
  */
 const createTensor = function createTensorObject(obj: any, dim?: number): Tensor {
   return new Tensor(obj, dim);

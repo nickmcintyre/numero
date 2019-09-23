@@ -41,6 +41,12 @@ describe('Tensor', function () {
       expect(() => pInst.createTensor(v, 4)).to.throw(Error);
     });
 
+    it('Should accept tfc.Tensor arguments', function () {
+      const t0 = pInst.tfc.tensor([1, 2]);
+      const t1 = pInst.createTensor(t0);
+      expect(t1).to.be.an.instanceof(pInst.Tensor);
+    })
+
     it('Should reject garbage arguments', function () {
       expect(() => pInst.createTensor("I'm only happy when it rains")).to.throw(Error);
     });
@@ -272,6 +278,33 @@ describe('Tensor', function () {
       const dim = 2;
       a.dot(x, dim);
       expect(a.equals(b)).to.equal(true);
+    });
+  });
+
+  describe('abs()', function () {
+    it('Should return a tensor', function () {
+      const t1 = pInst.createTensor([-2, 0, 1]);
+      const t2 = pInst.createTensor([2, 0, 1]);
+      const t3 = t1.abs();
+      expect(t2.equals(t3)).to.equal(true);
+    });
+  });
+
+  describe('ceil()', function () {
+    it('Should return a tensor', function () {
+      const t1 = pInst.createTensor([0, 0.1, 1.5]);
+      const t2 = pInst.createTensor([0, 1, 2]);
+      const t3 = t1.ceil();
+      expect(t2.equals(t3)).to.equal(true);
+    });
+  });
+
+  describe('constrain()', function () {
+    it('Should return a tensor', function () {
+      const t1 = pInst.createTensor([-2, 0, 1, 5]);
+      const t2 = pInst.createTensor([-1, 0, 1, 3]);
+      const t3 = t1.constrain(-1, 3);
+      expect(t2.equals(t3)).to.equal(true);
     });
   });
 });
