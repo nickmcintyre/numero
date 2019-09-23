@@ -90,7 +90,7 @@ class Tensor {
   }
 
   /**
-   * Adds two tensors.
+   * Adds two tensors element-wise.
    * 
    * @param b the tensor to be added
    * 
@@ -104,7 +104,7 @@ class Tensor {
   }
 
   /**
-   * Subtracts two tensors.
+   * Subtracts two tensors element-wise.
    * 
    * @param b the tensor to be subtracted
    * @param dim (optional) the number of dimensions in a p5.Vector
@@ -118,11 +118,11 @@ class Tensor {
   }
 
   /**
-   * Multiplies two tensors.
+   * Multiplies two tensors element-wise.
    * 
    * @param b the tensor to be multiplied
    */
-  mul(b: any, dim?: number) {
+  mult(b: any, dim?: number) {
     tfc.tidy(() => {
       const b_: Tensor = this.handleType(b, dim);
       const result: tfc.Tensor = this.tensor.mul(b_.tensor);
@@ -131,7 +131,7 @@ class Tensor {
   }
 
   /**
-   * Divides two tensors.
+   * Divides two tensors element-wise.
    * 
    * @param b the tensor to be divided by
    * @param dim (optional) the number of dimensions in a p5.Vector

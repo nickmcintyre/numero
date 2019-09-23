@@ -171,12 +171,12 @@ describe('Tensor', function () {
     });
   });
 
-  describe('mul()', function () {
+  describe('mult()', function () {
     it('Should multiply by a Tensor', function () {
       const t1 = pInst.createTensor([[1, 2], [3, 4]]);
       const t2 = pInst.createTensor([[2, 2], [2, 2]]);
       const t3 = pInst.createTensor([[2, 4], [6, 8]]);
-      t1.mul(t2);
+      t1.mult(t2);
       expect(t1.equals(t3)).to.equal(true);
     });
 
@@ -185,7 +185,7 @@ describe('Tensor', function () {
       const v = pInst.createVector(1, 2);
       const t2 = pInst.createTensor([3, 8]);
       const dim = 2;
-      t1.mul(v, dim);
+      t1.mult(v, dim);
       expect(t1.equals(t2)).to.equal(true);
     });
 
@@ -193,7 +193,7 @@ describe('Tensor', function () {
       const t1 = pInst.createTensor(1);
       const n = 2;
       const t2 = pInst.createTensor(2);
-      t1.mul(n);
+      t1.mult(n);
       expect(t1.equals(t2)).to.equal(true);
     });
 
@@ -201,7 +201,7 @@ describe('Tensor', function () {
       const t1 = pInst.createTensor([[1, 2], [3, 4]]);
       const t2 = pInst.createTensor(2);
       const t3 = pInst.createTensor([[2, 4], [6, 8]]);
-      t1.mul(t2);
+      t1.mult(t2);
       expect(t1.equals(t3)).to.equal(true);
     });
 
@@ -209,7 +209,7 @@ describe('Tensor', function () {
       const t1 = pInst.createTensor(2);
       const t2 = pInst.createTensor([[1, 2], [3, 4]]);
       const t3 = pInst.createTensor([[2, 4], [6, 8]]);
-      t1.mul(t2);
+      t1.mult(t2);
       expect(t1.equals(t3)).to.equal(true);
     });
   });
