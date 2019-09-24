@@ -307,4 +307,33 @@ describe('Tensor', function () {
       expect(t2.equals(t3)).to.equal(true);
     });
   });
+
+  describe('exp()', function () {
+    it('Should return a tensor', function () {
+      const a = [-2, 0, 1, 5];
+      const t1 = pInst.createTensor(a);
+      const t2 = pInst.createTensor(a.map((x) => Math.exp(x)));
+      const t3 = t1.exp();
+      expect(t2.equals(t3)).to.equal(true);
+    });
+  });
+
+  describe('floor()', function () {
+    it('Should return a tensor', function () {
+      const t1 = pInst.createTensor([0, 0.1, 1.5]);
+      const t2 = pInst.createTensor([0, 0, 1]);
+      const t3 = t1.floor();
+      expect(t2.equals(t3)).to.equal(true);
+    });
+  });
+
+  describe('log()', function () {
+    it('Should return a tensor', function () {
+      const a = [1, 2, 3];
+      const t1 = pInst.createTensor(a);
+      const t2 = pInst.createTensor(a.map((x) => Math.log(x)));
+      const t3 = t1.log();
+      expect(t2.equals(t3)).to.equal(true);
+    });
+  });
 });

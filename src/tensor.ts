@@ -203,6 +203,50 @@ class Tensor {
 
     return result;
   }
+
+  /**
+   * Raise Euler's number e (2.71828...) to the power of each tensor
+   * element.
+   */
+  exp(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.exp();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Calculates the closest int value that is less than or equal to
+   * the value of each tensor element. For example, floor(9.97) returns
+   * the value 9.
+   */
+  floor(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.floor();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Calculates the natural logarithm (the base-e logarithm) of each tensor
+   * element. This function expects each tensor element to be a value
+   * greater than 0.0.
+   */
+  log(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.log();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
 };
 
 /**
