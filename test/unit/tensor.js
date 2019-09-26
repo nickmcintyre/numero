@@ -336,4 +336,63 @@ describe('Tensor', function () {
       expect(t2.equals(t3)).to.equal(true);
     });
   });
+
+  describe('max()', function () {
+    it('Should return a number', function () {
+      const t = pInst.createTensor([1, 2, 3]);
+      expect(t.max()).to.equal(3);
+    });
+  });
+
+  describe('min()', function () {
+    it('Should return a number', function () {
+      const t = pInst.createTensor([1, 2, 3]);
+      expect(t.min()).to.equal(1);
+    });
+  });
+
+  describe('pow()', function () {
+    it('Should accept Number arguments', function () {
+      const a = [1, 2, 3];
+      const t1 = pInst.createTensor(a);
+      const t2 = pInst.createTensor(a.map((x) => x ** 2));
+      const t3 = t1.pow(2);
+      expect(t2.equals(t3)).to.equal(true);
+    });
+
+    it('Should accept Tensor arguments', function () {
+      const t1 = pInst.createTensor([1, 2, 3]);
+      const t2 = pInst.createTensor([1, 2, 3]);
+      const t3 = t1.pow(t2);
+      const t4 = pInst.createTensor([1, 4, 27]);
+      expect(t3.equals(t4)).to.equal(true);
+    });
+  });
+
+  describe('round()', function () {
+    it('Should return a tensor', function () {
+      const t1 = pInst.createTensor([2.2, 0.3, -1.4]);
+      const t2 = pInst.createTensor([2, 0, -1]);
+      const t3 = t1.round();
+      expect(t2.equals(t3)).to.equal(true);
+    });
+  });
+
+  describe('sq()', function () {
+    it('Should return a tensor', function () {
+      const t1 = pInst.createTensor([1, 2, 3]);
+      const t2 = pInst.createTensor([1, 4, 9]);
+      const t3 = t1.sq();
+      expect(t2.equals(t3)).to.equal(true);
+    });
+  });
+
+  describe('sqrt()', function () {
+    it('Should return a tensor', function () {
+      const t1 = pInst.createTensor([1, 4, 9]);
+      const t2 = pInst.createTensor([1, 2, 3]);
+      const t3 = t1.sqrt();
+      expect(t2.equals(t3)).to.equal(true);
+    });
+  });
 });

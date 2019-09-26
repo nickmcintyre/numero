@@ -140,7 +140,7 @@ class Tensor {
    */
   div(b: any, dim?: number) {
     tfc.tidy(() => {
-      const b_ = this.handleType(b, dim);
+      const b_: Tensor = this.handleType(b, dim);
       const result: tfc.Tensor = this.tensor.div(b_.tensor);
       this.handleRank(result);
     });
@@ -155,7 +155,7 @@ class Tensor {
    */
   dot(b: any, dim?: number) {
     tfc.tidy(() => {
-      const b_ = this.handleType(b, dim);
+      const b_: Tensor = this.handleType(b, dim);
       const result: tfc.Tensor = this.tensor.dot(b_.tensor);
       this.handleRank(result);
     });
@@ -242,6 +242,93 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.log();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Determines the largest value in a tensor, and then returns that value.
+   */
+  max(): number {
+    let result: any;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.max(this.tensor);
+      result = t.arraySync();
+    });
+
+    return result;
+  }
+
+  /**
+   * Determines the smallest value in a tensor, and then returns that value.
+   */
+  min(): number {
+    let result: any;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.min(this.tensor);
+      result = t.arraySync();
+    });
+
+    return result;
+  }
+
+  /**
+   * Facilitates exponential expressions. The pow() method is an
+   * efficient way of multiplying tensors by themselves (or their
+   * reciprocals) in large quantities.
+   */
+  pow(b: any): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const b_: Tensor = this.handleType(b);
+      const t = this.tensor.pow(b_.tensor);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Calculates the integer closest to each tensor element. For
+   * example, round(133.8) returns the value 134.
+   */
+  round(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.round();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Squares each tensor element (multiplies a number by itself). The
+   * result is always a positive number, as multiplying two negative
+   * numbers always yields a positive result. For example, -1 * -1 = 1.
+   */
+  sq(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.square();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Calculates the square root of each tensor element. The square root
+   * of a number is always positive, even though there may be a valid
+   * negative root. The square root s of number a is such that s*s = a.
+   * It is the opposite of squaring.
+   */
+  sqrt(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.sqrt();
       result = createTensor(t);
     });
 
