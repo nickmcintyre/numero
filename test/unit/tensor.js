@@ -91,308 +91,399 @@ describe('Tensor', function () {
     });
   });
 
-  describe('add()', function () {
-    it('Should add a Tensor', function () {
-      const t1 = pInst.createTensor([1, 2]);
-      const t2 = pInst.createTensor([3, 4]);
-      const t3 = pInst.createTensor([4, 6]);
-      t1.add(t2);
-      expect(t1.equals(t3)).to.equal(true);
+  describe('Calculation', function () {
+    describe('add()', function () {
+      it('Should add a Tensor', function () {
+        const t1 = pInst.createTensor([1, 2]);
+        const t2 = pInst.createTensor([3, 4]);
+        const t3 = pInst.createTensor([4, 6]);
+        t1.add(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
+
+      it('Should add a p5.Vector', function () {
+        const t1 = pInst.createTensor([1, 2]);
+        const v = pInst.createVector(3, 4);
+        const t2 = pInst.createTensor([4, 6]);
+        const dim = 2;
+        t1.add(v, dim);
+        expect(t1.equals(t2)).to.equal(true);
+      });
+
+      it('Should add a Number', function () {
+        const t1 = pInst.createTensor(1);
+        const n = 1;
+        const t2 = pInst.createTensor(2);
+        t1.add(n);
+        expect(t1.equals(t2)).to.equal(true);
+      });
+
+      it('Should broadcast addition when maintaining rank', function () {
+        const t1 = pInst.createTensor([1, 2]);
+        const t2 = pInst.createTensor(1);
+        const t3 = pInst.createTensor([2, 3]);
+        t1.add(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
+
+      it('Should broadcast addition when increasing rank', function () {
+        const t1 = pInst.createTensor(1);
+        const t2 = pInst.createTensor([1, 2]);
+        const t3 = pInst.createTensor([2, 3]);
+        t1.add(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
     });
 
-    it('Should add a p5.Vector', function () {
-      const t1 = pInst.createTensor([1, 2]);
-      const v = pInst.createVector(3, 4);
-      const t2 = pInst.createTensor([4, 6]);
-      const dim = 2;
-      t1.add(v, dim);
-      expect(t1.equals(t2)).to.equal(true);
+    describe('sub()', function () {
+      it('Should subtract a Tensor', function () {
+        const t1 = pInst.createTensor([3, 4]);
+        const t2 = pInst.createTensor([1, 2]);
+        const t3 = pInst.createTensor([2, 2]);
+        t1.sub(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
+
+      it('Should subtract a p5.Vector', function () {
+        const t1 = pInst.createTensor([3, 4]);
+        const v = pInst.createVector(1, 2);
+        const t2 = pInst.createTensor([2, 2]);
+        const dim = 2;
+        t1.sub(v, dim);
+        expect(t1.equals(t2)).to.equal(true);
+      });
+
+      it('Should subtract a Number', function () {
+        const t1 = pInst.createTensor(1);
+        const n = 1;
+        const t2 = pInst.createTensor(0);
+        t1.sub(n);
+        expect(t1.equals(t2)).to.equal(true);
+      });
+
+      it('Should broadcast subtraction when maintaining rank', function () {
+        const t1 = pInst.createTensor([2, 3]);
+        const t2 = pInst.createTensor(1);
+        const t3 = pInst.createTensor([1, 2]);
+        t1.sub(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
+
+      it('Should broadcast subtraction when increasing rank', function () {
+        const t1 = pInst.createTensor(1);
+        const t2 = pInst.createTensor([2, 3]);
+        const t3 = pInst.createTensor([-1, -2]);
+        t1.sub(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
     });
 
-    it('Should add a Number', function () {
-      const t1 = pInst.createTensor(1);
-      const n = 1;
-      const t2 = pInst.createTensor(2);
-      t1.add(n);
-      expect(t1.equals(t2)).to.equal(true);
+    describe('mult()', function () {
+      it('Should multiply by a Tensor', function () {
+        const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+        const t2 = pInst.createTensor([[2, 2], [2, 2]]);
+        const t3 = pInst.createTensor([[2, 4], [6, 8]]);
+        t1.mult(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
+
+      it('Should multiply by a p5.Vector', function () {
+        const t1 = pInst.createTensor([3, 4]);
+        const v = pInst.createVector(1, 2);
+        const t2 = pInst.createTensor([3, 8]);
+        const dim = 2;
+        t1.mult(v, dim);
+        expect(t1.equals(t2)).to.equal(true);
+      });
+
+      it('Should multiply by a Number', function () {
+        const t1 = pInst.createTensor(1);
+        const n = 2;
+        const t2 = pInst.createTensor(2);
+        t1.mult(n);
+        expect(t1.equals(t2)).to.equal(true);
+      });
+
+      it('Should broadcast multiplication when maintaining rank', function () {
+        const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+        const t2 = pInst.createTensor(2);
+        const t3 = pInst.createTensor([[2, 4], [6, 8]]);
+        t1.mult(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
+
+      it('Should broadcast multiplication when increasing rank', function () {
+        const t1 = pInst.createTensor(2);
+        const t2 = pInst.createTensor([[1, 2], [3, 4]]);
+        const t3 = pInst.createTensor([[2, 4], [6, 8]]);
+        t1.mult(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
     });
 
-    it('Should broadcast addition when maintaining rank', function () {
-      const t1 = pInst.createTensor([1, 2]);
-      const t2 = pInst.createTensor(1);
-      const t3 = pInst.createTensor([2, 3]);
-      t1.add(t2);
-      expect(t1.equals(t3)).to.equal(true);
+    describe('div()', function () {
+      it('Should divide by a Tensor', function () {
+        const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+        const t2 = pInst.createTensor([[2, 2], [2, 2]]);
+        const t3 = pInst.createTensor([[0.5, 1], [1.5, 2]]);
+        t1.div(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
+
+      it('Should divide by a p5.Vector', function () {
+        const t1 = pInst.createTensor([2, 4]);
+        const v = pInst.createVector(2, 2);
+        const t2 = pInst.createTensor([1, 2]);
+        const dim = 2;
+        t1.div(v, dim);
+        expect(t1.equals(t2)).to.equal(true);
+      });
+
+      it('Should divide by a Number', function () {
+        const t1 = pInst.createTensor([2, 4]);
+        const n = 2;
+        const t2 = pInst.createTensor([1, 2]);
+        t1.div(n);
+        expect(t1.equals(t2)).to.equal(true);
+      });
+
+      it('Should broadcast division when maintaining rank', function () {
+        const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+        const t2 = pInst.createTensor(2);
+        const t3 = pInst.createTensor([[0.5, 1], [1.5, 2]]);
+        t1.div(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
+
+      it('Should broadcast division when increasing rank', function () {
+        const t1 = pInst.createTensor(10);
+        const t2 = pInst.createTensor([[1, 2], [4, 5]]);
+        const t3 = pInst.createTensor([[10, 5], [2.5, 2]]);
+        t1.div(t2);
+        expect(t1.equals(t3)).to.equal(true);
+      });
     });
 
-    it('Should broadcast addition when increasing rank', function () {
-      const t1 = pInst.createTensor(1);
-      const t2 = pInst.createTensor([1, 2]);
-      const t3 = pInst.createTensor([2, 3]);
-      t1.add(t2);
-      expect(t1.equals(t3)).to.equal(true);
+    describe('dot()', function () {
+      it('Should dot with a Tensor', function () {
+        const t1 = pInst.createTensor([[1, 0], [0, 1]]);
+        const t2 = pInst.createTensor([1, 2]);
+        t1.dot(t2);
+        expect(t1.equals(t2)).to.equal(true);
+      });
+
+      it('Should dot with a p5.Vector', function () {
+        const a = pInst.createTensor([[2, 0], [0, 2]]);
+        const x = pInst.createVector(1, 2);
+        const b = pInst.createTensor([2, 4]);
+        const dim = 2;
+        a.dot(x, dim);
+        expect(a.equals(b)).to.equal(true);
+      });
+    });
+
+    describe('abs()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor([-2, 0, 1]);
+        const t2 = pInst.createTensor([2, 0, 1]);
+        const t3 = t1.abs();
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+
+    describe('ceil()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor([0, 0.1, 1.5]);
+        const t2 = pInst.createTensor([0, 1, 2]);
+        const t3 = t1.ceil();
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+
+    describe('constrain()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor([-2, 0, 1, 5]);
+        const t2 = pInst.createTensor([-1, 0, 1, 3]);
+        const t3 = t1.constrain(-1, 3);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+
+    describe('exp()', function () {
+      it('Should return a tensor', function () {
+        const a = [-2, 0, 1, 5];
+        const t1 = pInst.createTensor(a);
+        const t2 = pInst.createTensor(a.map((x) => Math.exp(x)));
+        const t3 = t1.exp();
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+
+    describe('floor()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor([0, 0.1, 1.5]);
+        const t2 = pInst.createTensor([0, 0, 1]);
+        const t3 = t1.floor();
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+
+    describe('log()', function () {
+      it('Should return a tensor', function () {
+        const a = [1, 2, 3];
+        const t1 = pInst.createTensor(a);
+        const t2 = pInst.createTensor(a.map((x) => Math.log(x)));
+        const t3 = t1.log();
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+
+    describe('max()', function () {
+      it('Should return a number', function () {
+        const t = pInst.createTensor([1, 2, 3]);
+        expect(t.max()).to.equal(3);
+      });
+    });
+
+    describe('min()', function () {
+      it('Should return a number', function () {
+        const t = pInst.createTensor([1, 2, 3]);
+        expect(t.min()).to.equal(1);
+      });
+    });
+
+    describe('pow()', function () {
+      it('Should accept Number arguments', function () {
+        const a = [1, 2, 3];
+        const t1 = pInst.createTensor(a);
+        const t2 = pInst.createTensor(a.map((x) => x ** 2));
+        const t3 = t1.pow(2);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+
+      it('Should accept Tensor arguments', function () {
+        const t1 = pInst.createTensor([1, 2, 3]);
+        const t2 = pInst.createTensor([1, 2, 3]);
+        const t3 = t1.pow(t2);
+        const t4 = pInst.createTensor([1, 4, 27]);
+        expect(t3.equals(t4)).to.equal(true);
+      });
+    });
+
+    describe('round()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor([2.2, 0.3, -1.4]);
+        const t2 = pInst.createTensor([2, 0, -1]);
+        const t3 = t1.round();
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+
+    describe('sq()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor([1, 2, 3]);
+        const t2 = pInst.createTensor([1, 4, 9]);
+        const t3 = t1.sq();
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+
+    describe('sqrt()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor([1, 4, 9]);
+        const t2 = pInst.createTensor([1, 2, 3]);
+        const t3 = t1.sqrt();
+        expect(t2.equals(t3)).to.equal(true);
+      });
     });
   });
 
-  describe('sub()', function () {
-    it('Should subtract a Tensor', function () {
-      const t1 = pInst.createTensor([3, 4]);
-      const t2 = pInst.createTensor([1, 2]);
-      const t3 = pInst.createTensor([2, 2]);
-      t1.sub(t2);
-      expect(t1.equals(t3)).to.equal(true);
+  describe('Trigonometry', function () {
+    describe('acos()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor(0);
+        const t2 = pInst.createTensor(Math.PI / 2);
+        const t3 = t1.acos();
+        expect(t2.equals(t3)).to.equal(true);
+
+        const t4 = pInst.createTensor(-1);
+        const t5 = pInst.createTensor(Math.PI);
+        const t6 = t4.acos();
+        expect(t5.equals(t6)).to.equal(true);
+      });
     });
 
-    it('Should subtract a p5.Vector', function () {
-      const t1 = pInst.createTensor([3, 4]);
-      const v = pInst.createVector(1, 2);
-      const t2 = pInst.createTensor([2, 2]);
-      const dim = 2;
-      t1.sub(v, dim);
-      expect(t1.equals(t2)).to.equal(true);
+    describe('asin()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor(1);
+        const t2 = pInst.createTensor(Math.PI / 2);
+        const t3 = t1.asin();
+        expect(t2.equals(t3)).to.equal(true);
+
+        const t4 = pInst.createTensor(-1);
+        const t5 = pInst.createTensor(-Math.PI / 2);
+        const t6 = t4.asin();
+        expect(t5.equals(t6)).to.equal(true);
+      });
     });
 
-    it('Should subtract a Number', function () {
-      const t1 = pInst.createTensor(1);
-      const n = 1;
-      const t2 = pInst.createTensor(0);
-      t1.sub(n);
-      expect(t1.equals(t2)).to.equal(true);
+    describe('atan()', function () {
+      it('Should return a tensor', function () {
+        const a = Math.PI + Math.PI / 3;
+        const t1 = pInst.createTensor(a);
+        const t2 = pInst.createTensor(Math.atan(a));
+        const t3 = t1.atan();
+        expect(t2.equals(t3)).to.equal(true);
+      });
     });
 
-    it('Should broadcast subtraction when maintaining rank', function () {
-      const t1 = pInst.createTensor([2, 3]);
-      const t2 = pInst.createTensor(1);
-      const t3 = pInst.createTensor([1, 2]);
-      t1.sub(t2);
-      expect(t1.equals(t3)).to.equal(true);
+    describe('atan2()', function () {
+      it('Should accept Number arguments', function () {
+        const x = 15;
+        const y = 90;
+        const t1 = pInst.createTensor(y);
+        const t2 = pInst.createTensor(Math.atan2(y, x));
+        const t3 = t1.atan2(x);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+
+      it('Should accept Tensor arguments', function () {
+        const x = 15;
+        const y = 90;
+        const t1 = pInst.createTensor(y);
+        const t2 = pInst.createTensor(Math.atan2(y, x));
+        const t3 = pInst.createTensor(x);
+        const t4 = t1.atan2(t3);
+        expect(t2.equals(t4)).to.equal(true);
+      });
     });
 
-    it('Should broadcast subtraction when increasing rank', function () {
-      const t1 = pInst.createTensor(1);
-      const t2 = pInst.createTensor([2, 3]);
-      const t3 = pInst.createTensor([-1, -2]);
-      t1.sub(t2);
-      expect(t1.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('mult()', function () {
-    it('Should multiply by a Tensor', function () {
-      const t1 = pInst.createTensor([[1, 2], [3, 4]]);
-      const t2 = pInst.createTensor([[2, 2], [2, 2]]);
-      const t3 = pInst.createTensor([[2, 4], [6, 8]]);
-      t1.mult(t2);
-      expect(t1.equals(t3)).to.equal(true);
+    describe('cos()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor(Math.PI);
+        const t2 = pInst.createTensor(-1);
+        const t3 = t1.cos();
+        expect(t2.equals(t3)).to.equal(true);
+      });
     });
 
-    it('Should multiply by a p5.Vector', function () {
-      const t1 = pInst.createTensor([3, 4]);
-      const v = pInst.createVector(1, 2);
-      const t2 = pInst.createTensor([3, 8]);
-      const dim = 2;
-      t1.mult(v, dim);
-      expect(t1.equals(t2)).to.equal(true);
+    describe('sin()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor(Math.PI / 2);
+        const t2 = pInst.createTensor(1);
+        const t3 = t1.sin();
+        expect(t2.equals(t3)).to.equal(true);
+      });
     });
 
-    it('Should multiply by a Number', function () {
-      const t1 = pInst.createTensor(1);
-      const n = 2;
-      const t2 = pInst.createTensor(2);
-      t1.mult(n);
-      expect(t1.equals(t2)).to.equal(true);
-    });
-
-    it('Should broadcast multiplication when maintaining rank', function () {
-      const t1 = pInst.createTensor([[1, 2], [3, 4]]);
-      const t2 = pInst.createTensor(2);
-      const t3 = pInst.createTensor([[2, 4], [6, 8]]);
-      t1.mult(t2);
-      expect(t1.equals(t3)).to.equal(true);
-    });
-
-    it('Should broadcast multiplication when increasing rank', function () {
-      const t1 = pInst.createTensor(2);
-      const t2 = pInst.createTensor([[1, 2], [3, 4]]);
-      const t3 = pInst.createTensor([[2, 4], [6, 8]]);
-      t1.mult(t2);
-      expect(t1.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('div()', function () {
-    it('Should divide by a Tensor', function () {
-      const t1 = pInst.createTensor([[1, 2], [3, 4]]);
-      const t2 = pInst.createTensor([[2, 2], [2, 2]]);
-      const t3 = pInst.createTensor([[0.5, 1], [1.5, 2]]);
-      t1.div(t2);
-      expect(t1.equals(t3)).to.equal(true);
-    });
-
-    it('Should divide by a p5.Vector', function () {
-      const t1 = pInst.createTensor([2, 4]);
-      const v = pInst.createVector(2, 2);
-      const t2 = pInst.createTensor([1, 2]);
-      const dim = 2;
-      t1.div(v, dim);
-      expect(t1.equals(t2)).to.equal(true);
-    });
-
-    it('Should divide by a Number', function () {
-      const t1 = pInst.createTensor([2, 4]);
-      const n = 2;
-      const t2 = pInst.createTensor([1, 2]);
-      t1.div(n);
-      expect(t1.equals(t2)).to.equal(true);
-    });
-
-    it('Should broadcast division when maintaining rank', function () {
-      const t1 = pInst.createTensor([[1, 2], [3, 4]]);
-      const t2 = pInst.createTensor(2);
-      const t3 = pInst.createTensor([[0.5, 1], [1.5, 2]]);
-      t1.div(t2);
-      expect(t1.equals(t3)).to.equal(true);
-    });
-
-    it('Should broadcast division when increasing rank', function () {
-      const t1 = pInst.createTensor(10);
-      const t2 = pInst.createTensor([[1, 2], [4, 5]]);
-      const t3 = pInst.createTensor([[10, 5], [2.5, 2]]);
-      t1.div(t2);
-      expect(t1.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('dot()', function () {
-    it('Should dot with a Tensor', function () {
-      const t1 = pInst.createTensor([[1, 0], [0, 1]]);
-      const t2 = pInst.createTensor([1, 2]);
-      t1.dot(t2);
-      expect(t1.equals(t2)).to.equal(true);
-    });
-
-    it('Should dot with a p5.Vector', function () {
-      const a = pInst.createTensor([[2, 0], [0, 2]]);
-      const x = pInst.createVector(1, 2);
-      const b = pInst.createTensor([2, 4]);
-      const dim = 2;
-      a.dot(x, dim);
-      expect(a.equals(b)).to.equal(true);
-    });
-  });
-
-  describe('abs()', function () {
-    it('Should return a tensor', function () {
-      const t1 = pInst.createTensor([-2, 0, 1]);
-      const t2 = pInst.createTensor([2, 0, 1]);
-      const t3 = t1.abs();
-      expect(t2.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('ceil()', function () {
-    it('Should return a tensor', function () {
-      const t1 = pInst.createTensor([0, 0.1, 1.5]);
-      const t2 = pInst.createTensor([0, 1, 2]);
-      const t3 = t1.ceil();
-      expect(t2.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('constrain()', function () {
-    it('Should return a tensor', function () {
-      const t1 = pInst.createTensor([-2, 0, 1, 5]);
-      const t2 = pInst.createTensor([-1, 0, 1, 3]);
-      const t3 = t1.constrain(-1, 3);
-      expect(t2.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('exp()', function () {
-    it('Should return a tensor', function () {
-      const a = [-2, 0, 1, 5];
-      const t1 = pInst.createTensor(a);
-      const t2 = pInst.createTensor(a.map((x) => Math.exp(x)));
-      const t3 = t1.exp();
-      expect(t2.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('floor()', function () {
-    it('Should return a tensor', function () {
-      const t1 = pInst.createTensor([0, 0.1, 1.5]);
-      const t2 = pInst.createTensor([0, 0, 1]);
-      const t3 = t1.floor();
-      expect(t2.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('log()', function () {
-    it('Should return a tensor', function () {
-      const a = [1, 2, 3];
-      const t1 = pInst.createTensor(a);
-      const t2 = pInst.createTensor(a.map((x) => Math.log(x)));
-      const t3 = t1.log();
-      expect(t2.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('max()', function () {
-    it('Should return a number', function () {
-      const t = pInst.createTensor([1, 2, 3]);
-      expect(t.max()).to.equal(3);
-    });
-  });
-
-  describe('min()', function () {
-    it('Should return a number', function () {
-      const t = pInst.createTensor([1, 2, 3]);
-      expect(t.min()).to.equal(1);
-    });
-  });
-
-  describe('pow()', function () {
-    it('Should accept Number arguments', function () {
-      const a = [1, 2, 3];
-      const t1 = pInst.createTensor(a);
-      const t2 = pInst.createTensor(a.map((x) => x ** 2));
-      const t3 = t1.pow(2);
-      expect(t2.equals(t3)).to.equal(true);
-    });
-
-    it('Should accept Tensor arguments', function () {
-      const t1 = pInst.createTensor([1, 2, 3]);
-      const t2 = pInst.createTensor([1, 2, 3]);
-      const t3 = t1.pow(t2);
-      const t4 = pInst.createTensor([1, 4, 27]);
-      expect(t3.equals(t4)).to.equal(true);
-    });
-  });
-
-  describe('round()', function () {
-    it('Should return a tensor', function () {
-      const t1 = pInst.createTensor([2.2, 0.3, -1.4]);
-      const t2 = pInst.createTensor([2, 0, -1]);
-      const t3 = t1.round();
-      expect(t2.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('sq()', function () {
-    it('Should return a tensor', function () {
-      const t1 = pInst.createTensor([1, 2, 3]);
-      const t2 = pInst.createTensor([1, 4, 9]);
-      const t3 = t1.sq();
-      expect(t2.equals(t3)).to.equal(true);
-    });
-  });
-
-  describe('sqrt()', function () {
-    it('Should return a tensor', function () {
-      const t1 = pInst.createTensor([1, 4, 9]);
-      const t2 = pInst.createTensor([1, 2, 3]);
-      const t3 = t1.sqrt();
-      expect(t2.equals(t3)).to.equal(true);
+    describe('tan()', function () {
+      it('Should return a tensor', function () {
+        const a = 1;
+        const t1 = pInst.createTensor(a);
+        const t2 = pInst.createTensor(Math.tan(a));
+        const t3 = t1.tan();
+        expect(t2.equals(t3)).to.equal(true);
+      });
     });
   });
 });

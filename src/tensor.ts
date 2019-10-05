@@ -193,6 +193,9 @@ class Tensor {
   /**
    * Constrains the value of each tensor element between a minimum and
    * maximum value.
+   * 
+   * @param low the minimum value
+   * @param high the maximum value
    */
   constrain(low: number, high: number): Tensor {
     let result: Tensor;
@@ -278,6 +281,8 @@ class Tensor {
    * Facilitates exponential expressions. The pow() method is an
    * efficient way of multiplying tensors by themselves (or their
    * reciprocals) in large quantities.
+   * 
+   * @param b the power by which to raise each tensor element
    */
   pow(b: any): Tensor {
     let result: Tensor;
@@ -329,6 +334,113 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.sqrt();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * The inverse of cos(), returns the arc cosine of each tensor element.
+   * This function expects the values in the range of -1 to 1 and values
+   * are returned in the range 0 to PI (3.1415927).
+   */
+  acos(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.acos();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * The inverse of sin(), returns the arc sine of a each tensor element.
+   * This function expects the values in the range of -1 to 1 and values
+   * are returned in the range -PI/2 to PI/2.
+   */
+  asin(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.asin();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * The inverse of tan(), returns the arc tangent of each tensor element.
+   * This function expects the values in the range of -Infinity to Infinity
+   * (exclusive) and values are returned in the range -PI/2 to PI/2.
+   */
+  atan(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.atan();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+  * Calculates the angle (in radians) from a specified point to the
+  * coordinate origin as measured from the positive x-axis. Values are
+  * returned as a float in the range from PI to -PI.
+  * 
+  * @param b the x-coordinate(s) used for computing arctangent
+  */
+  atan2(b: any): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const b_: Tensor = this.handleType(b);
+      const t = this.tensor.atan2(b_.tensor);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Calculates the cosine of each tensor element. This function
+   * does not yet take into account the current angleMode.
+   * Values are returned in the range -1 to 1.
+   */
+  cos(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.cos();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Calculates the sine of each tensor element. This function
+   * does not yet take into account the current angleMode.
+   * Values are returned in the range -1 to 1.
+   */
+  sin(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.sin();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Calculates the tangent of each tensor element. This function
+   * does not yet take into account the current angleMode.
+   */
+  tan(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.tan();
       result = createTensor(t);
     });
 
