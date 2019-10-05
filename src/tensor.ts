@@ -38,6 +38,7 @@ class Tensor {
    * 
    * @param b the input Number, p5.Vector, or Tensor to be made compatible
    * @param dim (optional) the number of dimenions in a p5.Vector
+   * @return the equivalent tensor
    */
   private handleType(b: any, dim?: number): Tensor {
     let b_: Tensor;
@@ -95,7 +96,6 @@ class Tensor {
    * Adds two tensors element-wise.
    * 
    * @param b the tensor to be added
-   * 
    */
   add(b: any, dim?: number) {
     tfc.tidy(() => {
@@ -164,6 +164,8 @@ class Tensor {
   /**
    * Calculates the absolute value (magniutde) of each tensor element.
    * The absolute value of a number is always positive.
+   * 
+   * @return the absolute value of each tensor element
    */
   abs(): Tensor {
     let result: Tensor;
@@ -179,6 +181,8 @@ class Tensor {
    * Calculates the closest int value that is greater than or equal to
    * the value of each tensor element. For example, ceil(9.03) returns
    * the value 10.
+   * 
+   * @return each tensor element rounded up
    */
   ceil(): Tensor {
     let result: Tensor;
@@ -196,6 +200,7 @@ class Tensor {
    * 
    * @param low the minimum value
    * @param high the maximum value
+   * @return each tensor element constrained to the given range
    */
   constrain(low: number, high: number): Tensor {
     let result: Tensor;
@@ -210,6 +215,8 @@ class Tensor {
   /**
    * Raise Euler's number e (2.71828...) to the power of each tensor
    * element.
+   * 
+   * @return e^n for each tensor element
    */
   exp(): Tensor {
     let result: Tensor;
@@ -225,6 +232,8 @@ class Tensor {
    * Calculates the closest int value that is less than or equal to
    * the value of each tensor element. For example, floor(9.97) returns
    * the value 9.
+   * 
+   * @return each tensor element rounded down
    */
   floor(): Tensor {
     let result: Tensor;
@@ -240,6 +249,8 @@ class Tensor {
    * Calculates the natural logarithm (the base-e logarithm) of each tensor
    * element. This function expects each tensor element to be a value
    * greater than 0.0.
+   * 
+   * @return the natural logarithm of each tensor element
    */
   log(): Tensor {
     let result: Tensor;
@@ -253,6 +264,8 @@ class Tensor {
 
   /**
    * Determines the largest value in a tensor, and then returns that value.
+   * 
+   * @return the maximum number in the tensor
    */
   max(): number {
     let result: any;
@@ -266,6 +279,8 @@ class Tensor {
 
   /**
    * Determines the smallest value in a tensor, and then returns that value.
+   * 
+   * @return the minimum number in the tensor
    */
   min(): number {
     let result: any;
@@ -298,6 +313,8 @@ class Tensor {
   /**
    * Calculates the integer closest to each tensor element. For
    * example, round(133.8) returns the value 134.
+   * 
+   * @return each tensor element rounded
    */
   round(): Tensor {
     let result: Tensor;
@@ -313,6 +330,8 @@ class Tensor {
    * Squares each tensor element (multiplies a number by itself). The
    * result is always a positive number, as multiplying two negative
    * numbers always yields a positive result. For example, -1 * -1 = 1.
+   * 
+   * @return the square of each tensor element
    */
   sq(): Tensor {
     let result: Tensor;
@@ -329,6 +348,8 @@ class Tensor {
    * of a number is always positive, even though there may be a valid
    * negative root. The square root s of number a is such that s*s = a.
    * It is the opposite of squaring.
+   * 
+   * @return the square root of each tensor element
    */
   sqrt(): Tensor {
     let result: Tensor;
@@ -344,6 +365,8 @@ class Tensor {
    * The inverse of cos(), returns the arc cosine of each tensor element.
    * This function expects the values in the range of -1 to 1 and values
    * are returned in the range 0 to PI (3.1415927).
+   * 
+   * @return the arc cosine of each tensor element
    */
   acos(): Tensor {
     let result: Tensor;
@@ -359,6 +382,8 @@ class Tensor {
    * The inverse of sin(), returns the arc sine of a each tensor element.
    * This function expects the values in the range of -1 to 1 and values
    * are returned in the range -PI/2 to PI/2.
+   * 
+   * @return the arc sine of each tensor element
    */
   asin(): Tensor {
     let result: Tensor;
@@ -374,6 +399,8 @@ class Tensor {
    * The inverse of tan(), returns the arc tangent of each tensor element.
    * This function expects the values in the range of -Infinity to Infinity
    * (exclusive) and values are returned in the range -PI/2 to PI/2.
+   * 
+   * @return the arc tangent of each tensor element
    */
   atan(): Tensor {
     let result: Tensor;
@@ -391,6 +418,7 @@ class Tensor {
   * returned as a float in the range from PI to -PI.
   * 
   * @param b the x-coordinate(s) used for computing arctangent
+  * @return the arctangent of each tensor element 
   */
   atan2(b: any): Tensor {
     let result: Tensor;
@@ -407,6 +435,8 @@ class Tensor {
    * Calculates the cosine of each tensor element. This function
    * does not yet take into account the current angleMode.
    * Values are returned in the range -1 to 1.
+   * 
+   * @return the cosine of each tensor element
    */
   cos(): Tensor {
     let result: Tensor;
@@ -422,6 +452,8 @@ class Tensor {
    * Calculates the sine of each tensor element. This function
    * does not yet take into account the current angleMode.
    * Values are returned in the range -1 to 1.
+   * 
+   * @return the sine of each tensor element
    */
   sin(): Tensor {
     let result: Tensor;
@@ -436,6 +468,8 @@ class Tensor {
   /**
    * Calculates the tangent of each tensor element. This function
    * does not yet take into account the current angleMode.
+   * 
+   * @return the tangent of each tensor element
    */
   tan(): Tensor {
     let result: Tensor;
