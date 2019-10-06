@@ -486,4 +486,40 @@ describe('Tensor', function () {
       });
     });
   });
+
+  describe('Random', function () {
+    describe('random()', function () {
+      it('Should return a uniformly distributed tensor', function () {
+        const t = pInst.Tensor.random([100000]);
+        const x = t.tensor.arraySync();
+        const mean = x.reduce((a, b) => a + b) / 100000;
+        expect(mean).to.be.closeTo(0.5, 0.01);
+      });
+    });
+
+    describe('randomGaussian()', function () {
+      it('Should return a normally distributed tensor', function () {
+        const t = pInst.Tensor.randomGaussian([100000]);
+        const x = t.tensor.arraySync();
+        const mean = x.reduce((a, b) => a + b) / 100000;
+        expect(mean).to.be.closeTo(0, 0.01);
+      });
+
+      it('Should accept mean as an argument', function () {
+        const t = pInst.Tensor.randomGaussian([100000], 5);
+        const x = t.tensor.arraySync();
+        const mean = x.reduce((a, b) => a + b) / 100000;
+        expect(mean).to.be.closeTo(5, 0.01);
+      });
+
+      it('Should accept mean and sd as arguments', function () {
+        const t = pInst.Tensor.randomGaussian([100000], 5, 1);
+        const x = t.tensor.arraySync();
+        const mean = x.reduce((a, b) => a + b) / 100000;
+        const sd = Math.sqrt(x.reduce((a, b) => a + (b - mean) ** 2) / (100000 - 1));
+        expect(mean).to.be.closeTo(5, 0.01);
+        expect(sd).to.be.closeTo(1, 0.01);
+      });
+    });
+  });
 });

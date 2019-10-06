@@ -413,13 +413,13 @@ class Tensor {
   }
 
   /**
-  * Calculates the angle (in radians) from a specified point to the
-  * coordinate origin as measured from the positive x-axis. Values are
-  * returned as a float in the range from PI to -PI.
-  * 
-  * @param b the x-coordinate(s) used for computing arctangent
-  * @return the arctangent of each tensor element 
-  */
+   * Calculates the angle (in radians) from a specified point to the
+   * coordinate origin as measured from the positive x-axis. Values are
+   * returned as a float in the range from PI to -PI.
+   * 
+   * @param b the x-coordinate(s) used for computing the arc tangent
+   * @return the arc tangent of each tensor element 
+   */
   atan2(b: any): Tensor {
     let result: Tensor;
     tfc.tidy(() => {
@@ -476,6 +476,49 @@ class Tensor {
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.tan();
       result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Generates a tensor full of uniformly distributed random numbers.
+   * 
+   * @param the shape of the tensor
+   * @return    the random tensor
+   */
+  static random(shape: number[]): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.randomUniform(shape);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Generates a tensor full of normally distributed random numbers.
+   * 
+   * @param shape the shape of tensor
+   * @param mean  the mean
+   * @param sd    the standard deviation
+   */
+  static randomGaussian(shape: number[], mean?: number, sd?: number): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      let t: tfc.Tensor;
+      if (mean !== undefined) {
+        if (sd !== undefined) {
+          t = tfc.randomNormal(shape, mean, sd);
+        } else {
+          t = tfc.randomNormal(shape, mean);
+        }
+      } else {
+        t = tfc.randomNormal(shape);
+      }
+
+       result = createTensor(t);
     });
 
     return result;
