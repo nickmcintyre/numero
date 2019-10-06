@@ -12,6 +12,12 @@ import p5 from './index';
 class Tensor {
   public tensor: tfc.Variable;
 
+  /**
+   * Constructs a new tensor object.
+   * 
+   * @param obj the numerical object used to create the tensor
+   * @param dim (optional) the dimensionality of the p5.Vector used
+   */
   constructor(obj: any, dim?: number) {
     tfc.tidy(() => {
       if (typeof obj === 'number') {
@@ -36,9 +42,9 @@ class Tensor {
   /**
    * Handle any necessary conversions from Number or p5.Vector.
    * 
-   * @param b the input Number, p5.Vector, or Tensor to be made compatible
+   * @param b   the input Number, p5.Vector, or Tensor to be made compatible
    * @param dim (optional) the number of dimenions in a p5.Vector
-   * @return the equivalent tensor
+   * @return    the equivalent tensor
    */
   private handleType(b: any, dim?: number): Tensor {
     let b_: Tensor;
@@ -108,7 +114,7 @@ class Tensor {
   /**
    * Subtracts two tensors element-wise.
    * 
-   * @param b the tensor to be subtracted
+   * @param b   the tensor to be subtracted
    * @param dim (optional) the number of dimensions in a p5.Vector
    */
   sub(b: any, dim?: number) {
@@ -135,7 +141,7 @@ class Tensor {
   /**
    * Divides two tensors element-wise.
    * 
-   * @param b the tensor to be divided by
+   * @param b   the tensor to be divided by
    * @param dim (optional) the number of dimensions in a p5.Vector
    */
   div(b: any, dim?: number) {
@@ -150,7 +156,7 @@ class Tensor {
    * Calculates the dot product of two matrices and/or vectors.
    * Note: Only works when both operands are rank 1 or 2.
    * 
-   * @param b the matrix or vector to be dotted
+   * @param b   the matrix or vector to be dotted
    * @param dim (optional) the number of dimensions in a p5.Vector
    */
   dot(b: any, dim?: number) {
@@ -198,9 +204,9 @@ class Tensor {
    * Constrains the value of each tensor element between a minimum and
    * maximum value.
    * 
-   * @param low the minimum value
+   * @param low  the minimum value
    * @param high the maximum value
-   * @return each tensor element constrained to the given range
+   * @return     each tensor element constrained to the given range
    */
   constrain(low: number, high: number): Tensor {
     let result: Tensor;
@@ -418,7 +424,7 @@ class Tensor {
    * returned as a float in the range from PI to -PI.
    * 
    * @param b the x-coordinate(s) used for computing the arc tangent
-   * @return the arc tangent of each tensor element 
+   * @return  the arc tangent of each tensor element
    */
   atan2(b: any): Tensor {
     let result: Tensor;
@@ -484,8 +490,8 @@ class Tensor {
   /**
    * Generates a tensor full of uniformly distributed random numbers.
    * 
-   * @param the shape of the tensor
-   * @return    the random tensor
+   * @param shape the shape of the tensor
+   * @return      the random tensor
    */
   static random(shape: number[]): Tensor {
     let result: Tensor;
@@ -501,8 +507,9 @@ class Tensor {
    * Generates a tensor full of normally distributed random numbers.
    * 
    * @param shape the shape of tensor
-   * @param mean  the mean
-   * @param sd    the standard deviation
+   * @param mean  (optional) the mean
+   * @param sd    (optional) the standard deviation
+   * @return      the random tensor
    */
   static randomGaussian(shape: number[], mean?: number, sd?: number): Tensor {
     let result: Tensor;
@@ -528,7 +535,9 @@ class Tensor {
 /**
  * Creates a new Tensor (the datatype for storing tensors).
  *
- * @param obj the reference Number, Array, p5.Vector, or tfc.Tensor
+ * @param obj the numerical object used to create the tensor
+ * @param dim (optional) the dimensionality of the p5.Vector used
+ * @return    the tensor
  */
 const createTensor = function createTensorObject(obj: any, dim?: number): Tensor {
   return new Tensor(obj, dim);
