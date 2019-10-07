@@ -487,38 +487,118 @@ describe('Tensor', function () {
     });
   });
 
-  describe('Random', function () {
+  describe('Creation Methods', function () {
+    describe('copy()', function () {
+      it('Should return a copy of the calling tensor', function () {
+        const t1 = pInst.createTensor([1, 2, 3]);
+        const t2 = t1.copy();
+        expect(t1.equals(t2)).to.equal(true);
+      });
+    });
+
+    describe('eye()', function () {
+      it('Should return an identity matrix', function () {
+        const eye = [[1, 0], [0, 1]];
+        const t = pInst.Tensor.eye(2);
+        const x = t.tensor.arraySync();
+        expect(x).to.eql(eye);
+      });
+
+      it('Should allow for rectangular identity matrices', function () {
+        const eye = [[1, 0, 0], [0, 1, 0]];
+        const t = pInst.Tensor.eye(2, 3);
+        const x = t.tensor.arraySync();
+        expect(x).to.eql(eye);
+      });
+    });
+
+    describe('fill()', function () {
+      it('Should return a tensor filled with a number', function () {
+        const a = [[2, 2], [2, 2]];
+        const t = pInst.Tensor.fill([2, 2], 2);
+        const x = t.tensor.arraySync();
+        expect(x).to.eql(a);
+      });
+    });
+
+    describe('linspace()', function () {
+      it('Should return a tensor filled with evenly spaced numbers', function () {
+        const a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const t = pInst.Tensor.linspace(0, 9, 10);
+        const x = t.tensor.arraySync();
+        expect(x).to.eql(a);
+      });
+    });
+
+    describe('ones()', function () {
+      it('Should return a tensor filled with ones', function () {
+        const a = [[1, 1], [1, 1]];
+        const t = pInst.Tensor.ones([2, 2]);
+        const x = t.tensor.arraySync();
+        expect(x).to.eql(a);
+      });
+    });
+
     describe('random()', function () {
       it('Should return a uniformly distributed tensor', function () {
-        const t = pInst.Tensor.random([100000]);
+        const n = 100000;
+        const t = pInst.Tensor.random([n]);
         const x = t.tensor.arraySync();
-        const mean = x.reduce((a, b) => a + b) / 100000;
+        const mean = x.reduce((a, b) => a + b) / n;
         expect(mean).to.be.closeTo(0.5, 0.01);
       });
     });
 
     describe('randomGaussian()', function () {
       it('Should return a normally distributed tensor', function () {
-        const t = pInst.Tensor.randomGaussian([100000]);
+        const n = 100000;
+        const t = pInst.Tensor.randomGaussian([n]);
         const x = t.tensor.arraySync();
-        const mean = x.reduce((a, b) => a + b) / 100000;
+        const mean = x.reduce((a, b) => a + b) / n;
         expect(mean).to.be.closeTo(0, 0.01);
       });
 
       it('Should accept mean as an argument', function () {
-        const t = pInst.Tensor.randomGaussian([100000], 5);
+        const n = 100000;
+        const t = pInst.Tensor.randomGaussian([n], 5);
         const x = t.tensor.arraySync();
-        const mean = x.reduce((a, b) => a + b) / 100000;
+        const mean = x.reduce((a, b) => a + b) / n;
         expect(mean).to.be.closeTo(5, 0.01);
       });
 
       it('Should accept mean and sd as arguments', function () {
-        const t = pInst.Tensor.randomGaussian([100000], 5, 1);
+        const n = 100000;
+        const t = pInst.Tensor.randomGaussian([n], 5, 1);
         const x = t.tensor.arraySync();
-        const mean = x.reduce((a, b) => a + b) / 100000;
-        const sd = Math.sqrt(x.reduce((a, b) => a + (b - mean) ** 2) / (100000 - 1));
+        const mean = x.reduce((a, b) => a + b) / n;
+        const sd = Math.sqrt(x.reduce((a, b) => a + (b - mean) ** 2) / (n - 1));
         expect(mean).to.be.closeTo(5, 0.01);
         expect(sd).to.be.closeTo(1, 0.01);
+      });
+    });
+
+    describe('range()', function () {
+      it('Should return a tensor filled with evenly spaced numbers', function () {
+        const a = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        const t = pInst.Tensor.range(0, 9);
+        const x = t.tensor.arraySync();
+        expect(x).to.eql(a);
+      });
+
+      it('Should control space between numbers', function () {
+        const a = [0, 2, 4, 6, 8];
+        const t = pInst.Tensor.range(0, 9, 2);
+        const x = t.tensor.arraySync();
+        expect(x).to.eql(a);
+      });
+    });
+
+    describe('zeros()', function () {
+      it('Should return a tensor filled with zeros', function () {
+        const a = [[0, 0], [0, 0]];
+        const t = pInst.Tensor.zeros([2, 2]);
+        const x = t.tensor.arraySync();
+        expect(x).to.eql(a);
       });
     });
   });

@@ -24,7 +24,7 @@ describe('hello, número', function () {
         c = a.mul(b).arraySync();
       });
 
-      expect(c).to.deep.equal([0, 2, 4, 6]);
+      expect(c).to.eql([0, 2, 4, 6]);
     });
   });
 });

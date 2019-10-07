@@ -44,7 +44,7 @@ class Tensor {
    * 
    * @param b   the input Number, p5.Vector, or Tensor to be made compatible
    * @param dim (optional) the number of dimenions in a p5.Vector
-   * @return    the equivalent tensor
+   * @returns   the equivalent tensor
    */
   private handleType(b: any, dim?: number): Tensor {
     let b_: Tensor;
@@ -64,7 +64,9 @@ class Tensor {
   /**
    * Equality check against a Number, p5.Vector, or Tensor.
    * 
-   * @param b the tensor to be compared
+   * @param b   the tensor to be compared
+   * @param dim (optional) the dimensionality of the p5.Vector used
+   * @returns   whether the objects are equals
    */
   equals(b: any, dim?: number): boolean {
     let result: boolean = false;
@@ -97,6 +99,8 @@ class Tensor {
       this.tensor.assign(result);
     }
   }
+
+  // ===== Calculation =====
 
   /**
    * Adds two tensors element-wise.
@@ -171,7 +175,7 @@ class Tensor {
    * Calculates the absolute value (magniutde) of each tensor element.
    * The absolute value of a number is always positive.
    * 
-   * @return the absolute value of each tensor element
+   * @returns the absolute value of each tensor element
    */
   abs(): Tensor {
     let result: Tensor;
@@ -188,7 +192,7 @@ class Tensor {
    * the value of each tensor element. For example, ceil(9.03) returns
    * the value 10.
    * 
-   * @return each tensor element rounded up
+   * @returns each tensor element rounded up
    */
   ceil(): Tensor {
     let result: Tensor;
@@ -206,7 +210,7 @@ class Tensor {
    * 
    * @param low  the minimum value
    * @param high the maximum value
-   * @return     each tensor element constrained to the given range
+   * @returns    each tensor element constrained to the given range
    */
   constrain(low: number, high: number): Tensor {
     let result: Tensor;
@@ -222,7 +226,7 @@ class Tensor {
    * Raise Euler's number e (2.71828...) to the power of each tensor
    * element.
    * 
-   * @return e^n for each tensor element
+   * @returns e^n for each tensor element
    */
   exp(): Tensor {
     let result: Tensor;
@@ -239,7 +243,7 @@ class Tensor {
    * the value of each tensor element. For example, floor(9.97) returns
    * the value 9.
    * 
-   * @return each tensor element rounded down
+   * @returns each tensor element rounded down
    */
   floor(): Tensor {
     let result: Tensor;
@@ -256,7 +260,7 @@ class Tensor {
    * element. This function expects each tensor element to be a value
    * greater than 0.0.
    * 
-   * @return the natural logarithm of each tensor element
+   * @returns the natural logarithm of each tensor element
    */
   log(): Tensor {
     let result: Tensor;
@@ -271,7 +275,7 @@ class Tensor {
   /**
    * Determines the largest value in a tensor, and then returns that value.
    * 
-   * @return the maximum number in the tensor
+   * @returns the maximum number in the tensor
    */
   max(): number {
     let result: any;
@@ -286,7 +290,7 @@ class Tensor {
   /**
    * Determines the smallest value in a tensor, and then returns that value.
    * 
-   * @return the minimum number in the tensor
+   * @returns the minimum number in the tensor
    */
   min(): number {
     let result: any;
@@ -320,7 +324,7 @@ class Tensor {
    * Calculates the integer closest to each tensor element. For
    * example, round(133.8) returns the value 134.
    * 
-   * @return each tensor element rounded
+   * @returns each tensor element rounded
    */
   round(): Tensor {
     let result: Tensor;
@@ -337,7 +341,7 @@ class Tensor {
    * result is always a positive number, as multiplying two negative
    * numbers always yields a positive result. For example, -1 * -1 = 1.
    * 
-   * @return the square of each tensor element
+   * @returns the square of each tensor element
    */
   sq(): Tensor {
     let result: Tensor;
@@ -355,7 +359,7 @@ class Tensor {
    * negative root. The square root s of number a is such that s*s = a.
    * It is the opposite of squaring.
    * 
-   * @return the square root of each tensor element
+   * @returns the square root of each tensor element
    */
   sqrt(): Tensor {
     let result: Tensor;
@@ -367,12 +371,14 @@ class Tensor {
     return result;
   }
 
+  // ===== Trigonometry =====
+
   /**
    * The inverse of cos(), returns the arc cosine of each tensor element.
    * This function expects the values in the range of -1 to 1 and values
    * are returned in the range 0 to PI (3.1415927).
    * 
-   * @return the arc cosine of each tensor element
+   * @returns the arc cosine of each tensor element
    */
   acos(): Tensor {
     let result: Tensor;
@@ -389,7 +395,7 @@ class Tensor {
    * This function expects the values in the range of -1 to 1 and values
    * are returned in the range -PI/2 to PI/2.
    * 
-   * @return the arc sine of each tensor element
+   * @returns the arc sine of each tensor element
    */
   asin(): Tensor {
     let result: Tensor;
@@ -406,7 +412,7 @@ class Tensor {
    * This function expects the values in the range of -Infinity to Infinity
    * (exclusive) and values are returned in the range -PI/2 to PI/2.
    * 
-   * @return the arc tangent of each tensor element
+   * @returns the arc tangent of each tensor element
    */
   atan(): Tensor {
     let result: Tensor;
@@ -424,7 +430,7 @@ class Tensor {
    * returned as a float in the range from PI to -PI.
    * 
    * @param b the x-coordinate(s) used for computing the arc tangent
-   * @return  the arc tangent of each tensor element
+   * @returns the arc tangent of each tensor element
    */
   atan2(b: any): Tensor {
     let result: Tensor;
@@ -442,7 +448,7 @@ class Tensor {
    * does not yet take into account the current angleMode.
    * Values are returned in the range -1 to 1.
    * 
-   * @return the cosine of each tensor element
+   * @returns the cosine of each tensor element
    */
   cos(): Tensor {
     let result: Tensor;
@@ -459,7 +465,7 @@ class Tensor {
    * does not yet take into account the current angleMode.
    * Values are returned in the range -1 to 1.
    * 
-   * @return the sine of each tensor element
+   * @returns the sine of each tensor element
    */
   sin(): Tensor {
     let result: Tensor;
@@ -474,8 +480,9 @@ class Tensor {
   /**
    * Calculates the tangent of each tensor element. This function
    * does not yet take into account the current angleMode.
+   * Values are returned in the range of all real numbers.
    * 
-   * @return the tangent of each tensor element
+   * @returns the tangent of each tensor element
    */
   tan(): Tensor {
     let result: Tensor;
@@ -487,11 +494,93 @@ class Tensor {
     return result;
   }
 
+  // ===== Creation Methods =====
+
+  /**
+   * Gets a copy of the tensor, returns a Tensor object.
+   * 
+   * @returns a copy of the tensor
+   */
+  copy(): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.clone();
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Generates an identity matrix with the given dimensions.
+   * 
+   * @param numRows the number of rows
+   * @param numCols (optional) the number of columns
+   * @returns       the identity matrix
+   */
+  static eye(numRows: number, numCols?: number): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.eye(numRows, numCols);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Generates a tensor filled with a given value.
+   * 
+   * @param shape the shape of the tensor
+   * @param value the value to fill the tensor with
+   */
+  static fill(shape: number[], value: number): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.fill(shape, value);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Generates a tensor filled with evenly spaced values.
+   * 
+   * @param min the lower bound (inclusive)
+   * @param max the upper bound (inclusive)
+   * @param num the number of values to generate
+   */
+  static linspace(min: number, max: number, num: number): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.linspace(min, max, num);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Generates a tensor full of ones.
+   * 
+   * @param shape the shape of the tensor
+   */
+  static ones(shape: number[]): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      let t: tfc.Tensor = tfc.ones(shape);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
   /**
    * Generates a tensor full of uniformly distributed random numbers.
    * 
    * @param shape the shape of the tensor
-   * @return      the random tensor
+   * @returns      the random tensor
    */
   static random(shape: number[]): Tensor {
     let result: Tensor;
@@ -509,23 +598,45 @@ class Tensor {
    * @param shape the shape of tensor
    * @param mean  (optional) the mean
    * @param sd    (optional) the standard deviation
-   * @return      the random tensor
+   * @returns      the random tensor
    */
   static randomGaussian(shape: number[], mean?: number, sd?: number): Tensor {
     let result: Tensor;
     tfc.tidy(() => {
-      let t: tfc.Tensor;
-      if (mean !== undefined) {
-        if (sd !== undefined) {
-          t = tfc.randomNormal(shape, mean, sd);
-        } else {
-          t = tfc.randomNormal(shape, mean);
-        }
-      } else {
-        t = tfc.randomNormal(shape);
-      }
+      let t: tfc.Tensor = tfc.randomNormal(shape, mean, sd);
+      result = createTensor(t);
+    });
 
-       result = createTensor(t);
+    return result;
+  }
+
+  /**
+   * Generates a tensor filled with numbers in the range provided.
+   * 
+   * @param min  the lower bound (inclusive)
+   * @param max  the upper bound (exclusive)
+   * @param step (optional) the integer spacing between values
+   */
+  static range(min: number, max: number, step?: number) {
+    let result: Tensor;
+    tfc.tidy(() => {
+      let t: tfc.Tensor = tfc.range(min, max, step);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Generates a tensor full of zeros.
+   * 
+   * @param shape the shape of the tensor
+   */
+  static zeros(shape: number[]): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      let t: tfc.Tensor = tfc.zeros(shape);
+      result = createTensor(t);
     });
 
     return result;
@@ -537,7 +648,7 @@ class Tensor {
  *
  * @param obj the numerical object used to create the tensor
  * @param dim (optional) the dimensionality of the p5.Vector used
- * @return    the tensor
+ * @returns    the tensor
  */
 const createTensor = function createTensorObject(obj: any, dim?: number): Tensor {
   return new Tensor(obj, dim);
