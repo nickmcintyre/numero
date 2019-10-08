@@ -11,6 +11,7 @@ import p5 from './index';
  */
 class Tensor {
   public tensor: tfc.Variable;
+  private isComplex: boolean = false;
 
   /**
    * Constructs a new tensor object.
@@ -37,6 +38,18 @@ class Tensor {
         throw new Error('Tensors must be created from Numbers, Arrays, or p5.Vectors.');
       }
     });
+  }
+
+  // ===== Utilities =====
+
+  /**
+   * Returns a string representation of a tensor. This method is useful for
+   * logging tensors to the console.
+   * 
+   * @returns a human-readable description of the tensor
+   */
+  toString(): string {
+    return this.tensor.toString();
   }
 
   /**
@@ -69,17 +82,81 @@ class Tensor {
    * @returns   whether the objects are equals
    */
   equals(b: any, dim?: number): boolean {
+    // FIXME: this feels like a hack
+    if (b.isComplex && this.isComplex) {
+      return this.complexEquals(b);
+    } else if (b.isComplex || this.isComplex) {
+      throw new Error('Both tensors must be either real or complex.');
+    }
+
     let result: boolean = false;
     tfc.tidy(() => {
       const b_: Tensor = this.handleType(b, dim);
       if (this.tensor.rank !== b_.tensor.rank) {
-        result = false;
+        throw new Error('Both tensors must have the same rank.');
       } else {
         const check: tfc.Tensor = tfc.all(this.tensor.equal(b_.tensor));
         if (check.arraySync() === 1) {
           result = true;
         }
       };
+    });
+
+    return result;
+  }
+
+  /**
+   * Gets the real component of a complex tensor.
+   * 
+   * @returns the real component(s) of the tensor
+   */
+  real(): Tensor {
+    if (!this.isComplex) {
+      throw new Error('Tensor must be complex to use this method.');
+    }
+
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.real(this.tensor);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Gets the imaginary component of a complex tensor.
+   * 
+   * @returns the imaginary component(s) of the tensor
+   */
+  imag(): Tensor {
+    if (!this.isComplex) {
+      throw new Error('Tensor must be complex to use this method.');
+    }
+
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.imag(this.tensor);
+      result = createTensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Equality check against a complex tensor.
+   * 
+   * @param b the tensor to be compared
+   * @returns whether the objects are equals
+   */
+  private complexEquals(b: Tensor): boolean {
+    let result: boolean = false;
+    tfc.tidy(() => {
+      const realCheck: boolean = this.real().equals(b.real());
+      const imagCheck: boolean = this.imag().equals(b.imag());
+      if (realCheck && imagCheck) {
+        result = true;
+      }
     });
 
     return result;
@@ -497,6 +574,37 @@ class Tensor {
   // ===== Creation Methods =====
 
   /**
+   * Creates a complex tensor with the given real and imaginary
+   * components.
+   * 
+   * @param real the real component(s)
+   * @param imag the imaginary component(s)
+   * @returns    the complex tensor
+   */
+  static complex(real: any, imag: any): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      let real_: tfc.Tensor;
+      let imag_: tfc.Tensor;
+      if (typeof real === 'number' && typeof imag === 'number') {
+        real_ = tfc.tensor(real);
+        imag_ = tfc.tensor(imag);
+      } else if (real instanceof Tensor && imag instanceof Tensor) {
+        real_ = real.tensor;
+        imag_ = imag.tensor;
+      } else {
+        throw new Error('Components must be either Numbers or Tensors');
+      }
+
+      const t: tfc.Tensor = tfc.complex(real_, imag_);
+      result = createTensor(t);
+      result.isComplex = true;
+    });
+
+    return result;
+  };
+
+  /**
    * Gets a copy of the tensor, returns a Tensor object.
    * 
    * @returns a copy of the tensor
@@ -512,7 +620,7 @@ class Tensor {
   }
 
   /**
-   * Generates an identity matrix with the given dimensions.
+   * Creates an identity matrix with the given dimensions.
    * 
    * @param numRows the number of rows
    * @param numCols (optional) the number of columns
@@ -529,10 +637,11 @@ class Tensor {
   }
 
   /**
-   * Generates a tensor filled with a given value.
+   * Creates a tensor filled with a given value.
    * 
    * @param shape the shape of the tensor
    * @param value the value to fill the tensor with
+   * @returns     the filled tensor
    */
   static fill(shape: number[], value: number): Tensor {
     let result: Tensor;
@@ -545,11 +654,12 @@ class Tensor {
   }
 
   /**
-   * Generates a tensor filled with evenly spaced values.
+   * Creates a tensor filled with evenly spaced values.
    * 
    * @param min the lower bound (inclusive)
    * @param max the upper bound (inclusive)
    * @param num the number of values to generate
+   * @returns   the filled tensor
    */
   static linspace(min: number, max: number, num: number): Tensor {
     let result: Tensor;
@@ -562,9 +672,10 @@ class Tensor {
   }
 
   /**
-   * Generates a tensor full of ones.
+   * Creates a tensor filled with ones.
    * 
    * @param shape the shape of the tensor
+   * @returns     the filled tensor
    */
   static ones(shape: number[]): Tensor {
     let result: Tensor;
@@ -577,10 +688,10 @@ class Tensor {
   }
 
   /**
-   * Generates a tensor full of uniformly distributed random numbers.
+   * Creates a tensor filled with uniformly distributed random numbers.
    * 
    * @param shape the shape of the tensor
-   * @returns      the random tensor
+   * @returns     the filled tensor
    */
   static random(shape: number[]): Tensor {
     let result: Tensor;
@@ -593,12 +704,12 @@ class Tensor {
   }
 
   /**
-   * Generates a tensor full of normally distributed random numbers.
+   * Creates a tensor filled with normally distributed random numbers.
    * 
    * @param shape the shape of tensor
    * @param mean  (optional) the mean
    * @param sd    (optional) the standard deviation
-   * @returns      the random tensor
+   * @returns     the filled tensor
    */
   static randomGaussian(shape: number[], mean?: number, sd?: number): Tensor {
     let result: Tensor;
@@ -611,11 +722,12 @@ class Tensor {
   }
 
   /**
-   * Generates a tensor filled with numbers in the range provided.
+   * Creates a tensor filled with numbers in the range provided.
    * 
    * @param min  the lower bound (inclusive)
    * @param max  the upper bound (exclusive)
    * @param step (optional) the integer spacing between values
+   * @returns    the filled tensor
    */
   static range(min: number, max: number, step?: number) {
     let result: Tensor;
@@ -628,9 +740,10 @@ class Tensor {
   }
 
   /**
-   * Generates a tensor full of zeros.
+   * Creates a tensor filled with zeros.
    * 
    * @param shape the shape of the tensor
+   * @returns     the filled tensor
    */
   static zeros(shape: number[]): Tensor {
     let result: Tensor;
@@ -648,7 +761,7 @@ class Tensor {
  *
  * @param obj the numerical object used to create the tensor
  * @param dim (optional) the dimensionality of the p5.Vector used
- * @returns    the tensor
+ * @returns   the tensor
  */
 const createTensor = function createTensorObject(obj: any, dim?: number): Tensor {
   return new Tensor(obj, dim);

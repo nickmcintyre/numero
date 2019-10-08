@@ -52,43 +52,88 @@ describe('Tensor', function () {
     });
   });
 
-  describe('equals()', function () {
-    it('Should compare a Tensor', function () {
-      const t1 = pInst.createTensor([1, 0]);
-      const t2 = pInst.createTensor([1, 0]);
-      expect(t1.equals(t2)).to.equal(true);
+  describe('Utilities', function () {
+    describe('toString()', function () {
+      it('Should return a string representation of the tensor', function () {
+        const t = pInst.createTensor(1);
+        const string = 'Tensor\n    1';
+        expect(t.toString()).to.equal(string);
+      });
     });
 
-    it('Should compare a p5.Vector', function () {
-      const t = pInst.createTensor([1, 0]);
-      const v = pInst.createVector(1, 0);
-      const dim = 2;
-      expect(t.equals(v, dim)).to.equal(true);
+    describe('equals()', function () {
+      it('Should compare a Tensor', function () {
+        const t1 = pInst.createTensor([1, 0]);
+        const t2 = pInst.createTensor([1, 0]);
+        const t3 = pInst.createTensor([2, 0]);
+        expect(t1.equals(t2)).to.equal(true);
+        expect(t1.equals(t3)).to.equal(false);
+      });
+
+      it('Should compare a p5.Vector', function () {
+        const t = pInst.createTensor([1, 0]);
+        const v1 = pInst.createVector(1, 0);
+        const v2 = pInst.createVector(2, 0);
+        const dim = 2;
+        expect(t.equals(v1, dim)).to.equal(true);
+        expect(t.equals(v2, dim)).to.equal(false);
+      });
+
+      it('Should compare a Number', function () {
+        const t = pInst.createTensor(1);
+        expect(t.equals(1)).to.equal(true);
+        expect(t.equals(2)).to.equal(false);
+      });
+
+      it('Should compare complex tensors', function () {
+        const t1 = pInst.Tensor.complex(2, 5);
+        const t2 = pInst.Tensor.complex(2, 5);
+        const t3 = pInst.Tensor.complex(3, 5);
+        expect(t1.equals(t2)).to.equal(true);
+        expect(t1.equals(t3)).to.equal(false);
+      });
+
+      it('Should require consistent tensors', function () {
+        const a = pInst.createTensor([3, 5]);
+        const b = pInst.createTensor([[3, 5], [3, 5]]);
+        const z = pInst.Tensor.complex(3, 5);
+        expect(() => a.equals(z)).to.throw(Error);
+        expect(() => a.equals(b)).to.throw(Error);
+      });
+
+      it('Should reject garbage arguments', function () {
+        const t = pInst.createTensor(1);
+        expect(() => t.equals('garbage')).to.throw(Error);
+      });
     });
 
-    it('Should compare a Number', function () {
-      const t = pInst.createTensor(1);
-      expect(t.equals(1)).to.equal(true);
+    describe('imag()', function () {
+      it('Should return a tensor', function () {
+        const t = pInst.Tensor.complex(2, 5);
+        const b = pInst.createTensor(5);
+        expect(b.equals(t.imag())).to.equal(true);
+      });
+
+      it('Should fail if not complex', function () {
+        const t = pInst.createTensor(1);
+        expect(() => t.imag()).to.throw(Error);
+      });
     });
 
-    it('Should reject garbage arguments', function () {
-      const t = pInst.createTensor(1);
-      expect(() => t.equals('garbage')).to.throw(Error);
+    describe('real()', function () {
+      it('Should return a tensor', function () {
+        const t = pInst.Tensor.complex(2, 5);
+        const a = pInst.createTensor(2);
+        expect(a.equals(t.real())).to.equal(true);
+      });
+
+      it('Should fail if not complex', function () {
+        const t = pInst.createTensor(1);
+        expect(() => t.real()).to.throw(Error);
+      });
     });
 
-    it('Should return true when logically equal', function () {
-      const t1 = pInst.createTensor([0, 1]);
-      const t2 = pInst.createTensor([0, 1]);
-      expect(t1.equals(t2)).to.equal(true);
-    });
-
-    it('Should return false when not logically equal', function () {
-      const t1 = pInst.createTensor([0, 1]);
-      const t2 = pInst.createTensor([1, 0]);
-      const t3 = pInst.createTensor([[0, 1], [0, 1]]);
-      expect(t1.equals(t2)).to.equal(false);
-      expect(t1.equals(t3)).to.equal(false);
-    });
+    describe
   });
 
   describe('Calculation', function () {
@@ -133,6 +178,14 @@ describe('Tensor', function () {
         t1.add(t2);
         expect(t1.equals(t3)).to.equal(true);
       });
+
+      it('Should work with complex tensors', function () {
+        const z1 = pInst.Tensor.complex(2, 5);
+        const z2 = pInst.Tensor.complex(1, 3);
+        const z3 = pInst.Tensor.complex(3, 8);
+        z1.add(z2);
+        expect(z1.equals(z3)).to.equal(true);
+      });
     });
 
     describe('sub()', function () {
@@ -176,6 +229,14 @@ describe('Tensor', function () {
         t1.sub(t2);
         expect(t1.equals(t3)).to.equal(true);
       });
+
+      it('Should work with complex tensors', function () {
+        const z1 = pInst.Tensor.complex(2, 5);
+        const z2 = pInst.Tensor.complex(1, 3);
+        const z3 = pInst.Tensor.complex(1, 2);
+        z1.sub(z2);
+        expect(z1.equals(z3)).to.equal(true);
+      });
     });
 
     describe('mult()', function () {
@@ -218,6 +279,14 @@ describe('Tensor', function () {
         const t3 = pInst.createTensor([[2, 4], [6, 8]]);
         t1.mult(t2);
         expect(t1.equals(t3)).to.equal(true);
+      });
+
+      it('Should work with complex tensors', function () {
+        const z1 = pInst.Tensor.complex(2, 5);
+        const z2 = pInst.Tensor.complex(3, -2);
+        const z3 = pInst.Tensor.complex(16, 11);
+        z1.mult(z2);
+        expect(z1.equals(z3)).to.equal(true);
       });
     });
 
@@ -488,6 +557,32 @@ describe('Tensor', function () {
   });
 
   describe('Creation Methods', function () {
+    describe('complex()', function () {
+      it('Should accept two Number arguments', function () {
+        const real = 2;
+        const imag = 5;
+        const z = pInst.Tensor.complex(real, imag);
+        const a = pInst.createTensor(real);
+        const b = pInst.createTensor(imag);
+        expect(z.real().equals(a)).to.equal(true);
+        expect(z.imag().equals(b)).to.equal(true);
+      });
+
+      it('Should accept two tensor arguments', function () {
+        const real = pInst.createTensor(2);
+        const imag = pInst.createTensor(5);
+        const z = pInst.Tensor.complex(real, imag);
+        expect(z.real().equals(real)).to.equal(true);
+        expect(z.imag().equals(imag)).to.equal(true);
+      });
+
+      it('Should reject garbage arguments', function () {
+        const real = '2';
+        const imag = '5';
+        expect(() => pInst.Tensor.complex(real, imag)).to.throw(Error);
+      });
+    });
+
     describe('copy()', function () {
       it('Should return a copy of the calling tensor', function () {
         const t1 = pInst.createTensor([1, 2, 3]);
