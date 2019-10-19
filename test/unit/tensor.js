@@ -9,7 +9,7 @@ describe('Tensor', function () {
   });
 
   afterEach(function () {
-    pInst.tfc.disposeVariables();
+    num.tfc.disposeVariables();
     pInst.remove();
   });
 
@@ -20,19 +20,19 @@ describe('Tensor', function () {
 
     it('Should accept Number arguments', function () {
       const t = pInst.createTensor(1);
-      expect(t).to.be.an.instanceof(pInst.Tensor);
+      expect(t).to.be.an.instanceof(num.Tensor);
     });
 
     it('Should accept Array arguments', function () {
       const t = pInst.createTensor([0, 1]);
-      expect(t).to.be.an.instanceof(pInst.Tensor);
+      expect(t).to.be.an.instanceof(num.Tensor);
     });
 
     it('Should accept p5.Vector arguments', function () {
       const v = pInst.createVector(1, 2);
       const dim = 2;
       const t = pInst.createTensor(v, dim);
-      expect(t).to.be.an.instanceof(pInst.Tensor);
+      expect(t).to.be.an.instanceof(num.Tensor);
     });
 
     it('Should verify p5.Vector dimensions', function () {
@@ -42,9 +42,9 @@ describe('Tensor', function () {
     });
 
     it('Should accept tfc.Tensor arguments', function () {
-      const t0 = pInst.tfc.tensor([1, 2]);
+      const t0 = num.tfc.tensor([1, 2]);
       const t1 = pInst.createTensor(t0);
-      expect(t1).to.be.an.instanceof(pInst.Tensor);
+      expect(t1).to.be.an.instanceof(num.Tensor);
     })
 
     it('Should reject garbage arguments', function () {
@@ -86,9 +86,9 @@ describe('Tensor', function () {
       });
 
       it('Should compare complex tensors', function () {
-        const t1 = pInst.Tensor.complex(2, 5);
-        const t2 = pInst.Tensor.complex(2, 5);
-        const t3 = pInst.Tensor.complex(3, 5);
+        const t1 = num.Tensor.complex(2, 5);
+        const t2 = num.Tensor.complex(2, 5);
+        const t3 = num.Tensor.complex(3, 5);
         expect(t1.equals(t2)).to.equal(true);
         expect(t1.equals(t3)).to.equal(false);
       });
@@ -96,7 +96,7 @@ describe('Tensor', function () {
       it('Should require consistent tensors', function () {
         const a = pInst.createTensor([3, 5]);
         const b = pInst.createTensor([[3, 5], [3, 5]]);
-        const z = pInst.Tensor.complex(3, 5);
+        const z = num.Tensor.complex(3, 5);
         expect(() => a.equals(z)).to.throw(Error);
         expect(() => a.equals(b)).to.throw(Error);
       });
@@ -109,7 +109,7 @@ describe('Tensor', function () {
 
     describe('imag()', function () {
       it('Should return a tensor', function () {
-        const t = pInst.Tensor.complex(2, 5);
+        const t = num.Tensor.complex(2, 5);
         const b = pInst.createTensor(5);
         expect(b.equals(t.imag())).to.equal(true);
       });
@@ -122,7 +122,7 @@ describe('Tensor', function () {
 
     describe('real()', function () {
       it('Should return a tensor', function () {
-        const t = pInst.Tensor.complex(2, 5);
+        const t = num.Tensor.complex(2, 5);
         const a = pInst.createTensor(2);
         expect(a.equals(t.real())).to.equal(true);
       });
@@ -180,9 +180,9 @@ describe('Tensor', function () {
       });
 
       it('Should work with complex tensors', function () {
-        const z1 = pInst.Tensor.complex(2, 5);
-        const z2 = pInst.Tensor.complex(1, 3);
-        const z3 = pInst.Tensor.complex(3, 8);
+        const z1 = num.Tensor.complex(2, 5);
+        const z2 = num.Tensor.complex(1, 3);
+        const z3 = num.Tensor.complex(3, 8);
         z1.add(z2);
         expect(z1.equals(z3)).to.equal(true);
       });
@@ -231,9 +231,9 @@ describe('Tensor', function () {
       });
 
       it('Should work with complex tensors', function () {
-        const z1 = pInst.Tensor.complex(2, 5);
-        const z2 = pInst.Tensor.complex(1, 3);
-        const z3 = pInst.Tensor.complex(1, 2);
+        const z1 = num.Tensor.complex(2, 5);
+        const z2 = num.Tensor.complex(1, 3);
+        const z3 = num.Tensor.complex(1, 2);
         z1.sub(z2);
         expect(z1.equals(z3)).to.equal(true);
       });
@@ -282,9 +282,9 @@ describe('Tensor', function () {
       });
 
       it('Should work with complex tensors', function () {
-        const z1 = pInst.Tensor.complex(2, 5);
-        const z2 = pInst.Tensor.complex(3, -2);
-        const z3 = pInst.Tensor.complex(16, 11);
+        const z1 = num.Tensor.complex(2, 5);
+        const z2 = num.Tensor.complex(3, -2);
+        const z3 = num.Tensor.complex(16, 11);
         z1.mult(z2);
         expect(z1.equals(z3)).to.equal(true);
       });
@@ -561,7 +561,7 @@ describe('Tensor', function () {
       it('Should accept two Number arguments', function () {
         const real = 2;
         const imag = 5;
-        const z = pInst.Tensor.complex(real, imag);
+        const z = num.Tensor.complex(real, imag);
         const a = pInst.createTensor(real);
         const b = pInst.createTensor(imag);
         expect(z.real().equals(a)).to.equal(true);
@@ -571,7 +571,7 @@ describe('Tensor', function () {
       it('Should accept two tensor arguments', function () {
         const real = pInst.createTensor(2);
         const imag = pInst.createTensor(5);
-        const z = pInst.Tensor.complex(real, imag);
+        const z = num.Tensor.complex(real, imag);
         expect(z.real().equals(real)).to.equal(true);
         expect(z.imag().equals(imag)).to.equal(true);
       });
@@ -579,7 +579,7 @@ describe('Tensor', function () {
       it('Should reject garbage arguments', function () {
         const real = '2';
         const imag = '5';
-        expect(() => pInst.Tensor.complex(real, imag)).to.throw(Error);
+        expect(() => num.Tensor.complex(real, imag)).to.throw(Error);
       });
     });
 
@@ -594,14 +594,14 @@ describe('Tensor', function () {
     describe('eye()', function () {
       it('Should return an identity matrix', function () {
         const eye = [[1, 0], [0, 1]];
-        const t = pInst.Tensor.eye(2);
+        const t = num.Tensor.eye(2);
         const x = t.tensor.arraySync();
         expect(x).to.eql(eye);
       });
 
       it('Should allow for rectangular identity matrices', function () {
         const eye = [[1, 0, 0], [0, 1, 0]];
-        const t = pInst.Tensor.eye(2, 3);
+        const t = num.Tensor.eye(2, 3);
         const x = t.tensor.arraySync();
         expect(x).to.eql(eye);
       });
@@ -610,7 +610,7 @@ describe('Tensor', function () {
     describe('fill()', function () {
       it('Should return a tensor filled with a number', function () {
         const a = [[2, 2], [2, 2]];
-        const t = pInst.Tensor.fill([2, 2], 2);
+        const t = num.Tensor.fill([2, 2], 2);
         const x = t.tensor.arraySync();
         expect(x).to.eql(a);
       });
@@ -619,7 +619,7 @@ describe('Tensor', function () {
     describe('linspace()', function () {
       it('Should return a tensor filled with evenly spaced numbers', function () {
         const a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        const t = pInst.Tensor.linspace(0, 9, 10);
+        const t = num.Tensor.linspace(0, 9, 10);
         const x = t.tensor.arraySync();
         expect(x).to.eql(a);
       });
@@ -628,7 +628,7 @@ describe('Tensor', function () {
     describe('ones()', function () {
       it('Should return a tensor filled with ones', function () {
         const a = [[1, 1], [1, 1]];
-        const t = pInst.Tensor.ones([2, 2]);
+        const t = num.Tensor.ones([2, 2]);
         const x = t.tensor.arraySync();
         expect(x).to.eql(a);
       });
@@ -637,7 +637,7 @@ describe('Tensor', function () {
     describe('random()', function () {
       it('Should return a uniformly distributed tensor', function () {
         const n = 100000;
-        const t = pInst.Tensor.random([n]);
+        const t = num.Tensor.random([n]);
         const x = t.tensor.arraySync();
         const mean = x.reduce((a, b) => a + b) / n;
         expect(mean).to.be.closeTo(0.5, 0.01);
@@ -647,7 +647,7 @@ describe('Tensor', function () {
     describe('randomGaussian()', function () {
       it('Should return a normally distributed tensor', function () {
         const n = 100000;
-        const t = pInst.Tensor.randomGaussian([n]);
+        const t = num.Tensor.randomGaussian([n]);
         const x = t.tensor.arraySync();
         const mean = x.reduce((a, b) => a + b) / n;
         expect(mean).to.be.closeTo(0, 0.01);
@@ -655,7 +655,7 @@ describe('Tensor', function () {
 
       it('Should accept mean as an argument', function () {
         const n = 100000;
-        const t = pInst.Tensor.randomGaussian([n], 5);
+        const t = num.Tensor.randomGaussian([n], 5);
         const x = t.tensor.arraySync();
         const mean = x.reduce((a, b) => a + b) / n;
         expect(mean).to.be.closeTo(5, 0.01);
@@ -663,7 +663,7 @@ describe('Tensor', function () {
 
       it('Should accept mean and sd as arguments', function () {
         const n = 100000;
-        const t = pInst.Tensor.randomGaussian([n], 5, 1);
+        const t = num.Tensor.randomGaussian([n], 5, 1);
         const x = t.tensor.arraySync();
         const mean = x.reduce((a, b) => a + b) / n;
         const sd = Math.sqrt(x.reduce((a, b) => a + (b - mean) ** 2) / (n - 1));
@@ -675,14 +675,14 @@ describe('Tensor', function () {
     describe('range()', function () {
       it('Should return a tensor filled with evenly spaced numbers', function () {
         const a = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-        const t = pInst.Tensor.range(0, 9);
+        const t = num.Tensor.range(0, 9);
         const x = t.tensor.arraySync();
         expect(x).to.eql(a);
       });
 
       it('Should control space between numbers', function () {
         const a = [0, 2, 4, 6, 8];
-        const t = pInst.Tensor.range(0, 9, 2);
+        const t = num.Tensor.range(0, 9, 2);
         const x = t.tensor.arraySync();
         expect(x).to.eql(a);
       });
@@ -691,7 +691,7 @@ describe('Tensor', function () {
     describe('zeros()', function () {
       it('Should return a tensor filled with zeros', function () {
         const a = [[0, 0], [0, 0]];
-        const t = pInst.Tensor.zeros([2, 2]);
+        const t = num.Tensor.zeros([2, 2]);
         const x = t.tensor.arraySync();
         expect(x).to.eql(a);
       });

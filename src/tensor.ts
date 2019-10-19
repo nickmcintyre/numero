@@ -1,6 +1,5 @@
 import * as tfc from '@tensorflow/tfjs-core';
-
-import p5 from './index';
+import * as p5 from 'p5';
 
 
 /**
@@ -9,7 +8,7 @@ import p5 from './index';
  * many useful operations. They are applied throughout mathematics, physics,
  * engineering, and computer science.
  */
-class Tensor {
+export class Tensor {
   public tensor: tfc.Variable;
   private isComplex: boolean = false;
 
@@ -62,9 +61,9 @@ class Tensor {
   private handleType(b: any, dim?: number): Tensor {
     let b_: Tensor;
     if (typeof b === 'number') {
-      b_ = createTensor(b);
+      b_ = new Tensor(b);
     } else if (b instanceof p5.Vector) {
-      b_ = createTensor(b, dim);
+      b_ = new Tensor(b, dim);
     } else if (b instanceof Tensor) {
       b_ = b;
     } else {
@@ -118,7 +117,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = tfc.real(this.tensor);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -137,7 +136,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = tfc.imag(this.tensor);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -258,7 +257,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.abs();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -275,7 +274,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.ceil();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -293,7 +292,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.clipByValue(low, high);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -309,7 +308,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.exp();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -326,7 +325,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.floor();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -343,7 +342,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.log();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -391,7 +390,7 @@ class Tensor {
     tfc.tidy(() => {
       const b_: Tensor = this.handleType(b);
       const t = this.tensor.pow(b_.tensor);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -407,7 +406,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.round();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -424,7 +423,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.square();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -442,7 +441,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.sqrt();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -461,7 +460,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.acos();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -478,7 +477,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.asin();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -495,7 +494,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.atan();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -514,7 +513,7 @@ class Tensor {
     tfc.tidy(() => {
       const b_: Tensor = this.handleType(b);
       const t = this.tensor.atan2(b_.tensor);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -531,7 +530,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.cos();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -548,7 +547,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.sin();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -565,7 +564,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.tan();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -597,7 +596,7 @@ class Tensor {
       }
 
       const t: tfc.Tensor = tfc.complex(real_, imag_);
-      result = createTensor(t);
+      result = new Tensor(t);
       result.isComplex = true;
     });
 
@@ -613,7 +612,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = this.tensor.clone();
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -630,7 +629,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = tfc.eye(numRows, numCols);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -647,7 +646,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = tfc.fill(shape, value);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -665,7 +664,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = tfc.linspace(min, max, num);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -681,7 +680,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       let t: tfc.Tensor = tfc.ones(shape);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -697,7 +696,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       const t: tfc.Tensor = tfc.randomUniform(shape);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -715,7 +714,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       let t: tfc.Tensor = tfc.randomNormal(shape, mean, sd);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -729,11 +728,11 @@ class Tensor {
    * @param step (optional) the integer spacing between values
    * @returns    the filled tensor
    */
-  static range(min: number, max: number, step?: number) {
+  static range(min: number, max: number, step?: number): Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       let t: tfc.Tensor = tfc.range(min, max, step);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -749,7 +748,7 @@ class Tensor {
     let result: Tensor;
     tfc.tidy(() => {
       let t: tfc.Tensor = tfc.zeros(shape);
-      result = createTensor(t);
+      result = new Tensor(t);
     });
 
     return result;
@@ -763,11 +762,6 @@ class Tensor {
  * @param dim (optional) the dimensionality of the p5.Vector used
  * @returns   the tensor
  */
-const createTensor = function createTensorObject(obj: any, dim?: number): Tensor {
+export const createTensor = function createTensorObject(obj: any, dim?: number): Tensor {
   return new Tensor(obj, dim);
-};
-
-export {
-  Tensor,
-  createTensor,
 };

@@ -9,21 +9,19 @@ describe('hello, número', function () {
   });
 
   afterEach(function () {
-    pInst.tfc.disposeVariables();
+    num.tfc.disposeVariables();
     pInst.remove();
   });
 
   describe('the math is mathing', function () {
     it('sure is', function () {
       let c;
-
-      pInst.tfc.setBackend('cpu');
-      pInst.tfc.tidy(() => {
-        const a = pInst.tfc.tensor1d([0, 1, 2, 3]);
-        const b = pInst.tfc.scalar(2);
+      num.tfc.setBackend('cpu');
+      num.tfc.tidy(() => {
+        const a = num.tfc.tensor1d([0, 1, 2, 3]);
+        const b = num.tfc.scalar(2);
         c = a.mul(b).arraySync();
       });
-
       expect(c).to.eql([0, 2, 4, 6]);
     });
   });
