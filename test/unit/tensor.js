@@ -61,6 +61,34 @@ describe('Tensor', function () {
       });
     });
 
+    describe('array()', function () {
+      it('Should return a promise', function (done) {
+        const a = [[1, 2], [3, 4]];
+        const t = pInst.createTensor(a);
+        const vals = t.array();
+        vals.then(function (result) {
+          expect(result).to.eql(a);
+          done();
+        }, done);
+      });
+    });
+
+    describe('arraySync()', function () {
+      it('Should return an array', function () {
+        const a = [[1, 2], [3, 4]];
+        const t = pInst.createTensor(a);
+        expect(t.arraySync()).to.eql(a);
+      });
+    });
+
+    describe('dispose()', function () {
+      it('Should dispose of tensors from memory', function () {
+        const t = pInst.createTensor(1);
+        t.dispose();
+        expect(t.tensor.isDisposed).to.equal(true);
+      });
+    });
+
     describe('equals()', function () {
       it('Should compare a Tensor', function () {
         const t1 = pInst.createTensor([1, 0]);
@@ -132,8 +160,6 @@ describe('Tensor', function () {
         expect(() => t.real()).to.throw(Error);
       });
     });
-
-    describe
   });
 
   describe('Calculation', function () {
@@ -595,14 +621,14 @@ describe('Tensor', function () {
       it('Should return an identity matrix', function () {
         const eye = [[1, 0], [0, 1]];
         const t = num.Tensor.eye(2);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         expect(x).to.eql(eye);
       });
 
       it('Should allow for rectangular identity matrices', function () {
         const eye = [[1, 0, 0], [0, 1, 0]];
         const t = num.Tensor.eye(2, 3);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         expect(x).to.eql(eye);
       });
     });
@@ -611,7 +637,7 @@ describe('Tensor', function () {
       it('Should return a tensor filled with a number', function () {
         const a = [[2, 2], [2, 2]];
         const t = num.Tensor.fill([2, 2], 2);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         expect(x).to.eql(a);
       });
     });
@@ -620,7 +646,7 @@ describe('Tensor', function () {
       it('Should return a tensor filled with evenly spaced numbers', function () {
         const a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         const t = num.Tensor.linspace(0, 9, 10);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         expect(x).to.eql(a);
       });
     });
@@ -629,7 +655,7 @@ describe('Tensor', function () {
       it('Should return a tensor filled with ones', function () {
         const a = [[1, 1], [1, 1]];
         const t = num.Tensor.ones([2, 2]);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         expect(x).to.eql(a);
       });
     });
@@ -638,7 +664,7 @@ describe('Tensor', function () {
       it('Should return a uniformly distributed tensor', function () {
         const n = 100000;
         const t = num.Tensor.random([n]);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         const mean = x.reduce((a, b) => a + b) / n;
         expect(mean).to.be.closeTo(0.5, 0.01);
       });
@@ -648,7 +674,7 @@ describe('Tensor', function () {
       it('Should return a normally distributed tensor', function () {
         const n = 100000;
         const t = num.Tensor.randomGaussian([n]);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         const mean = x.reduce((a, b) => a + b) / n;
         expect(mean).to.be.closeTo(0, 0.01);
       });
@@ -656,7 +682,7 @@ describe('Tensor', function () {
       it('Should accept mean as an argument', function () {
         const n = 100000;
         const t = num.Tensor.randomGaussian([n], 5);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         const mean = x.reduce((a, b) => a + b) / n;
         expect(mean).to.be.closeTo(5, 0.01);
       });
@@ -664,7 +690,7 @@ describe('Tensor', function () {
       it('Should accept mean and sd as arguments', function () {
         const n = 100000;
         const t = num.Tensor.randomGaussian([n], 5, 1);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         const mean = x.reduce((a, b) => a + b) / n;
         const sd = Math.sqrt(x.reduce((a, b) => a + (b - mean) ** 2) / (n - 1));
         expect(mean).to.be.closeTo(5, 0.01);
@@ -676,14 +702,14 @@ describe('Tensor', function () {
       it('Should return a tensor filled with evenly spaced numbers', function () {
         const a = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         const t = num.Tensor.range(0, 9);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         expect(x).to.eql(a);
       });
 
       it('Should control space between numbers', function () {
         const a = [0, 2, 4, 6, 8];
         const t = num.Tensor.range(0, 9, 2);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         expect(x).to.eql(a);
       });
     });
@@ -692,9 +718,13 @@ describe('Tensor', function () {
       it('Should return a tensor filled with zeros', function () {
         const a = [[0, 0], [0, 0]];
         const t = num.Tensor.zeros([2, 2]);
-        const x = t.tensor.arraySync();
+        const x = t.arraySync();
         expect(x).to.eql(a);
       });
     });
+  });
+
+  describe('Slicing and Joining', function () {
+    
   });
 });

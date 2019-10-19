@@ -31,6 +31,8 @@ export class Tensor {
 
         const v = obj.array().slice(0, dim);
         this.tensor = tfc.variable(tfc.tensor(v));
+      } else if (obj instanceof Tensor) {
+        this.tensor = tfc.variable(obj.tensor);
       } else if (obj instanceof tfc.Tensor) {
         this.tensor = tfc.variable(obj);
       } else {
@@ -42,7 +44,7 @@ export class Tensor {
   // ===== Utilities =====
 
   /**
-   * Returns a string representation of a tensor. This method is useful for
+   * Returns a string representation of this tensor. This method is useful for
    * logging tensors to the console.
    * 
    * @returns a human-readable description of the tensor
@@ -52,25 +54,32 @@ export class Tensor {
   }
 
   /**
-   * Handle any necessary conversions from Number or p5.Vector.
+   * Returns a representation of this tensor as a float array. The data
+   * transfer is done asynchronously.
    * 
-   * @param b   the input Number, p5.Vector, or Tensor to be made compatible
-   * @param dim (optional) the number of dimenions in a p5.Vector
-   * @returns   the equivalent tensor
+   * @returns the (possibly nested) array of values
    */
-  private handleType(b: any, dim?: number): Tensor {
-    let b_: Tensor;
-    if (typeof b === 'number') {
-      b_ = new Tensor(b);
-    } else if (b instanceof p5.Vector) {
-      b_ = new Tensor(b, dim);
-    } else if (b instanceof Tensor) {
-      b_ = b;
-    } else {
-      throw new Error('Operation only defined on Numbers, p5.Vectors, or Tensors.');
-    }
+  async array(): Promise<any> {
+    const vals = await this.tensor.array();
 
-    return b_;
+    return vals;
+  }
+  
+  /**
+   * Returns a representation of this tensor as a float array. The data
+   * transfer is done synchronously.
+   * 
+   * @returns the (possibly nested) array of values
+   */
+  arraySync(): any {
+    return this.tensor.arraySync();
+  }
+
+  /**
+   * Disposes the tensor from memory.
+   */
+  dispose() {
+    this.tensor.dispose();
   }
 
   /**
@@ -90,7 +99,7 @@ export class Tensor {
 
     let result: boolean = false;
     tfc.tidy(() => {
-      const b_: Tensor = this.handleType(b, dim);
+      const b_: Tensor = new Tensor(b, dim);
       if (this.tensor.rank !== b_.tensor.rank) {
         throw new Error('Both tensors must have the same rank.');
       } else {
@@ -185,7 +194,7 @@ export class Tensor {
    */
   add(b: any, dim?: number) {
     tfc.tidy(() => {
-      const b_: Tensor = this.handleType(b, dim);
+      const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.add(b_.tensor);
       this.handleRank(result);
     });
@@ -199,7 +208,7 @@ export class Tensor {
    */
   sub(b: any, dim?: number) {
     tfc.tidy(() => {
-      const b_: Tensor = this.handleType(b, dim);
+      const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.sub(b_.tensor);
       this.handleRank(result);
     });
@@ -212,7 +221,7 @@ export class Tensor {
    */
   mult(b: any, dim?: number) {
     tfc.tidy(() => {
-      const b_: Tensor = this.handleType(b, dim);
+      const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.mul(b_.tensor);
       this.handleRank(result);
     });
@@ -226,7 +235,7 @@ export class Tensor {
    */
   div(b: any, dim?: number) {
     tfc.tidy(() => {
-      const b_: Tensor = this.handleType(b, dim);
+      const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.div(b_.tensor);
       this.handleRank(result);
     });
@@ -241,7 +250,7 @@ export class Tensor {
    */
   dot(b: any, dim?: number) {
     tfc.tidy(() => {
-      const b_: Tensor = this.handleType(b, dim);
+      const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.dot(b_.tensor);
       this.handleRank(result);
     });
@@ -388,7 +397,7 @@ export class Tensor {
   pow(b: any): Tensor {
     let result: Tensor;
     tfc.tidy(() => {
-      const b_: Tensor = this.handleType(b);
+      const b_: Tensor = new Tensor(b);
       const t = this.tensor.pow(b_.tensor);
       result = new Tensor(t);
     });
@@ -511,7 +520,7 @@ export class Tensor {
   atan2(b: any): Tensor {
     let result: Tensor;
     tfc.tidy(() => {
-      const b_: Tensor = this.handleType(b);
+      const b_: Tensor = new Tensor(b);
       const t = this.tensor.atan2(b_.tensor);
       result = new Tensor(t);
     });
