@@ -9,7 +9,7 @@ import * as p5 from 'p5';
  * engineering, and computer science.
  */
 export class Tensor {
-  public tensor: tfc.Variable;
+  public tensor: tfc.Tensor;
   private isComplex: boolean = false;
 
   /**
@@ -19,26 +19,24 @@ export class Tensor {
    * @param dim (optional) the dimensionality of the p5.Vector used
    */
   constructor(x: number|number[]|p5.Vector|tfc.Tensor|Tensor, dim?: number) {
-    tfc.tidy(() => {
-      if (typeof x === 'number') {
-        this.tensor = tfc.variable(tfc.scalar(x));
-      } else if (x instanceof Array) {
-        this.tensor = tfc.variable(tfc.tensor(x));
-      } else if (x instanceof p5.Vector) {
-        if (!(dim >= 2 && dim <= 3)) {
-          throw new Error('p5.Vectors must be 2 or 3-dimensional.');
-        }
-
-        const v = x.array().slice(0, dim);
-        this.tensor = tfc.variable(tfc.tensor(v));
-      } else if (x instanceof Tensor) {
-        this.tensor = tfc.variable(x.tensor);
-      } else if (x instanceof tfc.Tensor) {
-        this.tensor = tfc.variable(x);
-      } else {
-        throw new Error('Tensors must be created from Numbers, Arrays, or p5.Vectors.');
+    if (typeof x === 'number') {
+      this.tensor = tfc.scalar(x);
+    } else if (x instanceof Array) {
+      this.tensor = tfc.tensor(x);
+    } else if (x instanceof p5.Vector) {
+      if (!(dim >= 2 && dim <= 3)) {
+        throw new Error('p5.Vectors must be 2 or 3-dimensional.');
       }
-    });
+
+      const v = x.array().slice(0, dim);
+      this.tensor = tfc.tensor(v);
+    } else if (x instanceof Tensor) {
+      this.tensor = x.tensor;
+    } else if (x instanceof tfc.Tensor) {
+      this.tensor = x;
+    } else {
+      throw new Error('Tensors must be created from Numbers, Arrays, or p5.Vectors.');
+    }
   }
 
   // ===== Utilities =====
@@ -89,12 +87,14 @@ export class Tensor {
    * @param dim (optional) the dimensionality of the p5.Vector used
    * @returns   whether the objects are equals
    */
-  equals(b: any, dim?: number): boolean {
+  equals(b: number|p5.Vector|Tensor, dim?: number): boolean {
     // FIXME: this feels like a hack
-    if (b.isComplex && this.isComplex) {
-      return this.complexEquals(b);
-    } else if (b.isComplex || this.isComplex) {
-      throw new Error('Both tensors must be either real or complex.');
+    if (b instanceof Tensor) {
+      if (b.isComplex && this.isComplex) {
+        return this.complexEquals(b);
+      } else if (b.isComplex || this.isComplex) {
+        throw new Error('Both tensors must be either real or complex.');
+      }
     }
 
     let result: boolean = false;
@@ -123,11 +123,11 @@ export class Tensor {
       throw new Error('Tensor must be complex to use this method.');
     }
 
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = tfc.real(this.tensor);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.real(this.tensor);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -142,11 +142,11 @@ export class Tensor {
       throw new Error('Tensor must be complex to use this method.');
     }
 
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = tfc.imag(this.tensor);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.imag(this.tensor);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -170,35 +170,28 @@ export class Tensor {
     return result;
   }
 
-  /**
-   * Handle any changes in the tensor's shape due to an operation.
-   * Note: Only call method from within tfc.tidy() to avoid memory leaks.
-   * 
-   * @param result the tensor resulting from an operation
-   */
-  private handleShape(result: tfc.Tensor) {
-    if (this.tensor.shape.toString() !== result.shape.toString()) {
-      this.dispose();
-      this.tensor = tfc.variable(result);
-    } else {
-      this.tensor.assign(result);
-    }
-  }
-
   // ===== Calculation =====
 
   /**
    * Adds two tensors element-wise.
    * 
    * @param b the tensor to be added
+   * @returns the sum of the tensors
    */
-  add(b: any, dim?: number) {
-    tfc.tidy(() => {
+  add(b: number|p5.Vector|Tensor, dim?: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
-      const result: tfc.Tensor = this.tensor.add(b_.tensor);
-      this.handleShape(result);
-      b_.dispose();
+      const t_: tfc.Tensor = this.tensor.add(b_.tensor);
+      return t_;
     });
+    const result = new Tensor(t);
+    if (b instanceof Tensor) {
+      if (this.isComplex && b.isComplex) {
+        result.isComplex = true;
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -206,28 +199,44 @@ export class Tensor {
    * 
    * @param b   the tensor to be subtracted
    * @param dim (optional) the number of dimensions in a p5.Vector
+   * @returns   the difference of the tensors
    */
-  sub(b: any, dim?: number) {
-    tfc.tidy(() => {
+  sub(b: number|p5.Vector|Tensor, dim?: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
-      const result: tfc.Tensor = this.tensor.sub(b_.tensor);
-      this.handleShape(result);
-      b_.dispose();
+      const t_: tfc.Tensor = this.tensor.sub(b_.tensor);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
+    if (b instanceof Tensor) {
+      if (this.isComplex && b.isComplex) {
+        result.isComplex = true;
+      }
+    }
+
+    return result;
   }
 
   /**
    * Multiplies two tensors element-wise.
    * 
    * @param b the tensor to be multiplied
+   * @returns the product of the tensors
    */
-  mult(b: any, dim?: number) {
-    tfc.tidy(() => {
+  mult(b: number|p5.Vector|Tensor, dim?: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
-      const result: tfc.Tensor = this.tensor.mul(b_.tensor);
-      this.handleShape(result);
-      b_.dispose();
+      const t_: tfc.Tensor = this.tensor.mul(b_.tensor);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
+    if (b instanceof Tensor) {
+      if (this.isComplex && b.isComplex) {
+        result.isComplex = true;
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -235,14 +244,22 @@ export class Tensor {
    * 
    * @param b   the tensor to be divided by
    * @param dim (optional) the number of dimensions in a p5.Vector
+   * @returns   the quotient of the tensors
    */
-  div(b: any, dim?: number) {
-    tfc.tidy(() => {
+  div(b: number|p5.Vector|Tensor, dim?: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
-      const result: tfc.Tensor = this.tensor.div(b_.tensor);
-      this.handleShape(result);
-      b_.dispose();
+      const t_: tfc.Tensor = this.tensor.div(b_.tensor);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
+    if (b instanceof Tensor) {
+      if (this.isComplex && b.isComplex) {
+        result.isComplex = true;
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -251,14 +268,17 @@ export class Tensor {
    * 
    * @param b   the matrix or vector to be dotted
    * @param dim (optional) the number of dimensions in a p5.Vector
+   * @returns   the dot product of the tensors
    */
-  dot(b: any, dim?: number) {
-    tfc.tidy(() => {
+  dot(b: p5.Vector|Tensor, dim?: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
-      const result: tfc.Tensor = this.tensor.dot(b_.tensor);
-      this.handleShape(result);
-      b_.dispose();
+      const t_: tfc.Tensor = this.tensor.dot(b_.tensor);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
+
+    return result;
   }
 
   /**
@@ -268,11 +288,11 @@ export class Tensor {
    * @returns the absolute value of each tensor element
    */
   abs(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.abs();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.abs();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -285,11 +305,11 @@ export class Tensor {
    * @returns each tensor element rounded up
    */
   ceil(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.ceil();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.ceil();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -303,11 +323,11 @@ export class Tensor {
    * @returns    each tensor element constrained to the given range
    */
   constrain(low: number, high: number): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.clipByValue(low, high);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.clipByValue(low, high);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -319,11 +339,11 @@ export class Tensor {
    * @returns e^n for each tensor element
    */
   exp(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.exp();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.exp();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -336,11 +356,11 @@ export class Tensor {
    * @returns each tensor element rounded down
    */
   floor(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.floor();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.floor();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -353,11 +373,11 @@ export class Tensor {
    * @returns the natural logarithm of each tensor element
    */
   log(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.log();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.log();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -368,11 +388,11 @@ export class Tensor {
    * @returns the maximum number in the tensor
    */
   max(): number {
-    let result: any;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = tfc.max(this.tensor);
-      result = t.arraySync();
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.max(this.tensor);
+      return t_;
     });
+    const result: any = t.arraySync();
 
     return result;
   }
@@ -383,11 +403,11 @@ export class Tensor {
    * @returns the minimum number in the tensor
    */
   min(): number {
-    let result: any;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = tfc.min(this.tensor);
-      result = t.arraySync();
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.min(this.tensor);
+      return t_;
     });
+    const result: any = t.arraySync();
 
     return result;
   }
@@ -399,14 +419,13 @@ export class Tensor {
    * 
    * @param b the power by which to raise each tensor element
    */
-  pow(b: any): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
+  pow(b: number|Tensor): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b);
-      const t = this.tensor.pow(b_.tensor);
-      result = new Tensor(t);
-      b_.dispose();
+      const t_ = this.tensor.pow(b_.tensor);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -418,11 +437,11 @@ export class Tensor {
    * @returns each tensor element rounded
    */
   round(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.round();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.round();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -435,11 +454,11 @@ export class Tensor {
    * @returns the square of each tensor element
    */
   sq(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.square();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.square();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -453,11 +472,11 @@ export class Tensor {
    * @returns the square root of each tensor element
    */
   sqrt(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.sqrt();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.sqrt();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -472,11 +491,11 @@ export class Tensor {
    * @returns the arc cosine of each tensor element
    */
   acos(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.acos();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.acos();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -489,11 +508,11 @@ export class Tensor {
    * @returns the arc sine of each tensor element
    */
   asin(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.asin();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.asin();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -506,11 +525,11 @@ export class Tensor {
    * @returns the arc tangent of each tensor element
    */
   atan(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.atan();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.atan();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -523,14 +542,13 @@ export class Tensor {
    * @param b the x-coordinate(s) used for computing the arc tangent
    * @returns the arc tangent of each tensor element
    */
-  atan2(b: any): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
+  atan2(b: number|Tensor): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b);
-      const t = this.tensor.atan2(b_.tensor);
-      result = new Tensor(t);
-      b_.dispose();
+      const t_ = this.tensor.atan2(b_.tensor);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -543,11 +561,11 @@ export class Tensor {
    * @returns the cosine of each tensor element
    */
   cos(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.cos();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.cos();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -560,11 +578,11 @@ export class Tensor {
    * @returns the sine of each tensor element
    */
   sin(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.sin();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.sin();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -577,11 +595,11 @@ export class Tensor {
    * @returns the tangent of each tensor element
    */
   tan(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.tan();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.tan();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -596,25 +614,25 @@ export class Tensor {
    * @param imag the imaginary component(s)
    * @returns    the complex tensor
    */
-  static complex(real: any, imag: any): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
+  static complex(real: number|Tensor, imag: number|Tensor): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
       let real_: tfc.Tensor;
       let imag_: tfc.Tensor;
       if (typeof real === 'number' && typeof imag === 'number') {
         real_ = tfc.tensor(real);
         imag_ = tfc.tensor(imag);
       } else if (real instanceof Tensor && imag instanceof Tensor) {
-        real_ = real.tensor;
-        imag_ = imag.tensor;
+        real_ = tfc.clone(real.tensor);
+        imag_ = tfc.clone(imag.tensor);
       } else {
         throw new Error('Components must be either Numbers or Tensors');
       }
 
-      const t: tfc.Tensor = tfc.complex(real_, imag_);
-      result = new Tensor(t);
-      result.isComplex = true;
+      const t_: tfc.Tensor = tfc.complex(real_, imag_);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
+    result.isComplex = true;
 
     return result;
   };
@@ -625,11 +643,11 @@ export class Tensor {
    * @returns a copy of the tensor
    */
   copy(): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.clone();
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.clone();
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -642,11 +660,11 @@ export class Tensor {
    * @returns       the identity matrix
    */
   static eye(numRows: number, numCols?: number): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = tfc.eye(numRows, numCols);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.eye(numRows, numCols);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -659,11 +677,11 @@ export class Tensor {
    * @returns     the filled tensor
    */
   static fill(shape: number[], value: number): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = tfc.fill(shape, value);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.fill(shape, value);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -677,11 +695,11 @@ export class Tensor {
    * @returns   the filled tensor
    */
   static linspace(min: number, max: number, num: number): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = tfc.linspace(min, max, num);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.linspace(min, max, num);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -693,11 +711,11 @@ export class Tensor {
    * @returns     the filled tensor
    */
   static ones(shape: number[]): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      let t: tfc.Tensor = tfc.ones(shape);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.ones(shape);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -709,11 +727,11 @@ export class Tensor {
    * @returns     the filled tensor
    */
   static random(shape: number[]): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = tfc.randomUniform(shape);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.randomUniform(shape);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -727,11 +745,11 @@ export class Tensor {
    * @returns     the filled tensor
    */
   static randomGaussian(shape: number[], mean?: number, sd?: number): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      let t: tfc.Tensor = tfc.randomNormal(shape, mean, sd);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.randomNormal(shape, mean, sd);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -745,11 +763,11 @@ export class Tensor {
    * @returns    the filled tensor
    */
   static range(min: number, max: number, step?: number): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      let t: tfc.Tensor = tfc.range(min, max, step);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.range(min, max, step);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -761,11 +779,11 @@ export class Tensor {
    * @returns     the filled tensor
    */
   static zeros(shape: number[]): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      let t: tfc.Tensor = tfc.zeros(shape);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = tfc.zeros(shape);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -780,9 +798,7 @@ export class Tensor {
    * @returns    the concatenated tensor
    */
   concat(b: Tensor|Tensor[], axis?: number): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      let t: tfc.Tensor;
+    const t: tfc.Tensor = tfc.tidy(() => {
       const tensors: tfc.Tensor[] = [this.tensor];
       if (b instanceof Tensor) {
         tensors.push(b.tensor);
@@ -791,9 +807,10 @@ export class Tensor {
         tensors.concat(b_);
       }
 
-      t = tfc.concat(tensors, axis);
-      result = new Tensor(t);
+      const t_: tfc.Tensor = tfc.concat(tensors, axis);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -805,11 +822,11 @@ export class Tensor {
    * @returns    the reversed tensor
    */
   reverse(axis?: number|number[]): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.reverse(axis);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.reverse(axis);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }
@@ -822,11 +839,11 @@ export class Tensor {
    * @returns     the tensor slice
    */
   slice(begin: number|number[], size?: number|number[]): Tensor {
-    let result: Tensor;
-    tfc.tidy(() => {
-      const t: tfc.Tensor = this.tensor.slice(begin, size);
-      result = new Tensor(t);
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.slice(begin, size);
+      return t_;
     });
+    const result: Tensor = new Tensor(t);
 
     return result;
   }

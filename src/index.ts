@@ -1,4 +1,5 @@
 import * as tfc from '@tensorflow/tfjs-core';
+import { setBackend, tidy } from '@tensorflow/tfjs-core';
 
 import { Tensor, createTensor } from './tensor';
 
@@ -9,5 +10,6 @@ p5.prototype.createTensor = createTensor;
 
 export {
   tfc,
+  tidy,
   Tensor,
 };
