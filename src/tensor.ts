@@ -15,26 +15,26 @@ export class Tensor {
   /**
    * Constructs a new tensor object.
    * 
-   * @param obj the numerical object used to create the tensor
+   * @param x   the numerical object used to create the tensor
    * @param dim (optional) the dimensionality of the p5.Vector used
    */
-  constructor(obj: any, dim?: number) {
+  constructor(x: number|number[]|p5.Vector|tfc.Tensor|Tensor, dim?: number) {
     tfc.tidy(() => {
-      if (typeof obj === 'number') {
-        this.tensor = tfc.variable(tfc.scalar(obj));
-      } else if (obj instanceof Array) {
-        this.tensor = tfc.variable(tfc.tensor(obj));
-      } else if (obj instanceof p5.Vector) {
+      if (typeof x === 'number') {
+        this.tensor = tfc.variable(tfc.scalar(x));
+      } else if (x instanceof Array) {
+        this.tensor = tfc.variable(tfc.tensor(x));
+      } else if (x instanceof p5.Vector) {
         if (!(dim >= 2 && dim <= 3)) {
           throw new Error('p5.Vectors must be 2 or 3-dimensional.');
         }
 
-        const v = obj.array().slice(0, dim);
+        const v = x.array().slice(0, dim);
         this.tensor = tfc.variable(tfc.tensor(v));
-      } else if (obj instanceof Tensor) {
-        this.tensor = tfc.variable(obj.tensor);
-      } else if (obj instanceof tfc.Tensor) {
-        this.tensor = tfc.variable(obj);
+      } else if (x instanceof Tensor) {
+        this.tensor = tfc.variable(x.tensor);
+      } else if (x instanceof tfc.Tensor) {
+        this.tensor = tfc.variable(x);
       } else {
         throw new Error('Tensors must be created from Numbers, Arrays, or p5.Vectors.');
       }
@@ -85,7 +85,7 @@ export class Tensor {
   /**
    * Equality check against a Number, p5.Vector, or Tensor.
    * 
-   * @param b   the tensor to be compared
+   * @param b   the object to be compared
    * @param dim (optional) the dimensionality of the p5.Vector used
    * @returns   whether the objects are equals
    */
@@ -171,14 +171,14 @@ export class Tensor {
   }
 
   /**
-   * Handle any changes in the tensor's rank due to an operation.
+   * Handle any changes in the tensor's shape due to an operation.
    * Note: Only call method from within tfc.tidy() to avoid memory leaks.
    * 
    * @param result the tensor resulting from an operation
    */
-  private handleRank(result: tfc.Tensor) {
-    if (this.tensor.rank !== result.rank) {
-      this.tensor.dispose();
+  private handleShape(result: tfc.Tensor) {
+    if (this.tensor.shape.toString() !== result.shape.toString()) {
+      this.dispose();
       this.tensor = tfc.variable(result);
     } else {
       this.tensor.assign(result);
@@ -196,7 +196,8 @@ export class Tensor {
     tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.add(b_.tensor);
-      this.handleRank(result);
+      this.handleShape(result);
+      b_.dispose();
     });
   }
 
@@ -210,7 +211,8 @@ export class Tensor {
     tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.sub(b_.tensor);
-      this.handleRank(result);
+      this.handleShape(result);
+      b_.dispose();
     });
   }
 
@@ -223,7 +225,8 @@ export class Tensor {
     tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.mul(b_.tensor);
-      this.handleRank(result);
+      this.handleShape(result);
+      b_.dispose();
     });
   }
 
@@ -237,7 +240,8 @@ export class Tensor {
     tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.div(b_.tensor);
-      this.handleRank(result);
+      this.handleShape(result);
+      b_.dispose();
     });
   }
 
@@ -252,7 +256,8 @@ export class Tensor {
     tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const result: tfc.Tensor = this.tensor.dot(b_.tensor);
-      this.handleRank(result);
+      this.handleShape(result);
+      b_.dispose();
     });
   }
 
@@ -400,6 +405,7 @@ export class Tensor {
       const b_: Tensor = new Tensor(b);
       const t = this.tensor.pow(b_.tensor);
       result = new Tensor(t);
+      b_.dispose();
     });
 
     return result;
@@ -523,6 +529,7 @@ export class Tensor {
       const b_: Tensor = new Tensor(b);
       const t = this.tensor.atan2(b_.tensor);
       result = new Tensor(t);
+      b_.dispose();
     });
 
     return result;
@@ -762,15 +769,76 @@ export class Tensor {
 
     return result;
   }
+
+  // ===== Slicing and Joining =====
+
+  /**
+   * Concatenates two or more tensors.
+   * 
+   * @param b    the tensor(s) to be concatenated
+   * @param axis (optional) the axis to concatenate along
+   * @returns    the concatenated tensor
+   */
+  concat(b: Tensor|Tensor[], axis?: number): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      let t: tfc.Tensor;
+      const tensors: tfc.Tensor[] = [this.tensor];
+      if (b instanceof Tensor) {
+        tensors.push(b.tensor);
+      } else if (b instanceof Array) {
+        const b_: tfc.Tensor[] = b.map(x => x.tensor);
+        tensors.concat(b_);
+      }
+
+      t = tfc.concat(tensors, axis);
+      result = new Tensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Reverses the tensor along a specificed axis.
+   * 
+   * @param axis (optional) the axis to reverse along
+   * @returns    the reversed tensor
+   */
+  reverse(axis?: number|number[]): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.reverse(axis);
+      result = new Tensor(t);
+    });
+
+    return result;
+  }
+
+  /**
+   * Extracts a slice from a tensor.
+   * 
+   * @param begin the coordinates to start the slice from
+   * @param size  (optional) the size of the slice
+   * @returns     the tensor slice
+   */
+  slice(begin: number|number[], size?: number|number[]): Tensor {
+    let result: Tensor;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = this.tensor.slice(begin, size);
+      result = new Tensor(t);
+    });
+
+    return result;
+  }
 };
 
 /**
  * Creates a new Tensor (the datatype for storing tensors).
  *
- * @param obj the numerical object used to create the tensor
+ * @param x   the numerical object used to create the tensor
  * @param dim (optional) the dimensionality of the p5.Vector used
  * @returns   the tensor
  */
-export const createTensor = function createTensorObject(obj: any, dim?: number): Tensor {
-  return new Tensor(obj, dim);
+export const createTensor = function createTensorObject(x: any, dim?: number): Tensor {
+  return new Tensor(x, dim);
 };

@@ -725,6 +725,54 @@ describe('Tensor', function () {
   });
 
   describe('Slicing and Joining', function () {
-    
+    describe('concat()', function () {
+      it('Should work with 1d tensors', function () {
+        const t1 = pInst.createTensor([1, 2]);
+        const t2 = pInst.createTensor([3, 4]);
+        const t3 = pInst.createTensor([1, 2, 3, 4]);
+        const t4 = t1.concat(t2);
+        expect(t3.equals(t4)).to.equal(true);
+      });
+
+      it('Should work with nd tensors', function () {
+        const t1 = pInst.createTensor([[1, 2], [10, 20]]);
+        const t2 = pInst.createTensor([[3, 4], [30, 40]]);
+        const t3 = pInst.createTensor([[1, 2, 3, 4], [10, 20, 30, 40]]);
+        const t4 = t1.concat(t2, 1);
+        expect(t3.equals(t4)).to.equal(true);
+      });
+    });
+
+    describe('reverse()', function () {
+      it('Should work with 1d tensors', function () {
+        const t1 = pInst.createTensor([1, 2, 3]);
+        const t2 = pInst.createTensor([3, 2, 1]);
+        const t3 = t1.reverse();
+        expect(t2.equals(t3)).to.equal(true);
+      });
+
+      it('Should work with nd tensors', function () {
+        const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+        const t2 = pInst.createTensor([[2, 1], [4, 3]]);
+        const t3 = t1.reverse(1);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+
+    describe('slice()', function () {
+      it('Should work with 1d tensors', function () {
+        const t1 = pInst.createTensor([1, 2, 3, 4]);
+        const t2 = pInst.createTensor([2, 3]);
+        const t3 = t1.slice([1], [2]);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+
+      it('Should work with nd tensors', function () {
+        const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+        const t2 = pInst.createTensor([[3, 4]]);
+        const t3 = t1.slice([1, 0], [1, 2]);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
   });
 });
