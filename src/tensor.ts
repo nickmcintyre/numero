@@ -388,11 +388,11 @@ export class Tensor {
    * @returns the maximum number in the tensor
    */
   max(): number {
-    const t: tfc.Tensor = tfc.tidy(() => {
-      const t_: tfc.Tensor = tfc.max(this.tensor);
-      return t_;
+    let result: any;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.max(this.tensor);
+      result = t.arraySync();
     });
-    const result: any = t.arraySync();
 
     return result;
   }
@@ -403,11 +403,11 @@ export class Tensor {
    * @returns the minimum number in the tensor
    */
   min(): number {
-    const t: tfc.Tensor = tfc.tidy(() => {
-      const t_: tfc.Tensor = tfc.min(this.tensor);
-      return t_;
+    let result: any;
+    tfc.tidy(() => {
+      const t: tfc.Tensor = tfc.min(this.tensor);
+      result = t.arraySync();
     });
-    const result: any = t.arraySync();
 
     return result;
   }
@@ -841,6 +841,23 @@ export class Tensor {
   slice(begin: number|number[], size?: number|number[]): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const t_: tfc.Tensor = this.tensor.slice(begin, size);
+      return t_;
+    });
+    const result: Tensor = new Tensor(t);
+
+    return result;
+  }
+
+  /**
+   * Pads a tensor with a given value and paddings.
+   * 
+   * @param paddings      an array prescribing how much to pad [before, after] along
+   *                      each tensor axis
+   * @param constantValue (optional) the pad value to use
+   */
+  pad(paddings: Array<[number, number]>, constantValue?: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.pad(paddings, constantValue);
       return t_;
     });
     const result: Tensor = new Tensor(t);

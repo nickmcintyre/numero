@@ -950,5 +950,21 @@ describe('Tensor', function () {
         });
       });
     });
+
+    describe('pad()', function () {
+      it('Should pad with zeros', function () {
+        const t1 = pInst.createTensor([1, 2, 3, 4]);
+        const t2 = pInst.createTensor([0, 1, 2, 3, 4, 0, 0]);
+        const t3 = t1.pad([[1, 2]]);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+
+      it('Should pad with constant values', function () {
+        const t1 = pInst.createTensor([1, 2, 3, 4]);
+        const t2 = pInst.createTensor([2, 1, 2, 3, 4, 2, 2]);
+        const t3 = t1.pad([[1, 2]], 2);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
   });
 });
