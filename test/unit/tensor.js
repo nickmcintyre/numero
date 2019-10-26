@@ -553,6 +553,27 @@ describe('Tensor', function () {
       });
     });
 
+    describe('mod()', function () {
+      it('Should accept Number arguments', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([2, 4, 5]);
+          const t2 = pInst.createTensor([0, 0, 1]);
+          const t3 = t1.mod(2);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+
+      it('Should accept Tensor arguments', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([2, 4, 5]);
+          const t2 = pInst.createTensor([2, 2, 2]);
+          const t3 = pInst.createTensor([0, 0, 1]);
+          const t4 = t1.mod(t2);
+          expect(t3.equals(t4)).to.equal(true);
+        });
+      });
+    });
+
     describe('pow()', function () {
       it('Should accept Number arguments', function () {
         num.tidy(() => {
@@ -605,6 +626,24 @@ describe('Tensor', function () {
           const t3 = t1.sqrt();
           expect(t2.equals(t3)).to.equal(true);
         });
+      });
+    });
+  });
+
+  describe('Reduction', function () {
+    describe('sum()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor([1, 2, 3]);
+        const t2 = pInst.createTensor(6);
+        const t3 = t1.sum();
+        expect(t2.equals(t3)).to.equal(true);
+      });
+
+      it('Should allow axes to be specified', function () {
+        const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+        const t2 = pInst.createTensor([3, 7]);
+        const t3 = t1.sum(1);
+        expect(t2.equals(t3)).to.equal(true);
       });
     });
   });
@@ -953,17 +992,45 @@ describe('Tensor', function () {
 
     describe('pad()', function () {
       it('Should pad with zeros', function () {
-        const t1 = pInst.createTensor([1, 2, 3, 4]);
-        const t2 = pInst.createTensor([0, 1, 2, 3, 4, 0, 0]);
-        const t3 = t1.pad([[1, 2]]);
-        expect(t2.equals(t3)).to.equal(true);
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3, 4]);
+          const t2 = pInst.createTensor([0, 1, 2, 3, 4, 0, 0]);
+          const t3 = t1.pad([[1, 2]]);
+          expect(t2.equals(t3)).to.equal(true);
+        });
       });
 
       it('Should pad with constant values', function () {
-        const t1 = pInst.createTensor([1, 2, 3, 4]);
-        const t2 = pInst.createTensor([2, 1, 2, 3, 4, 2, 2]);
-        const t3 = t1.pad([[1, 2]], 2);
-        expect(t2.equals(t3)).to.equal(true);
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3, 4]);
+          const t2 = pInst.createTensor([2, 1, 2, 3, 4, 2, 2]);
+          const t3 = t1.pad([[1, 2]], 2);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
+    describe('stack()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2]);
+          const t2 = pInst.createTensor([3, 4]);
+          const t3 = pInst.createTensor([5, 6]);
+          const t4 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t5 = num.Tensor.stack([t1, t2, t3]);
+          expect(t4.equals(t5)).to.equal(true);
+        });
+      });
+
+      it('Should allow axes to be specified', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2]);
+          const t2 = pInst.createTensor([3, 4]);
+          const t3 = pInst.createTensor([5, 6]);
+          const t4 = pInst.createTensor([[1, 3, 5], [2, 4, 6]]);
+          const t5 = num.Tensor.stack([t1, t2, t3], 1);
+          expect(t4.equals(t5)).to.equal(true);
+        });
       });
     });
   });

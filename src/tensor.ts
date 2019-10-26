@@ -413,6 +413,23 @@ export class Tensor {
   }
 
   /**
+   * Performs modular (remainder) division on two tensors element-wise.
+   * 
+   * @param b the tensor to be divided by
+   * @returns the remainder(s)
+   */
+  mod(b: number|Tensor): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const b_: Tensor = new Tensor(b);
+      const t_: tfc.Tensor = this.tensor.mod(b_.tensor);
+      return t_;
+    });
+    const result: Tensor = new Tensor(t);
+
+    return result;
+  }
+
+  /**
    * Facilitates exponential expressions. The pow() method is an
    * efficient way of multiplying tensors by themselves (or their
    * reciprocals) in large quantities.
@@ -422,7 +439,7 @@ export class Tensor {
   pow(b: number|Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b);
-      const t_ = this.tensor.pow(b_.tensor);
+      const t_: tfc.Tensor = this.tensor.pow(b_.tensor);
       return t_;
     });
     const result: Tensor = new Tensor(t);
@@ -474,6 +491,24 @@ export class Tensor {
   sqrt(): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const t_: tfc.Tensor = this.tensor.sqrt();
+      return t_;
+    });
+    const result: Tensor = new Tensor(t);
+
+    return result;
+  }
+
+  // ===== Reduction =====
+
+  /**
+   * Calculates the sum of tensor elements along an axis.
+   * 
+   * @param axis (optional) the axis to sum along
+   * @returns    the sum
+   */
+  sum(axis?: number|number[]): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.sum(axis);
       return t_;
     });
     const result: Tensor = new Tensor(t);
@@ -864,6 +899,28 @@ export class Tensor {
 
     return result;
   }
+
+  /**
+   * Stacks a list of tensors along an axis. Tensors must have the same rank.
+   * 
+   * @param tensors the tensors to be stacked
+   * @param axis    (optional) the axis to stack along
+   */
+  static stack(tensors: Tensor[], axis?: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const tensors_: tfc.Tensor[] = new Array(tensors.length);
+      for (let i = 0; i < tensors.length; i += 1) {
+        tensors_[i] = tensors[i].tensor;
+      }
+
+      const t_ = tfc.stack(tensors_, axis);
+
+      return t_;
+    });
+    const result: Tensor = new Tensor(t);
+
+    return result;
+  }
 };
 
 /**
@@ -873,6 +930,6 @@ export class Tensor {
  * @param dim (optional) the dimensionality of the p5.Vector used
  * @returns   the tensor
  */
-export const createTensor = function createTensorObject(x: any, dim?: number): Tensor {
+export const createTensor = function createTensorObject(x: number|number[]|p5.Vector|tfc.Tensor|Tensor, dim?: number): Tensor {
   return new Tensor(x, dim);
 };
