@@ -5,7 +5,7 @@ describe('Tensor', function () {
   let pInst;
 
   beforeEach(function () {
-    pInst = new p5(function () {});
+    pInst = new p5(function () { });
   });
 
   afterEach(function () {
@@ -220,7 +220,7 @@ describe('Tensor', function () {
           const v = pInst.createVector(3, 4);
           const t2 = pInst.createTensor([4, 6]);
           const dim = 2;
-          const t3 =  t1.add(v, dim);
+          const t3 = t1.add(v, dim);
           expect(t2.equals(t3)).to.equal(true);
         });
       });
@@ -1030,6 +1030,86 @@ describe('Tensor', function () {
           const t4 = pInst.createTensor([[1, 3, 5], [2, 4, 6]]);
           const t5 = num.Tensor.stack([t1, t2, t3], 1);
           expect(t4.equals(t5)).to.equal(true);
+        });
+      });
+    });
+
+    describe('addRows()', function () {
+      it('Should properly add row 1 to row 2', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[1, 2], [3, 4], [8, 10]]);
+          const t3 = t1.addRows(1, 2);
+          expect(t3.equals(t2)).to.equal(true);
+        });
+      });
+
+      it('Should properly add row 2 to row 0', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[6, 8], [3, 4], [5, 6]]);
+          const t3 = t1.addRows(2, 0);
+          expect(t3.equals(t2)).to.equal(true);
+        });
+      });
+    });
+
+    describe('subRows()', function () {
+      it('Should properly subtract row 1 from row 2', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[1, 2], [3, 4], [2, 2]]);
+          const t3 = t1.subRows(1, 2);
+          expect(t3.equals(t2)).to.equal(true);
+        });
+      });
+
+      it('Should properly subtract row 2 from row 0', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[-4, -4], [3, 4], [5, 6]]);
+          const t3 = t1.subRows(2, 0);
+          expect(t3.equals(t2)).to.equal(true);
+        });
+      });
+    });
+
+    describe('swapRows()', function () {
+      it('Should properly swap row 1 and row 2', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[1, 2], [5, 6], [3, 4]]);
+          const t3 = t1.swapRows(1, 2);
+          expect(t3.equals(t2)).to.equal(true);
+        });
+      });
+
+      it('Should properly swap row 2 and row 0', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[5, 6], [3, 4], [1, 2]]);
+          const t3 = t1.swapRows(2, 0);
+          expect(t3.equals(t2)).to.equal(true);
+        });
+      });
+    });
+
+    describe('mulRow()', function () {
+      it('Should properly multiply row 1 by 3', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[1, 2], [9, 12], [5, 6]]);
+          const t3 = t1.mulRow(1, 3);
+          expect(t3.equals(t2)).to.equal(true);
+        });
+      });
+
+      it('Should properly multiply row 2 by 6', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[1, 2], [3, 4], [30, 36]]);
+          const t3 = t1.mulRow(2, 6);
+          expect(t3.equals(t2)).to.equal(true);
         });
       });
     });
