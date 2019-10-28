@@ -1,5 +1,6 @@
 import * as tfc from '@tensorflow/tfjs-core';
 import * as p5 from 'p5';
+import { backpropagateGradients } from '@tensorflow/tfjs-core/dist/tape';
 
 
 /**
@@ -18,7 +19,7 @@ export class Tensor {
    * @param x   the numerical object used to create the tensor
    * @param dim (optional) the dimensionality of the p5.Vector used
    */
-  constructor(x: number|number[]|p5.Vector|tfc.Tensor|Tensor, dim?: number) {
+  constructor(x: number | number[] | p5.Vector | tfc.Tensor | Tensor, dim?: number) {
     if (typeof x === 'number') {
       this.tensor = tfc.scalar(x);
     } else if (x instanceof Array) {
@@ -62,7 +63,7 @@ export class Tensor {
 
     return vals;
   }
-  
+
   /**
    * Returns a representation of this tensor as a float array. The data
    * transfer is done synchronously.
@@ -87,7 +88,7 @@ export class Tensor {
    * @param dim (optional) the dimensionality of the p5.Vector used
    * @returns   whether the objects are equals
    */
-  equals(b: number|p5.Vector|Tensor, dim?: number): boolean {
+  equals(b: number | p5.Vector | Tensor, dim?: number): boolean {
     // FIXME: this feels like a hack
     if (b instanceof Tensor) {
       if (b.isComplex && this.isComplex) {
@@ -178,7 +179,7 @@ export class Tensor {
    * @param b the tensor to be added
    * @returns the sum of the tensors
    */
-  add(b: number|p5.Vector|Tensor, dim?: number): Tensor {
+  add(b: number | p5.Vector | Tensor, dim?: number): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const t_: tfc.Tensor = this.tensor.add(b_.tensor);
@@ -201,7 +202,7 @@ export class Tensor {
    * @param dim (optional) the number of dimensions in a p5.Vector
    * @returns   the difference of the tensors
    */
-  sub(b: number|p5.Vector|Tensor, dim?: number): Tensor {
+  sub(b: number | p5.Vector | Tensor, dim?: number): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const t_: tfc.Tensor = this.tensor.sub(b_.tensor);
@@ -223,7 +224,7 @@ export class Tensor {
    * @param b the tensor to be multiplied
    * @returns the product of the tensors
    */
-  mult(b: number|p5.Vector|Tensor, dim?: number): Tensor {
+  mult(b: number | p5.Vector | Tensor, dim?: number): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const t_: tfc.Tensor = this.tensor.mul(b_.tensor);
@@ -246,7 +247,7 @@ export class Tensor {
    * @param dim (optional) the number of dimensions in a p5.Vector
    * @returns   the quotient of the tensors
    */
-  div(b: number|p5.Vector|Tensor, dim?: number): Tensor {
+  div(b: number | p5.Vector | Tensor, dim?: number): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const t_: tfc.Tensor = this.tensor.div(b_.tensor);
@@ -270,7 +271,7 @@ export class Tensor {
    * @param dim (optional) the number of dimensions in a p5.Vector
    * @returns   the dot product of the tensors
    */
-  dot(b: p5.Vector|Tensor, dim?: number): Tensor {
+  dot(b: p5.Vector | Tensor, dim?: number): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b, dim);
       const t_: tfc.Tensor = this.tensor.dot(b_.tensor);
@@ -418,7 +419,7 @@ export class Tensor {
    * @param b the tensor to be divided by
    * @returns the remainder(s)
    */
-  mod(b: number|Tensor): Tensor {
+  mod(b: number | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b);
       const t_: tfc.Tensor = this.tensor.mod(b_.tensor);
@@ -436,7 +437,7 @@ export class Tensor {
    * 
    * @param b the power by which to raise each tensor element
    */
-  pow(b: number|Tensor): Tensor {
+  pow(b: number | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b);
       const t_: tfc.Tensor = this.tensor.pow(b_.tensor);
@@ -506,7 +507,7 @@ export class Tensor {
    * @param axis (optional) the axis to sum along
    * @returns    the sum
    */
-  sum(axis?: number|number[]): Tensor {
+  sum(axis?: number | number[]): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const t_: tfc.Tensor = this.tensor.sum(axis);
       return t_;
@@ -577,7 +578,7 @@ export class Tensor {
    * @param b the x-coordinate(s) used for computing the arc tangent
    * @returns the arc tangent of each tensor element
    */
-  atan2(b: number|Tensor): Tensor {
+  atan2(b: number | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const b_: Tensor = new Tensor(b);
       const t_ = this.tensor.atan2(b_.tensor);
@@ -649,7 +650,7 @@ export class Tensor {
    * @param imag the imaginary component(s)
    * @returns    the complex tensor
    */
-  static complex(real: number|Tensor, imag: number|Tensor): Tensor {
+  static complex(real: number | Tensor, imag: number | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       let real_: tfc.Tensor;
       let imag_: tfc.Tensor;
@@ -832,7 +833,7 @@ export class Tensor {
    * @param axis (optional) the axis to concatenate along
    * @returns    the concatenated tensor
    */
-  concat(b: Tensor|Tensor[], axis?: number): Tensor {
+  concat(b: Tensor | Tensor[], axis?: number): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const tensors: tfc.Tensor[] = [this.tensor];
       if (b instanceof Tensor) {
@@ -856,7 +857,7 @@ export class Tensor {
    * @param axis (optional) the axis to reverse along
    * @returns    the reversed tensor
    */
-  reverse(axis?: number|number[]): Tensor {
+  reverse(axis?: number | number[]): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const t_: tfc.Tensor = this.tensor.reverse(axis);
       return t_;
@@ -873,7 +874,7 @@ export class Tensor {
    * @param size  (optional) the size of the slice
    * @returns     the tensor slice
    */
-  slice(begin: number|number[], size?: number|number[]): Tensor {
+  slice(begin: number | number[], size?: number | number[]): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
       const t_: tfc.Tensor = this.tensor.slice(begin, size);
       return t_;
@@ -921,6 +922,96 @@ export class Tensor {
 
     return result;
   }
+
+  // ===== Elementary Row Operations =====
+
+  /**
+   * Adds two rows of a matrix. 
+   * 
+   * @param r1 the index of the row being added to the other row.
+   * @param r2 the index of the row being added to.
+   */
+  addRows(r1: number, r2: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
+      if (this.tensor.shape.length == 2) {
+        const begin: tfc.Tensor = this.tensor.slice(0, r2);
+        const row1: tfc.Tensor = this.tensor.slice(r1, 1);
+        let row2: tfc.Tensor = this.tensor.slice(r2, 1);
+        const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.tensor.shape[0] - r2 - 1);
+        row2 = row2.add(row1);
+        return begin.concat([row2, final]);
+      }
+    })
+    const result: Tensor = new Tensor(t);
+    return result;
+  }
+
+  /**
+   * Subtracts two rows of a matrix. 
+   * 
+   * @param r1 the index of the row being subtracted from the other row.
+   * @param r2 the index of the row being subtracted from.
+   */
+  subRows(r1: number, r2: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
+      if (this.tensor.shape.length == 2) {
+        const begin: tfc.Tensor = this.tensor.slice(0, r2);
+        const row1: tfc.Tensor = this.tensor.slice(r1, 1);
+        let row2: tfc.Tensor = this.tensor.slice(r2, 1);
+        const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.tensor.shape[0] - r2 - 1);
+        row2 = row2.sub(row1);
+        return begin.concat([row2, final]);
+      }
+    })
+    const result: Tensor = new Tensor(t);
+    return result;
+  }
+
+  /**
+   * Swaps two rows of a matrix. 
+   * 
+   * @param r1 the index of the first row being swapped.
+   * @param r2 the index of the second row being swapped.
+   */
+  swapRows(r1: number, r2: number): Tensor {
+    if (r1 > r2) {
+      let temp = r1;
+      r1 = r2;
+      r2 = temp;
+    }
+    const t: tfc.Tensor = tfc.tidy(() => {
+      if (this.tensor.shape.length == 2) {
+        const begin: tfc.Tensor = this.tensor.slice(0, r1);
+        const row1: tfc.Tensor = this.tensor.slice(r1, 1);
+        const middle: tfc.Tensor = this.tensor.slice(r1 + 1, r2 - r1 - 1);
+        const row2: tfc.Tensor = this.tensor.slice(r2, 1);
+        const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.tensor.shape[0] - r2 - 1);
+        return begin.concat([row2, middle, row1, final]);
+      }
+    })
+    const result: Tensor = new Tensor(t);
+    return result;
+  }
+
+  /**
+   * Multiplies a row of a matrix by a constant.
+   * 
+   * @param r1 the index of the row being multiplied.
+   * @param c the constant multiplier. 
+   */
+  mulRow(r1: number, c: number) {
+    const t: tfc.Tensor = tfc.tidy(() => {
+      if (this.tensor.shape.length == 2) {
+        const begin: tfc.Tensor = this.tensor.slice(0, r1);
+        let row1: tfc.Tensor = this.tensor.slice(r1, 1);
+        const final: tfc.Tensor = this.tensor.slice(r1 + 1, this.tensor.shape[0] - r1 - 1);
+        row1 = row1.mul(c);
+        return begin.concat([row1, final]);
+      }
+    })
+    const result: Tensor = new Tensor(t);
+    return result;
+  }
 };
 
 /**
@@ -930,6 +1021,6 @@ export class Tensor {
  * @param dim (optional) the dimensionality of the p5.Vector used
  * @returns   the tensor
  */
-export const createTensor = function createTensorObject(x: number|number[]|p5.Vector|tfc.Tensor|Tensor, dim?: number): Tensor {
+export const createTensor = function createTensorObject(x: number | number[] | p5.Vector | tfc.Tensor | Tensor, dim?: number): Tensor {
   return new Tensor(x, dim);
 };
