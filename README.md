@@ -1,7 +1,8 @@
 # número
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 ![número](numero.png)
 > A friendly and intuitive math library for p5.js
+
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
 This project aims to bring the mathematical chops of [NumPy](https://numpy.org/) and [SymPy](https://www.sympy.org/en/index.html) to the [p5.js](https://p5js.org/) ecosystem. A few guiding principles are:
 
