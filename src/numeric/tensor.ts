@@ -1,6 +1,5 @@
 import * as tfc from '@tensorflow/tfjs-core';
 import * as p5 from 'p5';
-import { backpropagateGradients } from '@tensorflow/tfjs-core/dist/tape';
 
 
 /**
