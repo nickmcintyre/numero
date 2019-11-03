@@ -1052,6 +1052,15 @@ describe('Tensor', function () {
           expect(t3.equals(t2)).to.equal(true);
         });
       });
+
+      it('Should properly add scalar multiples of two rows', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[1, 2], [5, 8], [5, 6]]);
+          const t3 = t1.addRows(0, 1, 2);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
     });
 
     describe('subRows()', function () {
@@ -1070,6 +1079,15 @@ describe('Tensor', function () {
           const t2 = pInst.createTensor([[-4, -4], [3, 4], [5, 6]]);
           const t3 = t1.subRows(2, 0);
           expect(t3.equals(t2)).to.equal(true);
+        });
+      });
+
+      it('Should properly subtract scalar multiples of two rows', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t2 = pInst.createTensor([[-5, -6], [3, 4], [5, 6]]);
+          const t3 = t1.subRows(1, 0, 2);
+          expect(t2.equals(t3)).to.equal(true);
         });
       });
     });

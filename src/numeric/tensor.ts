@@ -914,7 +914,6 @@ export class Tensor {
       }
 
       const t_ = tfc.stack(tensors_, axis);
-
       return t_;
     });
     const result: Tensor = new Tensor(t);
@@ -927,59 +926,67 @@ export class Tensor {
   /**
    * Adds two rows of a matrix. 
    * 
-   * @param r1 the index of the row being added to the other row.
-   * @param r2 the index of the row being added to.
+   * @param r1 the index of the row being added to the other row
+   * @param r2 the index of the row being added to
+   * @param c  (optional) the constant multiplier for r1
+   * @returns  the resulting matrix
    */
-  addRows(r1: number, r2: number): Tensor {
+  addRows(r1: number, r2: number, c = 1): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      if (this.tensor.shape.length == 2) {
+      if (this.tensor.shape.length === 2) {
         const begin: tfc.Tensor = this.tensor.slice(0, r2);
         const row1: tfc.Tensor = this.tensor.slice(r1, 1);
         let row2: tfc.Tensor = this.tensor.slice(r2, 1);
         const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.tensor.shape[0] - r2 - 1);
-        row2 = row2.add(row1);
+        row2 = row2.add(row1.mul(c));
         return begin.concat([row2, final]);
       }
-    })
+    });
     const result: Tensor = new Tensor(t);
+
     return result;
   }
 
   /**
    * Subtracts two rows of a matrix. 
    * 
-   * @param r1 the index of the row being subtracted from the other row.
-   * @param r2 the index of the row being subtracted from.
+   * @param r1 the index of the row being subtracted from the other row
+   * @param r2 the index of the row being subtracted from
+   * @param c  (optional) the constant multiplier for r1
+   * @returns  the resulting matrix
    */
-  subRows(r1: number, r2: number): Tensor {
+  subRows(r1: number, r2: number, c = 1): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      if (this.tensor.shape.length == 2) {
+      if (this.tensor.shape.length === 2) {
         const begin: tfc.Tensor = this.tensor.slice(0, r2);
         const row1: tfc.Tensor = this.tensor.slice(r1, 1);
         let row2: tfc.Tensor = this.tensor.slice(r2, 1);
         const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.tensor.shape[0] - r2 - 1);
-        row2 = row2.sub(row1);
+        row2 = row2.sub(row1.mul(c));
         return begin.concat([row2, final]);
       }
-    })
+    });
     const result: Tensor = new Tensor(t);
+
     return result;
   }
 
   /**
    * Swaps two rows of a matrix. 
    * 
-   * @param r1 the index of the first row being swapped.
-   * @param r2 the index of the second row being swapped.
+   * @param r1 the index of the first row being swapped
+   * @param r2 the index of the second row being swapped
+   * @returns  the resulting matrix
    */
   swapRows(r1: number, r2: number): Tensor {
     if (r1 > r2) {
-      let temp = r1;
+      const temp = r1;
       r1 = r2;
       r2 = temp;
     }
+
     const t: tfc.Tensor = tfc.tidy(() => {
-      if (this.tensor.shape.length == 2) {
+      if (this.tensor.shape.length === 2) {
         const begin: tfc.Tensor = this.tensor.slice(0, r1);
         const row1: tfc.Tensor = this.tensor.slice(r1, 1);
         const middle: tfc.Tensor = this.tensor.slice(r1 + 1, r2 - r1 - 1);
@@ -987,28 +994,31 @@ export class Tensor {
         const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.tensor.shape[0] - r2 - 1);
         return begin.concat([row2, middle, row1, final]);
       }
-    })
+    });
     const result: Tensor = new Tensor(t);
+
     return result;
   }
 
   /**
    * Multiplies a row of a matrix by a constant.
    * 
-   * @param r1 the index of the row being multiplied.
-   * @param c the constant multiplier. 
+   * @param r1 the index of the row being multiplied
+   * @param c  the constant multiplier
+   * @returns  the resulting matrix
    */
-  mulRow(r1: number, c: number) {
+  mulRow(r1: number, c: number): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      if (this.tensor.shape.length == 2) {
+      if (this.tensor.shape.length === 2) {
         const begin: tfc.Tensor = this.tensor.slice(0, r1);
         let row1: tfc.Tensor = this.tensor.slice(r1, 1);
         const final: tfc.Tensor = this.tensor.slice(r1 + 1, this.tensor.shape[0] - r1 - 1);
         row1 = row1.mul(c);
         return begin.concat([row1, final]);
       }
-    })
+    });
     const result: Tensor = new Tensor(t);
+
     return result;
   }
 };
