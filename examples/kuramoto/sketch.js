@@ -1,12 +1,12 @@
 // Simulate the synchronization of neurons in the brain by varying their connective
 // arrangement.
 // https://researchspace.auckland.ac.nz/bitstream/handle/2292/2666/esc-tr-638-1.pdf
-const networkSize = 10;
+const networkSize = 20;
 let time = 0;
-const dt = 0.01;
+const dt = 0.05;
 let coupling;
-const couplingStrength = 5;
-const noiseLevel = 0.5;
+const couplingStrength = 7;
+const noiseLevel = 0;
 let naturalFrequency;
 let phase;
 let velocity;
@@ -15,8 +15,8 @@ let arrangement = 'Press a key 1-5';
 
 function setup() {
   createCanvas(400, 400);
-  naturalFrequency = num.Tensor.random([networkSize]).mult(TWO_PI);
-  phase = num.Tensor.zeros([networkSize]);
+  naturalFrequency = num.Tensor.random([networkSize]).mult(PI);
+  phase = num.Tensor.random([networkSize]).mult(TWO_PI);
   velocity = num.Tensor.zeros([networkSize]);
   acceleration = num.Tensor.zeros([networkSize]);
   coupling = num.Tensor.zeros([networkSize, networkSize]);
@@ -246,7 +246,7 @@ function diff(increment, zeta) {
     dTheta = num.Tensor.stack(dTheta);
     const t_ = dTheta.sin()
                       .mult(coupling)
-                      .sum(0)
+                      .sum(1)
                       .div(networkSize)
                       .add(zeta)
                       .add(naturalFrequency);
