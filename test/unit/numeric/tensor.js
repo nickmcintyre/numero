@@ -927,6 +927,39 @@ describe('Tensor', function () {
     });
   });
 
+  describe('Transformations', function () {
+    describe('pad()', function () {
+      it('Should pad with zeros', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3, 4]);
+          const t2 = pInst.createTensor([0, 1, 2, 3, 4, 0, 0]);
+          const t3 = t1.pad([[1, 2]]);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+
+      it('Should pad with constant values', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3, 4]);
+          const t2 = pInst.createTensor([2, 1, 2, 3, 4, 2, 2]);
+          const t3 = t1.pad([[1, 2]], 2);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
+    describe('reshape()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3, 4]);
+          const t2 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t3 = t1.reshape([2, 2]);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+  });
+
   describe('Slicing and Joining', function () {
     describe('concat()', function () {
       it('Should work with 1d tensors', function () {
@@ -990,22 +1023,28 @@ describe('Tensor', function () {
       });
     });
 
-    describe('pad()', function () {
-      it('Should pad with zeros', function () {
+    describe('split()', function () {
+      it('Should return an array of tensors', function () {
         num.tidy(() => {
-          const t1 = pInst.createTensor([1, 2, 3, 4]);
-          const t2 = pInst.createTensor([0, 1, 2, 3, 4, 0, 0]);
-          const t3 = t1.pad([[1, 2]]);
-          expect(t2.equals(t3)).to.equal(true);
+          const t1 = pInst.createTensor([[1, 2, 3, 4], [5, 6, 7, 8]]);
+          const t2 = pInst.createTensor([[1, 2], [5, 6]]);
+          const t3 = pInst.createTensor([[3, 4], [7, 8]]);
+          const [a, b] = t1.split(2, 1);
+          expect(t2.equals(a)).to.equal(true);
+          expect(t3.equals(b)).to.equal(true);
         });
       });
 
-      it('Should pad with constant values', function () {
+      it('Should allow axes to be specified', function () {
         num.tidy(() => {
-          const t1 = pInst.createTensor([1, 2, 3, 4]);
-          const t2 = pInst.createTensor([2, 1, 2, 3, 4, 2, 2]);
-          const t3 = t1.pad([[1, 2]], 2);
-          expect(t2.equals(t3)).to.equal(true);
+          const t1 = pInst.createTensor([[1, 2, 3, 4], [5, 6, 7, 8]]);
+          const t2 = pInst.createTensor([[1], [5]]);
+          const t3 = pInst.createTensor([[2, 3], [6, 7]]);
+          const t4 = pInst.createTensor([[4], [8]]);
+          const [a, b, c] = t1.split([1, 2, 1], 1);
+          expect(t2.equals(a)).to.equal(true);
+          expect(t3.equals(b)).to.equal(true);
+          expect(t4.equals(c)).to.equal(true);
         });
       });
     });
@@ -1034,6 +1073,34 @@ describe('Tensor', function () {
       });
     });
 
+    describe('unstack()', function () {
+      it('Should return an array of tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t2 = pInst.createTensor([1, 2]);
+          const t3 = pInst.createTensor([3, 4]);
+          const a1 = [t2, t3];
+          const a2 = t1.unstack();
+          expect(a1[0].equals(a2[0])).to.equal(true);
+          expect(a1[1].equals(a2[1])).to.equal(true);
+        });
+      });
+
+      it('Should allow axes to be specified', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t2 = pInst.createTensor([1, 3]);
+          const t3 = pInst.createTensor([2, 4]);
+          const a1 = [t2, t3];
+          const a2 = t1.unstack(1);
+          expect(a1[0].equals(a2[0])).to.equal(true);
+          expect(a1[1].equals(a2[1])).to.equal(true);
+        });
+      });
+    });
+  });
+
+  describe('Elementary Row Operations', function () {
     describe('addRows()', function () {
       it('Should properly add row 1 to row 2', function () {
         num.tidy(() => {

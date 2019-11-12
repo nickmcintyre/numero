@@ -823,6 +823,42 @@ export class Tensor {
     return result;
   }
 
+  // ===== Transformations =====
+
+  /**
+   * Pads a tensor with a given value and paddings.
+   * 
+   * @param paddings      an array prescribing how much to pad [before, after] along
+   *                      each tensor axis
+   * @param constantValue (optional) the pad value to use
+   * @returns             the padded tensor
+   */
+  pad(paddings: Array<[number, number]>, constantValue?: number): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.pad(paddings, constantValue);
+      return t_;
+    });
+    const result: Tensor = new Tensor(t);
+
+    return result;
+  }
+
+  /**
+   * Reshapes a tensor to a given shape.
+   * 
+   * @param shape an array of integers defining the output tensor shape
+   * @returns     the reshaped tensor
+   */
+  reshape(shape: number[]): Tensor {
+    const t: tfc.Tensor = tfc.tidy(() => {
+      const t_: tfc.Tensor = this.tensor.reshape(shape);
+      return t_;
+    });
+    const result: Tensor = new Tensor(t);
+
+    return result;
+  }
+
   // ===== Slicing and Joining =====
 
   /**
@@ -884,18 +920,21 @@ export class Tensor {
   }
 
   /**
-   * Pads a tensor with a given value and paddings.
+   * Splits a tensor into sub tensors.
    * 
-   * @param paddings      an array prescribing how much to pad [before, after] along
-   *                      each tensor axis
-   * @param constantValue (optional) the pad value to use
+   * @param numOrSizeSplits either an integer indicating the number of splits along the axis
+   *                        or an array of integers containing the sizes of each output tensor
+   *                        along the axis. If a number then it must evenly divide the axis
+   *                        length; otherwise the sum of sizes must match axis length.
+   * @param axis            (optional) the dimension along which to split
+   * @returns               the split tensor
    */
-  pad(paddings: Array<[number, number]>, constantValue?: number): Tensor {
-    const t: tfc.Tensor = tfc.tidy(() => {
-      const t_: tfc.Tensor = this.tensor.pad(paddings, constantValue);
+  split(numOrSizeSplits: number | number[], axis?: number): Tensor[] {
+    const t: tfc.Tensor<tfc.Rank>[] = tfc.tidy(() => {
+      const t_: tfc.Tensor<tfc.Rank>[] = this.tensor.split(numOrSizeSplits, axis);
       return t_;
     });
-    const result: Tensor = new Tensor(t);
+    const result: Tensor[] = t.map((tensor) => new Tensor(tensor));
 
     return result;
   }
@@ -905,6 +944,7 @@ export class Tensor {
    * 
    * @param tensors the tensors to be stacked
    * @param axis    (optional) the axis to stack along
+   * @returns       the stacked tensor
    */
   static stack(tensors: Tensor[], axis?: number): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
@@ -917,6 +957,22 @@ export class Tensor {
       return t_;
     });
     const result: Tensor = new Tensor(t);
+
+    return result;
+  }
+
+  /**
+   * Unstacks a rank-R tensor into an array of rank-(R-1) tensors.
+   * 
+   * @param axis (optional) the axis to unstack along
+   * @returns    the array of tensors
+   */
+  unstack(axis?: number): Tensor[] {
+    const t: tfc.Tensor<tfc.Rank>[] = tfc.tidy(() => {
+      const t_: tfc.Tensor<tfc.Rank>[] = this.tensor.unstack(axis);
+      return t_;
+    });
+    const result: Tensor[] = t.map((tensor) => new Tensor(tensor));
 
     return result;
   }
