@@ -7,5 +7,9 @@ function setup() {
     return a.dot(x, dim);
   });
 
+  print('Result as a Tensor:');
   print(b.toString());
+  print('Result as a p5.Vector:');
+  const v = b.toVector();
+  print(v.toString());
 }

@@ -99,6 +99,25 @@ describe('Tensor', function () {
       });
     });
 
+    describe('toVector()', function () {
+      it('Should work with rank 1 tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3]);
+          const a1 = pInst.createVector(1, 2, 3);
+          const a2 = t1.toVector();
+          expect(a2).to.be.an.instanceof(p5.Vector);
+          expect(a1.equals(a2)).to.equal(true);
+        });
+      });
+
+      it('Should throw an error for rank 2 and above', function () {
+        num.tidy(() => {
+          const t = pInst.createTensor([[1, 2], [3, 4]]);
+          expect(() => t.toVector()).to.throw(Error);
+        });
+      });
+    });
+
     describe('dispose()', function () {
       it('Should dispose of tensors from memory', function () {
         num.tidy(() => {
@@ -928,6 +947,17 @@ describe('Tensor', function () {
   });
 
   describe('Transformations', function () {
+    describe('flatten()', function () {
+      it('Should return a 1d tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t2 = pInst.createTensor([1, 2, 3, 4]);
+          const t3 = t1.flatten();
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
     describe('pad()', function () {
       it('Should pad with zeros', function () {
         num.tidy(() => {
