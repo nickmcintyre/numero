@@ -35,17 +35,8 @@ describe('Tensor', function () {
     it('Should accept p5.Vector arguments', function () {
       num.tidy(() => {
         const v = pInst.createVector(1, 2);
-        const dim = 2;
-        const t = pInst.createTensor(v, dim);
+        const t = pInst.createTensor(v);
         expect(t).to.be.an.instanceof(num.Tensor);
-      });
-    });
-
-    it('Should verify p5.Vector dimensions', function () {
-      num.tidy(() => {
-        const v = pInst.createVector(1, 2);
-        expect(() => pInst.createTensor(v, 1)).to.throw(Error);
-        expect(() => pInst.createTensor(v, 4)).to.throw(Error);
       });
     });
 
@@ -141,12 +132,11 @@ describe('Tensor', function () {
 
       it('Should compare a p5.Vector', function () {
         num.tidy(() => {
-          const t = pInst.createTensor([1, 0]);
+          const t = pInst.createTensor([1, 0, 0]);
           const v1 = pInst.createVector(1, 0);
           const v2 = pInst.createVector(2, 0);
-          const dim = 2;
-          expect(t.equals(v1, dim)).to.equal(true);
-          expect(t.equals(v2, dim)).to.equal(false);
+          expect(t.equals(v1)).to.equal(true);
+          expect(t.equals(v2)).to.equal(false);
         });
       });
 
@@ -235,11 +225,10 @@ describe('Tensor', function () {
 
       it('Should add a p5.Vector', function () {
         num.tidy(() => {
-          const t1 = pInst.createTensor([1, 2]);
-          const v = pInst.createVector(3, 4);
-          const t2 = pInst.createTensor([4, 6]);
-          const dim = 2;
-          const t3 = t1.add(v, dim);
+          const t1 = pInst.createTensor([1, 2, 3]);
+          const v = pInst.createVector(4, 5, 6);
+          const t2 = pInst.createTensor([5, 7, 9]);
+          const t3 = t1.add(v);
           expect(t2.equals(t3)).to.equal(true);
         });
       });
@@ -298,11 +287,10 @@ describe('Tensor', function () {
 
       it('Should subtract a p5.Vector', function () {
         num.tidy(() => {
-          const t1 = pInst.createTensor([3, 4]);
+          const t1 = pInst.createTensor([4, 5, 6]);
           const v = pInst.createVector(1, 2);
-          const t2 = pInst.createTensor([2, 2]);
-          const dim = 2;
-          const t3 = t1.sub(v, dim);
+          const t2 = pInst.createTensor([3, 3, 6]);
+          const t3 = t1.sub(v);
           expect(t2.equals(t3)).to.equal(true);
         });
       });
@@ -361,11 +349,10 @@ describe('Tensor', function () {
 
       it('Should multiply by a p5.Vector', function () {
         num.tidy(() => {
-          const t1 = pInst.createTensor([3, 4]);
+          const t1 = pInst.createTensor([3, 4, 5]);
           const v = pInst.createVector(1, 2);
-          const t2 = pInst.createTensor([3, 8]);
-          const dim = 2;
-          const t3 = t1.mult(v, dim);
+          const t2 = pInst.createTensor([3, 8, 0]);
+          const t3 = t1.mult(v);
           expect(t2.equals(t3)).to.equal(true);
         });
       });
@@ -424,11 +411,10 @@ describe('Tensor', function () {
 
       it('Should divide by a p5.Vector', function () {
         num.tidy(() => {
-          const t1 = pInst.createTensor([2, 4]);
-          const v = pInst.createVector(2, 2);
-          const t2 = pInst.createTensor([1, 2]);
-          const dim = 2;
-          const t3 = t1.div(v, dim);
+          const t1 = pInst.createTensor([2, 4, 6]);
+          const v = pInst.createVector(2, 2, 2);
+          const t2 = pInst.createTensor([1, 2, 3]);
+          const t3 = t1.div(v);
           expect(t2.equals(t3)).to.equal(true);
         });
       });
@@ -476,11 +462,10 @@ describe('Tensor', function () {
 
       it('Should dot with a p5.Vector', function () {
         num.tidy(() => {
-          const a = pInst.createTensor([[2, 0], [0, 2]]);
-          const x = pInst.createVector(1, 2);
-          const b = pInst.createTensor([2, 4]);
-          const dim = 2;
-          const c = a.dot(x, dim);
+          const a = pInst.createTensor([[2, 0, 0], [0, 2, 0], [0, 0, 2]]);
+          const x = pInst.createVector(1, 2, 0);
+          const b = pInst.createTensor([2, 4, 0]);
+          const c = a.dot(x);
           expect(b.equals(c)).to.equal(true);
         });
       });

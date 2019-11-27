@@ -15,20 +15,15 @@ export class Tensor {
   /**
    * Constructs a new tensor object.
    * 
-   * @param x   the numerical object used to create the tensor
-   * @param dim (optional) the dimensionality of the p5.Vector used
+   * @param x the numerical object used to create the tensor
    */
-  constructor(x: number | number[] | p5.Vector | tfc.Tensor | Tensor, dim?: number) {
+  constructor(x: number | number[] | p5.Vector | tfc.Tensor | Tensor) {
     if (typeof x === 'number') {
       this.tensor = tfc.scalar(x);
     } else if (x instanceof Array) {
       this.tensor = tfc.tensor(x);
     } else if (x instanceof p5.Vector) {
-      if (!(dim >= 2 && dim <= 3)) {
-        throw new Error('p5.Vectors must be 2 or 3-dimensional.');
-      }
-
-      const v = x.array().slice(0, dim);
+      const v = x.array();
       this.tensor = tfc.tensor(v);
     } else if (x instanceof Tensor) {
       this.tensor = x.tensor;
@@ -100,10 +95,9 @@ export class Tensor {
    * Equality check against a Number, p5.Vector, or Tensor.
    * 
    * @param b   the object to be compared
-   * @param dim (optional) the dimensionality of the p5.Vector used
    * @returns   whether the objects are equals
    */
-  equals(b: number | p5.Vector | Tensor, dim?: number): boolean {
+  equals(b: number | p5.Vector | Tensor): boolean {
     // FIXME: this feels like a hack
     if (b instanceof Tensor) {
       if (b.isComplex && this.isComplex) {
@@ -115,7 +109,7 @@ export class Tensor {
 
     let result: boolean = false;
     tfc.tidy(() => {
-      const b_: Tensor = new Tensor(b, dim);
+      const b_: Tensor = new Tensor(b);
       if (this.tensor.rank !== b_.tensor.rank) {
         throw new Error('Both tensors must have the same rank.');
       } else {
@@ -192,9 +186,9 @@ export class Tensor {
    * @param b the tensor to be added
    * @returns the sum of the tensors
    */
-  add(b: number | p5.Vector | Tensor, dim?: number): Tensor {
+  add(b: number | p5.Vector | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      const b_: Tensor = new Tensor(b, dim);
+      const b_: Tensor = new Tensor(b);
       return this.tensor.add(b_.tensor);
     });
     const result = new Tensor(t);
@@ -211,12 +205,11 @@ export class Tensor {
    * Subtracts two tensors element-wise.
    * 
    * @param b   the tensor to be subtracted
-   * @param dim (optional) the number of dimensions in a p5.Vector
    * @returns   the difference of the tensors
    */
-  sub(b: number | p5.Vector | Tensor, dim?: number): Tensor {
+  sub(b: number | p5.Vector | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      const b_: Tensor = new Tensor(b, dim);
+      const b_: Tensor = new Tensor(b);
       return this.tensor.sub(b_.tensor);
     });
     const result: Tensor = new Tensor(t);
@@ -235,9 +228,9 @@ export class Tensor {
    * @param b the tensor to be multiplied
    * @returns the product of the tensors
    */
-  mult(b: number | p5.Vector | Tensor, dim?: number): Tensor {
+  mult(b: number | p5.Vector | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      const b_: Tensor = new Tensor(b, dim);
+      const b_: Tensor = new Tensor(b);
       return this.tensor.mul(b_.tensor);
     });
     const result: Tensor = new Tensor(t);
@@ -254,12 +247,11 @@ export class Tensor {
    * Divides two tensors element-wise.
    * 
    * @param b   the tensor to be divided by
-   * @param dim (optional) the number of dimensions in a p5.Vector
    * @returns   the quotient of the tensors
    */
-  div(b: number | p5.Vector | Tensor, dim?: number): Tensor {
+  div(b: number | p5.Vector | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      const b_: Tensor = new Tensor(b, dim);
+      const b_: Tensor = new Tensor(b);
       return this.tensor.div(b_.tensor);
     });
     const result: Tensor = new Tensor(t);
@@ -277,12 +269,11 @@ export class Tensor {
    * Note: Only works when both operands are rank 1 or 2.
    * 
    * @param b   the matrix or vector to be dotted
-   * @param dim (optional) the number of dimensions in a p5.Vector
    * @returns   the dot product of the tensors
    */
-  dot(b: p5.Vector | Tensor, dim?: number): Tensor {
+  dot(b: p5.Vector | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      const b_: Tensor = new Tensor(b, dim);
+      const b_: Tensor = new Tensor(b);
       return this.tensor.dot(b_.tensor);
     });
     const result: Tensor = new Tensor(t);
@@ -1069,9 +1060,8 @@ export class Tensor {
  * Creates a new Tensor (the datatype for storing tensors).
  *
  * @param x   the numerical object used to create the tensor
- * @param dim (optional) the dimensionality of the p5.Vector used
  * @returns   the tensor
  */
-export const createTensor = function createTensorObject(x: number | number[] | p5.Vector | tfc.Tensor | Tensor, dim?: number): Tensor {
-  return new Tensor(x, dim);
+export const createTensor = function createTensorObject(x: number | number[] | p5.Vector | tfc.Tensor | Tensor): Tensor {
+  return new Tensor(x);
 };
