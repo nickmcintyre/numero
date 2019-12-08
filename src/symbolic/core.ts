@@ -1,4 +1,4 @@
-import * as algebrite from 'algebrite';
+import * as alg from 'algebrite';
 
 
-export const { run } = algebrite;
+export const { run } = alg;
