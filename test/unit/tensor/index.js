@@ -1117,6 +1117,13 @@ describe('Tensor', function () {
 
   describe('Elementary Row Operations', function () {
     describe('addRows()', function () {
+      it('Should throw an error for rank 3 and above', function () {
+        num.tidy(() => {
+          const t = pInst.createTensor([[[1, 2]], [[3, 4]], [[5, 6]]]);
+          expect(() => t.addRows(1, 2)).to.throw(Error);
+        });
+      });
+
       it('Should properly add row 1 to row 2', function () {
         num.tidy(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
@@ -1146,6 +1153,13 @@ describe('Tensor', function () {
     });
 
     describe('subRows()', function () {
+      it('Should throw an error for rank 3 and above', function () {
+        num.tidy(() => {
+          const t = pInst.createTensor([[[1, 2]], [[3, 4]], [[5, 6]]]);
+          expect(() => t.subRows(1, 2)).to.throw(Error);
+        });
+      });
+
       it('Should properly subtract row 1 from row 2', function () {
         num.tidy(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
@@ -1175,6 +1189,13 @@ describe('Tensor', function () {
     });
 
     describe('swapRows()', function () {
+      it('Should throw an error for rank 3 and above', function () {
+        num.tidy(() => {
+          const t = pInst.createTensor([[[1, 2]], [[3, 4]], [[5, 6]]]);
+          expect(() => t.swapRows(1, 2)).to.throw(Error);
+        });
+      });
+
       it('Should properly swap row 1 and row 2', function () {
         num.tidy(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
@@ -1195,6 +1216,13 @@ describe('Tensor', function () {
     });
 
     describe('mulRow()', function () {
+      it('Should throw an error for rank 3 and above', function () {
+        num.tidy(() => {
+          const t = pInst.createTensor([[[1, 2]], [[3, 4]], [[5, 6]]]);
+          expect(() => t.mulRow(1, 3)).to.throw(Error);
+        });
+      });
+
       it('Should properly multiply row 1 by 3', function () {
         num.tidy(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);

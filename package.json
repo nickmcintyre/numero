@@ -1,13 +1,13 @@
 {
   "name": "numero",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A friendly and intuitive math library for p5.js",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "test": "mocha-chrome test/test.html",
     "dev": "webpack --watch --config webpack.config.js",
-    "all": "yarn run build && yarn run test"
+    "all": "npm run build && npm run test"
   },
   "repository": "https://github.com/nickmcintyre/numero.git",
   "author": "Nick McIntyre <nick@mcintyre.io>",
