@@ -203,8 +203,8 @@ export class Tensor {
   /**
    * Subtracts two tensors element-wise.
    *
-   * @param b   the tensor to be subtracted
-   * @returns   the difference of the tensors
+   * @param b the tensor to be subtracted
+   * @returns the difference of the tensors
    */
   sub(b: number | p5.Vector | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
@@ -245,8 +245,8 @@ export class Tensor {
   /**
    * Divides two tensors element-wise.
    *
-   * @param b   the tensor to be divided by
-   * @returns   the quotient of the tensors
+   * @param b the tensor to be divided by
+   * @returns the quotient of the tensors
    */
   div(b: number | p5.Vector | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
@@ -267,8 +267,8 @@ export class Tensor {
    * Calculates the dot product of two matrices and/or vectors.
    * Note: Only works when both operands are rank 1 or 2.
    *
-   * @param b   the matrix or vector to be dotted
-   * @returns   the dot product of the tensors
+   * @param b the matrix or vector to be dotted
+   * @returns the dot product of the tensors
    */
   dot(b: p5.Vector | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
@@ -415,6 +415,7 @@ export class Tensor {
    * reciprocals) in large quantities.
    *
    * @param b the power by which to raise each tensor element
+   * @returns the exponentiated tensor
    */
   pow(b: number | Tensor): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
