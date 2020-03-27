@@ -3,6 +3,8 @@ import * as p5 from 'p5';
 import { Tensor } from './index';
 
 
+// ===== Calculation =====
+
 /**
  * Adds two tensors element-wise.
  *
@@ -233,4 +235,104 @@ export const sq = function tensorSq(t: Tensor): Tensor {
  */
 export const sqrt = function tensorSqrt(t: Tensor): Tensor {
   return t.sqrt();
+};
+
+// ===== Reduction =====
+
+/**
+ * Calculates the sum of tensor elements along an axis.
+ *
+ * @param t    the input tensor
+ * @param axis (optional) the axis to sum along
+ * @returns    the sum
+ */
+export const sum = function tensorSum(t: Tensor, axis?: number | number[]): Tensor {
+  return t.sum(axis);
+};
+
+// ===== Trigonometry =====
+
+/**
+ * The inverse of cos(), returns the arc cosine of each tensor element.
+ * This function expects the values in the range of -1 to 1 and values
+ * are returned in the range 0 to PI (3.1415927).
+ *
+ * @param t the input tensor
+ * @returns the arc cosine of each tensor element
+ */
+export const acos = function tensorAcos(t: Tensor): Tensor {
+  return t.acos();
+};
+
+/**
+ * The inverse of sin(), returns the arc sine of a each tensor element.
+ * This function expects the values in the range of -1 to 1 and values
+ * are returned in the range -PI/2 to PI/2.
+ *
+ * @param t the input tensor
+ * @returns the arc sine of each tensor element
+ */
+export const asin = function tensorAsin(t: Tensor): Tensor {
+  return t.asin();
+};
+
+/**
+ * The inverse of tan(), returns the arc tangent of each tensor element.
+ * This function expects the values in the range of -Infinity to Infinity
+ * (exclusive) and values are returned in the range -PI/2 to PI/2.
+ *
+ * @param t the input tensor
+ * @returns the arc tangent of each tensor element
+ */
+export const atan = function tensorAtan(t: Tensor): Tensor {
+  return t.atan();
+};
+
+/**
+ * Calculates the angle (in radians) from a specified point to the
+ * coordinate origin as measured from the positive x-axis. Values are
+ * returned as a float in the range from PI to -PI.
+ *
+ * @param t the input tensor
+ * @param b the x-coordinate(s) used for computing the arc tangent
+ * @returns the arc tangent of each tensor element
+ */
+export const atan2 = function tensorAtan2(t: Tensor, b: number | Tensor): Tensor {
+  return t.atan2(b);
+};
+
+/**
+ * Calculates the cosine of each tensor element. This function
+ * does not yet take into account the current angleMode.
+ * Values are returned in the range -1 to 1.
+ *
+ * @param t the input tensor
+ * @returns the cosine of each tensor element
+ */
+export const cos = function tensorCos(t: Tensor): Tensor {
+  return t.cos();
+};
+
+/**
+ * Calculates the sine of each tensor element. This function
+ * does not yet take into account the current angleMode.
+ * Values are returned in the range -1 to 1.
+ *
+ * @param t the input tensor
+ * @returns the sine of each tensor element
+ */
+export const sin = function tensorSin(t: Tensor): Tensor {
+  return t.sin();
+};
+
+/**
+ * Calculates the tangent of each tensor element. This function
+ * does not yet take into account the current angleMode.
+ * Values are returned in the range of all real numbers.
+ *
+ * @param t the input tensor
+ * @returns the tangent of each tensor element
+ */
+export const tan = function tensorTan(t: Tensor): Tensor {
+  return t.tan();
 };

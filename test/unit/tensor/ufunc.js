@@ -9,7 +9,6 @@ describe('Universal Functions', function () {
   });
 
   afterEach(function () {
-    num.tfc.disposeVariables();
     pInst.remove();
   });
 
@@ -430,6 +429,129 @@ describe('Universal Functions', function () {
           const t1 = pInst.createTensor([1, 4, 9]);
           const t2 = pInst.createTensor([1, 2, 3]);
           const t3 = num.sqrt(t1);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+  });
+
+  describe('Reduction', function () {
+    describe('sum()', function () {
+      it('Should return a tensor', function () {
+        const t1 = pInst.createTensor([1, 2, 3]);
+        const t2 = pInst.createTensor(6);
+        const t3 = num.sum(t1);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+
+      it('Should allow axes to be specified', function () {
+        const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+        const t2 = pInst.createTensor([3, 7]);
+        const t3 = num.sum(t1, 1);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+  });
+
+  describe('Trigonometry', function () {
+    describe('acos()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor(0);
+          const t2 = pInst.createTensor(Math.PI / 2);
+          const t3 = num.acos(t1);
+          expect(t2.equals(t3)).to.equal(true);
+
+          const t4 = pInst.createTensor(-1);
+          const t5 = pInst.createTensor(Math.PI);
+          const t6 = t4.acos();
+          expect(t5.equals(t6)).to.equal(true);
+        });
+      });
+    });
+
+    describe('asin()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor(1);
+          const t2 = pInst.createTensor(Math.PI / 2);
+          const t3 = num.asin(t1);
+          expect(t2.equals(t3)).to.equal(true);
+
+          const t4 = pInst.createTensor(-1);
+          const t5 = pInst.createTensor(-Math.PI / 2);
+          const t6 = num.asin(t4);
+          expect(t5.equals(t6)).to.equal(true);
+        });
+      });
+    });
+
+    describe('atan()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const a = Math.PI + Math.PI / 3;
+          const t1 = pInst.createTensor(a);
+          const t2 = pInst.createTensor(Math.atan(a));
+          const t3 = num.atan(t1);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
+    describe('atan2()', function () {
+      it('Should accept Number arguments', function () {
+        num.tidy(() => {
+          const x = 15;
+          const y = 90;
+          const t1 = pInst.createTensor(y);
+          const t2 = pInst.createTensor(Math.atan2(y, x));
+          const t3 = num.atan2(t1, x);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+
+      it('Should accept Tensor arguments', function () {
+        num.tidy(() => {
+          const x = 15;
+          const y = 90;
+          const t1 = pInst.createTensor(y);
+          const t2 = pInst.createTensor(Math.atan2(y, x));
+          const t3 = pInst.createTensor(x);
+          const t4 = num.atan2(t1, t3);
+          expect(t2.equals(t4)).to.equal(true);
+        });
+      });
+    });
+
+    describe('cos()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor(Math.PI);
+          const t2 = pInst.createTensor(-1);
+          const t3 = num.cos(t1);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
+    describe('sin()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor(Math.PI / 2);
+          const t2 = pInst.createTensor(1);
+          const t3 = num.sin(t1);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
+    describe('tan()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const a = 1;
+          const t1 = pInst.createTensor(a);
+          const t2 = pInst.createTensor(Math.tan(a));
+          const t3 = num.tan(t1);
           expect(t2.equals(t3)).to.equal(true);
         });
       });

@@ -9,7 +9,6 @@ describe('Tensor', function () {
   });
 
   afterEach(function () {
-    num.tfc.disposeVariables();
     pInst.remove();
   });
 
