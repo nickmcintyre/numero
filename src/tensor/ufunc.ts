@@ -336,3 +336,131 @@ export const sin = function tensorSin(t: Tensor): Tensor {
 export const tan = function tensorTan(t: Tensor): Tensor {
   return t.tan();
 };
+
+// ===== Creation Methods =====
+
+/**
+ * Creates a complex tensor with the given real and imaginary
+ * components.
+ *
+ * @param real the real component(s)
+ * @param imag the imaginary component(s)
+ * @returns    the complex tensor
+ */
+export const complex = function tensorComplex(
+  real: number | Tensor,
+  imag: number | Tensor,
+): Tensor {
+  return Tensor.complex(real, imag);
+};
+
+/**
+ * Gets a copy of the tensor, returns a Tensor object.
+ *
+ * @param t the input tensor
+ * @returns a copy of the tensor
+ */
+export const copy = function tensorCopy(t: Tensor): Tensor {
+  return t.copy();
+};
+
+/**
+ * Creates an identity matrix with the given dimensions.
+ *
+ * @param numRows the number of rows
+ * @param numCols (optional) the number of columns
+ * @returns       the identity matrix
+ */
+export const eye = function tensorEye(numRows: number, numCols?: number): Tensor {
+  return Tensor.eye(numRows, numCols);
+};
+
+
+/**
+ * Creates a tensor filled with a given value.
+ *
+ * @param shape the shape of the tensor
+ * @param value the value to fill the tensor with
+ * @returns     the filled tensor
+ */
+export const fill = function tensorFill(shape: number[], value: number): Tensor {
+  return Tensor.fill(shape, value);
+};
+
+/**
+ * Creates a tensor filled with evenly spaced values.
+ *
+ * @param min the lower bound (inclusive)
+ * @param max the upper bound (inclusive)
+ * @param num the number of values to generate
+ * @returns   the filled tensor
+ */
+export const linspace = function tensorLinspace(
+  min: number,
+  max: number,
+  num: number,
+): Tensor {
+  return Tensor.linspace(min, max, num);
+};
+
+/**
+ * Creates a tensor filled with ones.
+ *
+ * @param shape the shape of the tensor
+ * @returns     the filled tensor
+ */
+export const ones = function tensorOnes(shape: number[]): Tensor {
+  return Tensor.ones(shape);
+};
+
+/**
+ * Creates a tensor filled with uniformly distributed random numbers.
+ *
+ * @param shape the shape of the tensor
+ * @returns     the filled tensor
+ */
+export const random = function tensorRandom(shape: number[]): Tensor {
+  return Tensor.random(shape);
+};
+
+/**
+ * Creates a tensor filled with normally distributed random numbers.
+ *
+ * @param shape the shape of tensor
+ * @param mean  (optional) the mean
+ * @param sd    (optional) the standard deviation
+ * @returns     the filled tensor
+ */
+export const randomGaussian = function tensorRandomGaussian(
+  shape: number[],
+  mean?: number,
+  sd?: number,
+): Tensor {
+  return Tensor.randomGaussian(shape, mean, sd);
+};
+
+/**
+ * Creates a tensor filled with numbers in the range provided.
+ *
+ * @param min  the lower bound (inclusive)
+ * @param max  the upper bound (exclusive)
+ * @param step (optional) the integer spacing between values
+ * @returns    the filled tensor
+ */
+export const range = function tensorRange(
+  min: number,
+  max: number,
+  step?: number,
+): Tensor {
+  return Tensor.range(min, max, step);
+};
+
+/**
+ * Creates a tensor filled with zeros.
+ *
+ * @param shape the shape of the tensor
+ * @returns     the filled tensor
+ */
+export const zeros = function tensorZeros(shape: number[]): Tensor {
+  return Tensor.zeros(shape);
+};

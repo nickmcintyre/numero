@@ -66,21 +66,21 @@ function setParameters() {
 function setTensors() {
   const shape = [params.m, params.n];
   // Microscopic density
-  state.n0 = fragment(num.Tensor.ones(shape));
-  state.nN = fragment(num.Tensor.ones(shape));
-  state.nS = fragment(num.Tensor.ones(shape));
-  state.nE = fragment(num.Tensor.ones(shape));
-  state.nW = fragment(num.Tensor.ones(shape));
-  state.nNE = fragment(num.Tensor.ones(shape));
-  state.nSE = fragment(num.Tensor.ones(shape));
-  state.nNW = fragment(num.Tensor.ones(shape));
-  state.nSW = fragment(num.Tensor.ones(shape));
+  state.n0 = fragment(num.ones(shape));
+  state.nN = fragment(num.ones(shape));
+  state.nS = fragment(num.ones(shape));
+  state.nE = fragment(num.ones(shape));
+  state.nW = fragment(num.ones(shape));
+  state.nNE = fragment(num.ones(shape));
+  state.nSE = fragment(num.ones(shape));
+  state.nNW = fragment(num.ones(shape));
+  state.nSW = fragment(num.ones(shape));
   // Macroscopic properties
-  state.rho = fragment(num.Tensor.ones(shape));
-  state.ux = fragment(num.Tensor.zeros(shape));
-  state.uy = fragment(num.Tensor.ones(shape).mult(params.u0));
+  state.rho = fragment(num.ones(shape));
+  state.ux = fragment(num.zeros(shape));
+  state.uy = fragment(num.ones(shape).mult(params.u0));
   // Barriers
-  barriers = fragment(num.Tensor.zeros(shape));
+  barriers = fragment(num.zeros(shape));
 }
 
 // Break up a 2D tensor into pieces
@@ -128,7 +128,7 @@ function equilibriate(piece, newux, newuy, newrho) {
   const result = num.tidy(() => {
     // Helpful values
     const { one36th, one9th, four9ths } = params;
-    const ones = num.Tensor.ones(state.n0[piece].tensor.shape);
+    const ones = num.ones(state.n0[piece].tensor.shape);
     const ux3 = newux * 3;
     const uy3 = newuy * 3;
     const ux2 = newux ** 2;
@@ -315,7 +315,7 @@ function micro() {
   const result = num.tidy(() => {
     // Helpful values
     const shape = [params.m - 2, params.n - 2];
-    const ones = num.Tensor.ones(shape);
+    const ones = num.ones(shape);
     const omega = 1 / (3 * params.viscosity + 0.5);
     const { one36th, one9th, four9ths } = params;
     const one36thrho = rho.middle.mult(one36th);
@@ -447,7 +447,7 @@ function micro() {
 function outlet() {
   const result = num.tidy(() => {
     const { m } = params;
-    const eye = num.Tensor.eye(m);
+    const eye = num.eye(m);
     const shiftBottom = eye
                         .slice([0], [m - 1])
                         .concat(eye.slice([m - 2], [1]));
@@ -497,7 +497,7 @@ function stream() {
 
   const result = num.tidy(() => {
     const m = params.m - 2;
-    const eye = num.Tensor.eye(m - 1);
+    const eye = num.eye(m - 1);
     const upperShift = eye.pad([[0, 1], [1, 0]]);
     const lowerShift = eye.pad([[1, 0], [0, 1]]);
 

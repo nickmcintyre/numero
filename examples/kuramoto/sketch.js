@@ -15,11 +15,11 @@ let arrangement = 'Press a key 1-5';
 
 function setup() {
   createCanvas(400, 400);
-  naturalFrequency = num.Tensor.random([networkSize]).mult(PI);
-  phase = num.Tensor.random([networkSize]).mult(TWO_PI);
-  velocity = num.Tensor.zeros([networkSize]);
-  acceleration = num.Tensor.zeros([networkSize]);
-  coupling = num.Tensor.zeros([networkSize, networkSize]);
+  naturalFrequency = num.random([networkSize]).mult(PI);
+  phase = num.random([networkSize]).mult(TWO_PI);
+  velocity = num.zeros([networkSize]);
+  acceleration = num.zeros([networkSize]);
+  coupling = num.zeros([networkSize, networkSize]);
 }
 
 function draw() {
@@ -204,7 +204,7 @@ function step() {
     const oldPhase = phase.copy();
     const oldVelocity = velocity.copy();
 
-    const zeros = num.Tensor.zeros([networkSize]);
+    const zeros = num.zeros([networkSize]);
     const k1 = diff(zeros, zeta).mult(dt);
     const k2 = diff(k1.div(2), zeta).mult(dt);
     const k3 = diff(k2.div(2), zeta).mult(dt);
