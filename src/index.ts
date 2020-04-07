@@ -38,6 +38,9 @@ import {
   randomGaussian,
   range,
   zeros,
+  flatten,
+  pad,
+  reshape,
 } from './tensor/ufunc';
 
 
@@ -84,6 +87,9 @@ export {
   randomGaussian,
   range,
   zeros,
+  flatten,
+  pad,
+  reshape,
   tfc,
   tidy,
   Tensor,

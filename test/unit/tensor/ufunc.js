@@ -731,4 +731,48 @@ describe('Universal Functions', function () {
       });
     });
   });
+
+  describe('Transformations', function () {
+    describe('flatten()', function () {
+      it('Should return a 1d tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t2 = pInst.createTensor([1, 2, 3, 4]);
+          const t3 = num.flatten(t1);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
+    describe('pad()', function () {
+      it('Should pad with zeros', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3, 4]);
+          const t2 = pInst.createTensor([0, 1, 2, 3, 4, 0, 0]);
+          const t3 = num.pad(t1, [[1, 2]]);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+
+      it('Should pad with constant values', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3, 4]);
+          const t2 = pInst.createTensor([2, 1, 2, 3, 4, 2, 2]);
+          const t3 = num.pad(t1, [[1, 2]], 2);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
+    describe('reshape()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3, 4]);
+          const t2 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t3 = num.reshape(t1, [2, 2]);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+  });
 });

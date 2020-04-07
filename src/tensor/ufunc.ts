@@ -464,3 +464,46 @@ export const range = function tensorRange(
 export const zeros = function tensorZeros(shape: number[]): Tensor {
   return Tensor.zeros(shape);
 };
+
+// ===== Transformations =====
+
+/**
+ * Flattens this tensor to one dimension.
+ *
+ * @param t the input tensor
+ * @returns the flattened tensor
+ */
+export const flatten = function tensorFlatten(t: Tensor): Tensor {
+  return t.flatten();
+};
+
+/**
+ * Pads a tensor with a given value and paddings.
+ *
+ * @param t             the input tensor
+ * @param paddings      an array prescribing how much to pad [before, after] along
+ *                      each tensor axis
+ * @param constantValue (optional) the pad value to use
+ * @returns             the padded tensor
+ */
+export const pad = function tensorPad(
+  t: Tensor,
+  paddings: Array<[number, number]>,
+  constantValue?: number,
+): Tensor {
+  return t.pad(paddings, constantValue);
+};
+
+/**
+ * Reshapes a tensor to a given shape.
+ *
+ * @param t     the input tensor
+ * @param shape an array of integers defining the output tensor shape
+ * @returns     the reshaped tensor
+ */
+export const reshape = function tensorReshape(
+  t: Tensor,
+  shape: number[],
+): Tensor {
+  return t.reshape(shape);
+};
