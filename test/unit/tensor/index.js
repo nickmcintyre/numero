@@ -995,6 +995,17 @@ describe('Tensor', function () {
           expect(t3.equals(t4)).to.equal(true);
         });
       });
+
+      it('Should work with an array of tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [10, 20]]);
+          const t2 = pInst.createTensor([[3, 4], [30, 40]]);
+          const t3 = pInst.createTensor([[5, 6], [50, 60]]);
+          const t4 = pInst.createTensor([[1, 2, 3, 4, 5, 6], [10, 20, 30, 40, 50, 60]]);
+          const t5 = t1.concat([t2, t3], 1);
+          expect(t4.equals(t5)).to.equal(true);
+        });
+      });
     });
 
     describe('reverse()', function () {

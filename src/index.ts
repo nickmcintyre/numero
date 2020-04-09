@@ -41,6 +41,12 @@ import {
   flatten,
   pad,
   reshape,
+  concat,
+  reverse,
+  slice,
+  split,
+  stack,
+  unstack,
 } from './tensor/ufunc';
 
 
@@ -90,6 +96,12 @@ export {
   flatten,
   pad,
   reshape,
+  concat,
+  reverse,
+  slice,
+  split,
+  stack,
+  unstack,
   tfc,
   tidy,
   Tensor,

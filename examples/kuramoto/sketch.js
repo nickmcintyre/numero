@@ -243,7 +243,7 @@ function diff(increment, zeta) {
       dTheta[i] = phase.sub(increment);
     }
 
-    dTheta = num.Tensor.stack(dTheta);
+    dTheta = num.stack(dTheta);
     const t_ = dTheta.sin()
                       .mult(coupling)
                       .sum(1)

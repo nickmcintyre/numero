@@ -775,4 +775,151 @@ describe('Universal Functions', function () {
       });
     });
   });
+
+  describe('Slicing and Joining', function () {
+    describe('concat()', function () {
+      it('Should fail with too few tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2]);
+          expect(() => num.concat([t1])).to.throw(Error);
+        });
+      });
+
+      it('Should work with 1d tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2]);
+          const t2 = pInst.createTensor([3, 4]);
+          const t3 = pInst.createTensor([1, 2, 3, 4]);
+          const t4 = num.concat([t1, t2]);
+          expect(t3.equals(t4)).to.equal(true);
+        });
+      });
+
+      it('Should work with nd tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [10, 20]]);
+          const t2 = pInst.createTensor([[3, 4], [30, 40]]);
+          const t3 = pInst.createTensor([[1, 2, 3, 4], [10, 20, 30, 40]]);
+          const t4 = num.concat([t1, t2], 1);
+          expect(t3.equals(t4)).to.equal(true);
+        });
+      });
+    });
+
+    describe('reverse()', function () {
+      it('Should work with 1d tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3]);
+          const t2 = pInst.createTensor([3, 2, 1]);
+          const t3 = num.reverse(t1);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+
+      it('Should work with nd tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t2 = pInst.createTensor([[2, 1], [4, 3]]);
+          const t3 = num.reverse(t1, 1);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
+    describe('slice()', function () {
+      it('Should work with 1d tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2, 3, 4]);
+          const t2 = pInst.createTensor([2, 3]);
+          const t3 = num.slice(t1, [1], [2]);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+
+      it('Should work with nd tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t2 = pInst.createTensor([[3, 4]]);
+          const t3 = num.slice(t1, [1, 0], [1, 2]);
+          expect(t2.equals(t3)).to.equal(true);
+        });
+      });
+    });
+
+    describe('split()', function () {
+      it('Should return an array of tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2, 3, 4], [5, 6, 7, 8]]);
+          const t2 = pInst.createTensor([[1, 2], [5, 6]]);
+          const t3 = pInst.createTensor([[3, 4], [7, 8]]);
+          const [a, b] = num.split(t1, 2, 1);
+          expect(t2.equals(a)).to.equal(true);
+          expect(t3.equals(b)).to.equal(true);
+        });
+      });
+
+      it('Should allow axes to be specified', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2, 3, 4], [5, 6, 7, 8]]);
+          const t2 = pInst.createTensor([[1], [5]]);
+          const t3 = pInst.createTensor([[2, 3], [6, 7]]);
+          const t4 = pInst.createTensor([[4], [8]]);
+          const [a, b, c] = num.split(t1, [1, 2, 1], 1);
+          expect(t2.equals(a)).to.equal(true);
+          expect(t3.equals(b)).to.equal(true);
+          expect(t4.equals(c)).to.equal(true);
+        });
+      });
+    });
+
+    describe('stack()', function () {
+      it('Should return a tensor', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2]);
+          const t2 = pInst.createTensor([3, 4]);
+          const t3 = pInst.createTensor([5, 6]);
+          const t4 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
+          const t5 = num.stack([t1, t2, t3]);
+          expect(t4.equals(t5)).to.equal(true);
+        });
+      });
+
+      it('Should allow axes to be specified', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([1, 2]);
+          const t2 = pInst.createTensor([3, 4]);
+          const t3 = pInst.createTensor([5, 6]);
+          const t4 = pInst.createTensor([[1, 3, 5], [2, 4, 6]]);
+          const t5 = num.stack([t1, t2, t3], 1);
+          expect(t4.equals(t5)).to.equal(true);
+        });
+      });
+    });
+
+    describe('unstack()', function () {
+      it('Should return an array of tensors', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t2 = pInst.createTensor([1, 2]);
+          const t3 = pInst.createTensor([3, 4]);
+          const a1 = [t2, t3];
+          const a2 = num.unstack(t1);
+          expect(a1[0].equals(a2[0])).to.equal(true);
+          expect(a1[1].equals(a2[1])).to.equal(true);
+        });
+      });
+
+      it('Should allow axes to be specified', function () {
+        num.tidy(() => {
+          const t1 = pInst.createTensor([[1, 2], [3, 4]]);
+          const t2 = pInst.createTensor([1, 3]);
+          const t3 = pInst.createTensor([2, 4]);
+          const a1 = [t2, t3];
+          const a2 = num.unstack(t1, 1);
+          expect(a1[0].equals(a2[0])).to.equal(true);
+          expect(a1[1].equals(a2[1])).to.equal(true);
+        });
+      });
+    });
+  });
 });

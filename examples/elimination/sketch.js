@@ -16,6 +16,7 @@ function setup() {
     a = a.mulRow(2, -1);
     a = a.subRows(1, 0);
     a = a.mulRow(0, 0.5);
+
     return a;
   });
 

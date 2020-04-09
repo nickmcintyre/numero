@@ -507,3 +507,97 @@ export const reshape = function tensorReshape(
 ): Tensor {
   return t.reshape(shape);
 };
+
+// ===== Slicing and Joining =====
+
+/**
+ * Concatenates an array of tensors.
+ *
+ * @param t    the tensor(s) to be concatenated
+ * @param axis (optional) the axis to concatenate along
+ * @returns    the concatenated tensor
+ */
+export const concat = function tensorConcat(t: Tensor[], axis?: number): Tensor {
+  if (t.length < 2) {
+    throw new Error('Two or more tensors must be provided.');
+  }
+
+  const a = t[0];
+  const b = t.slice(1);
+
+  return a.concat(b, axis);
+};
+
+/**
+ * Reverses a tensor along a specificed axis.
+ *
+ * @param t    the input tensor
+ * @param axis (optional) the axis to reverse along
+ * @returns    the reversed tensor
+ */
+export const reverse = function tensorReverse(
+  t: Tensor,
+  axis?: number | number[],
+): Tensor {
+  return t.reverse(axis);
+};
+
+/**
+ * Extracts a slice from a tensor.
+ *
+ * @param t     the input tensor
+ * @param begin the coordinates to start the slice from
+ * @param size  (optional) the size of the slice
+ * @returns     the tensor slice
+ */
+export const slice = function tensorSlice(
+  t: Tensor,
+  begin: number | number[],
+  size?: number | number[],
+): Tensor {
+  return t.slice(begin, size);
+};
+
+/**
+ * Splits a tensor into sub tensors.
+ *
+ * @param t               the input tensor
+ * @param numOrSizeSplits either an integer indicating the number of splits along the axis
+ *                        or an array of integers containing the sizes of each output tensor
+ *                        along the axis. If a number then it must evenly divide the axis
+ *                        length; otherwise the sum of sizes must match axis length.
+ * @param axis            (optional) the dimension along which to split
+ * @returns               the split tensor
+ */
+export const split = function tensorSplit(
+  t: Tensor,
+  numOrSizeSplits: number | number[],
+  axis?: number,
+): Tensor[] {
+  return t.split(numOrSizeSplits, axis);
+};
+
+/**
+ * Stacks an array of tensors along an axis. Tensors must have the same rank.
+ *
+ * @param tensors the tensors to be stacked
+ * @param axis    (optional) the axis to stack along
+ * @returns       the stacked tensor
+ */
+export const stack = function tensorStack(
+  tensors: Tensor[],
+  axis?: number,
+): Tensor {
+  return Tensor.stack(tensors, axis);
+};
+
+/**
+ * Unstacks a rank-R tensor into an array of rank-(R-1) tensors.
+ *
+ * @param t    the input tensor
+ * @param axis (optional) the axis to unstack along
+ * @returns    the array of tensors
+ */
+export const unstack = function tensorUnstack(t: Tensor, axis?: number): Tensor[] {
+  return t.unstack(axis);
+};

@@ -800,9 +800,9 @@ export class Tensor {
       const tensors: tfc.Tensor[] = [this.tensor];
       if (b instanceof Tensor) {
         tensors.push(b.tensor);
-      } else if (b instanceof Array) {
+      } else if (Array.isArray(b)) {
         const z: tfc.Tensor[] = b.map((x) => x.tensor);
-        tensors.concat(z);
+        Array.prototype.push.apply(tensors, z);
       }
 
       return tfc.concat(tensors, axis);
@@ -857,7 +857,7 @@ export class Tensor {
   }
 
   /**
-   * Stacks a list of tensors along an axis. Tensors must have the same rank.
+   * Stacks an array of tensors along an axis. Tensors must have the same rank.
    *
    * @param tensors the tensors to be stacked
    * @param axis    (optional) the axis to stack along
