@@ -23,15 +23,4 @@ describe('hello, número', function () {
       expect(c).to.eql([0, 2, 4, 6]);
     });
   });
-
-  describe('tidy()', function () {
-    it('Cleans up memory', function () {
-      const start = num.tfc.memory().numTensors;
-      num.tidy(() => {
-        const t = num.tfc.tensor([1, 2, 3]);
-      });
-      const end = num.tfc.memory().numTensors;
-      expect(start).to.equal(end);
-    });
-  });
 });

@@ -48,13 +48,17 @@ import {
   stack,
   unstack,
 } from './tensor/ufunc';
+import {
+  memory,
+  tidy,
+  startScope,
+  endScope,
+} from './tensor/memory';
 
 
 declare const p5: any;
 
 p5.prototype.createTensor = createTensor;
-
-const { tidy } = tfc;
 
 export {
   add,
@@ -102,7 +106,10 @@ export {
   split,
   stack,
   unstack,
-  tfc,
+  memory,
   tidy,
+  startScope,
+  endScope,
+  tfc,
   Tensor,
 };

@@ -1,6 +1,6 @@
 {
   "name": "numero",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A friendly and intuitive math library for p5.js",
   "main": "index.js",
   "scripts": {

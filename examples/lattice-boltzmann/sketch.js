@@ -18,22 +18,22 @@ function draw() {
   params.u0 = -amplitude * noise(t);
   collide();
   stream();
-  num.tidy(() => {
-    let uy = fuse(state.uy);
-    const uyMin = uy.min();
-    const uyMax = uy.max();
-    uy = uy.arraySync();
-    for (let i = 0; i < params.m; i += 1) {
-      const y = i * params.gridSize;
-      for (let j = 0; j < params.n; j += 1) {
-        const x = j * params.gridSize;
-        const c = color(map(uy[j][i], uyMin, uyMax, 0, 255), 255, 255);
-        fill(c);
-        stroke(c);
-        square(x, y, params.gridSize);
-      }
+  num.startScope();
+  let uy = fuse(state.uy);
+  const uyMin = uy.min();
+  const uyMax = uy.max();
+  uy = uy.arraySync();
+  for (let i = 0; i < params.m; i += 1) {
+    const y = i * params.gridSize;
+    for (let j = 0; j < params.n; j += 1) {
+      const x = j * params.gridSize;
+      const c = color(map(uy[j][i], uyMin, uyMax, 0, 255), 255, 255);
+      fill(c);
+      stroke(c);
+      square(x, y, params.gridSize);
     }
-  });
+  }
+  num.endScope();
 }
 
 // Initialize constants and data structures for simulation

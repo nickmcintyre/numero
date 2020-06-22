@@ -25,11 +25,9 @@ Also, math + code = awesome :)
 
 ```javascript
 // A little matrix-vector multiplication
-const b = num.tidy(() => {
-    const a = createTensor([[1, 2], [3, 4]]);
-    const x = createTensor([5, 6]);
-    return a.dot(x);
-});
+const a = createTensor([[1, 2], [3, 4]]);
+const x = createTensor([5, 6]);
+const b = a.dot(x);
 
 print(b.toString());
 ```
