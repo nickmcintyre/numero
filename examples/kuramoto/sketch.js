@@ -189,6 +189,8 @@ function keyPressed() {
       break;
     }
   }
+
+  num.keep(coupling);
 }
 
 /**
@@ -200,35 +202,24 @@ function keyPressed() {
 function step() {
   time += dt;
   const zeta = noiseLevel * noise(time);
-  const result = num.tidy(() => {
-    const oldPhase = phase.copy();
-    const oldVelocity = velocity.copy();
+  const oldPhase = phase.copy();
+  const oldVelocity = velocity.copy();
 
-    const zeros = num.zeros([networkSize]);
-    const k1 = diff(zeros, zeta).mult(dt);
-    const k2 = diff(k1.div(2), zeta).mult(dt);
-    const k3 = diff(k2.div(2), zeta).mult(dt);
-    const k4 = diff(k3, zeta).mult(dt);
-    const solution = k1.add(k2.mult(2)).add(k3.mult(2)).add(k4).div(6);
+  const zeros = num.zeros([networkSize]);
+  const k1 = diff(zeros, zeta).mult(dt);
+  const k2 = diff(k1.div(2), zeta).mult(dt);
+  const k3 = diff(k2.div(2), zeta).mult(dt);
+  const k4 = diff(k3, zeta).mult(dt);
+  const solution = k1.add(k2.mult(2)).add(k3.mult(2)).add(k4).div(6);
 
-    const newPhase = phase.add(solution).mod(TWO_PI);
-    const newVelocity = phase.sub(oldPhase).div(dt);
-    const newAcceleration = velocity.sub(oldVelocity).div(dt);
-
-    return {
-      newPhase,
-      newVelocity,
-      newAcceleration,
-    };
-  });
-
-  phase.dispose();
-  velocity.dispose();
-  acceleration.dispose();
-
-  phase = result.newPhase;
-  velocity = result.newVelocity;
-  acceleration = result.newAcceleration;
+  const newPhase = phase.add(solution).mod(TWO_PI);
+  const newVelocity = phase.sub(oldPhase).div(dt);
+  const newAcceleration = velocity.sub(oldVelocity).div(dt);
+  num.dispose([phase, velocity, acceleration]);
+  phase = newPhase;
+  velocity = newVelocity;
+  acceleration = newAcceleration;
+  num.keep([phase, velocity, acceleration]);
 }
 
 /**
@@ -237,22 +228,19 @@ function step() {
  * https://en.wikipedia.org/wiki/Kuramoto_model
  */
 function diff(increment, zeta) {
-  const t = num.tidy(() => {
-    let dTheta = new Array(networkSize);
-    for (let i = 0; i < networkSize; i += 1) {
-      dTheta[i] = phase.sub(increment);
-    }
+  let dTheta = new Array(networkSize);
+  for (let i = 0; i < networkSize; i += 1) {
+    dTheta[i] = phase.sub(increment);
+  }
 
-    dTheta = num.stack(dTheta);
-    const t_ = dTheta.sin()
-                      .mult(coupling)
-                      .sum(1)
-                      .div(networkSize)
-                      .add(zeta)
-                      .add(naturalFrequency);
-
-    return t_;
-  });
+  dTheta = num.stack(dTheta);
+  const t = dTheta.sin()
+                  .mult(coupling)
+                  .sum(1)
+                  .div(networkSize)
+                  .add(zeta)
+                  .add(naturalFrequency);
+  
   const result = createTensor(t);
 
   return result;

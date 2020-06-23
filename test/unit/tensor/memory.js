@@ -34,13 +34,20 @@ describe('Memory', function () {
   });
 
   describe('tidy()', function () {
-    it('Cleans up memory', function () {
+    it('Should clean up memory', function () {
       const start = num.tfc.memory().numTensors;
       num.tidy(() => {
         const t = num.tfc.tensor([1, 2, 3]);
       });
       const end = num.tfc.memory().numTensors;
       expect(start).to.equal(end);
+    });
+
+    it('Should return tensors', function () {
+      const t = num.tidy(() => {
+        return pInst.createTensor([1, 2, 3]);
+      });
+      expect(t).to.be.an.instanceof(num.Tensor);
     });
   });
 
@@ -50,6 +57,48 @@ describe('Memory', function () {
       num.startScope();
       const a = pInst.createTensor([1, 2, 3]);
       num.endScope();
+      const end = num.memory().numTensors;
+      expect(start).to.eq(end);
+    });
+  });
+
+  describe('keep()', function () {
+    it('Should keep a tensor in memory', function () {
+      const start = num.memory().numTensors;
+      num.startScope();
+      const a = pInst.createTensor([1, 2, 3]);
+      num.keep(a);
+      num.endScope();
+      const end = num.memory().numTensors;
+      expect(start).to.eq(end - 1);
+    });
+
+    it('Should keep multiple tensors in memory', function () {
+      const start = num.memory().numTensors;
+      num.startScope();
+      const a = pInst.createTensor([1, 2, 3]);
+      const b = pInst.createTensor([4, 5, 6]);
+      num.keep([a, b]);
+      num.endScope();
+      const end = num.memory().numTensors;
+      expect(start).to.eq(end - 2);
+    });
+  });
+
+  describe('dispose()', function () {
+    it('Should dispose of a tensor from memory', function () {
+      const start = num.memory().numTensors;
+      const a = pInst.createTensor([1, 2, 3]);
+      num.dispose(a);
+      const end = num.memory().numTensors;
+      expect(start).to.eq(end);
+    });
+
+    it('Should dispose of multiple tensors from memory', function () {
+      const start = num.memory().numTensors;
+      const a = pInst.createTensor([1, 2, 3]);
+      const b = pInst.createTensor([4, 5, 6]);
+      num.dispose([a, b]);
       const end = num.memory().numTensors;
       expect(start).to.eq(end);
     });

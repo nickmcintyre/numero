@@ -53,12 +53,16 @@ import {
   tidy,
   startScope,
   endScope,
+  keep,
+  dispose,
 } from './tensor/memory';
 
 
 declare const p5: any;
 
 p5.prototype.createTensor = createTensor;
+p5.prototype.registerMethod('pre', startScope);
+p5.prototype.registerMethod('post', endScope);
 
 export {
   add,
@@ -110,6 +114,8 @@ export {
   tidy,
   startScope,
   endScope,
+  keep,
+  dispose,
   tfc,
   Tensor,
 };

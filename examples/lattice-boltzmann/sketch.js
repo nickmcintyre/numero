@@ -18,7 +18,6 @@ function draw() {
   params.u0 = -amplitude * noise(t);
   collide();
   stream();
-  num.startScope();
   let uy = fuse(state.uy);
   const uyMin = uy.min();
   const uyMax = uy.max();
@@ -33,7 +32,6 @@ function draw() {
       square(x, y, params.gridSize);
     }
   }
-  num.endScope();
 }
 
 // Initialize constants and data structures for simulation
@@ -111,124 +109,105 @@ function fragment(tensor) {
 
 // Make up a 2D tensor from pieces
 function fuse(pieces) {
-  const tensor = num.tidy(() => {
-    const axis = 1;
-    const topLayer = pieces.tlc.concat(pieces.top, axis).concat(pieces.trc, axis);
-    const midLayer = pieces.left.concat(pieces.middle, axis).concat(pieces.right, axis);
-    const botLayer = pieces.blc.concat(pieces.bottom, axis).concat(pieces.brc, axis);
+  const axis = 1;
+  const topLayer = pieces.tlc.concat(pieces.top, axis).concat(pieces.trc, axis);
+  const midLayer = pieces.left.concat(pieces.middle, axis).concat(pieces.right, axis);
+  const botLayer = pieces.blc.concat(pieces.bottom, axis).concat(pieces.brc, axis);
 
-    return topLayer.concat(midLayer).concat(botLayer);
-  });
-
-  return tensor;
+  return topLayer.concat(midLayer).concat(botLayer);
 }
 
 // Set micro and macroscopic variables to their equilibrium values
 function equilibriate(piece, newux, newuy, newrho) {
-  const result = num.tidy(() => {
-    // Helpful values
-    const { one36th, one9th, four9ths } = params;
-    const ones = num.ones(state.n0[piece].tensor.shape);
-    const ux3 = newux * 3;
-    const uy3 = newuy * 3;
-    const ux2 = newux ** 2;
-    const uy2 = newuy ** 2;
-    const uxuy2 = newux * newuy * 2;
-    const u2 = ux2 + uy2;
-    const u215 = u2 * 1.5;
-    const one36thrho = newrho * one36th;
-    const one9thrho = newrho * one9th;
-    const four9thsrho = newrho * four9ths;
+  const result = {};
+  // Helpful values
+  const { one36th, one9th, four9ths } = params;
+  const ones = num.ones(state.n0[piece].tensor.shape);
+  const ux3 = newux * 3;
+  const uy3 = newuy * 3;
+  const ux2 = newux ** 2;
+  const uy2 = newuy ** 2;
+  const uxuy2 = newux * newuy * 2;
+  const u2 = ux2 + uy2;
+  const u215 = u2 * 1.5;
+  const one36thrho = newrho * one36th;
+  const one9thrho = newrho * one9th;
+  const four9thsrho = newrho * four9ths;
 
-    const n0_ = ones.sub(u215).mult(four9thsrho);
+  result['n0'] = ones.sub(u215).mult(four9thsrho);
 
-    const nE_ = ones.mult(ux2)
-                    .mult(4.5)
-                    .add(ones)
-                    .add(ux3)
-                    .sub(u215)
-                    .mult(one9thrho);
+  result['nE'] = ones.mult(ux2)
+                     .mult(4.5)
+                     .add(ones)
+                     .add(ux3)
+                     .sub(u215)
+                     .mult(one9thrho);
 
-    const nW_ = ones.mult(ux2)
-                    .mult(4.5)
-                    .add(ones)
-                    .sub(ux3)
-                    .sub(u215)
-                    .mult(one9thrho);
+  result['nW'] = ones.mult(ux2)
+                     .mult(4.5)
+                     .add(ones)
+                     .sub(ux3)
+                     .sub(u215)
+                     .mult(one9thrho);
 
-    const nN_ = ones.mult(uy2)
-                    .mult(4.5)
-                    .add(ones)
-                    .add(uy3)
-                    .sub(u215)
-                    .mult(one9thrho);
+  result['nN'] = ones.mult(uy2)
+                     .mult(4.5)
+                     .add(ones)
+                     .add(uy3)
+                     .sub(u215)
+                     .mult(one9thrho);
 
-    const nS_ = ones.mult(uy2)
-                    .mult(4.5)
-                    .add(ones)
-                    .sub(uy3)
-                    .sub(u215)
-                    .mult(one9thrho);
+  result['nS'] = ones.mult(uy2)
+                     .mult(4.5)
+                     .add(ones)
+                     .sub(uy3)
+                     .sub(u215)
+                     .mult(one9thrho);
 
-    const nNE_ = ones.mult(u2)
-                    .add(uxuy2)
-                    .mult(4.5)
-                    .add(ones)
-                    .add(ux3)
-                    .add(uy3)
-                    .sub(u215)
-                    .mult(one36thrho);
+  result['nNE'] = ones.mult(u2)
+                      .add(uxuy2)
+                      .mult(4.5)
+                      .add(ones)
+                      .add(ux3)
+                      .add(uy3)
+                      .sub(u215)
+                      .mult(one36thrho);
 
-    const nSE_ = ones.mult(u2)
-                    .sub(uxuy2)
-                    .mult(4.5)
-                    .add(ones)
-                    .add(ux3)
-                    .sub(uy3)
-                    .sub(u215)
-                    .mult(one36thrho);
+  result['nSE'] = ones.mult(u2)
+                      .sub(uxuy2)
+                      .mult(4.5)
+                      .add(ones)
+                      .add(ux3)
+                      .sub(uy3)
+                      .sub(u215)
+                      .mult(one36thrho);
 
-    const nNW_ = ones.mult(u2)
-                    .sub(uxuy2)
-                    .mult(4.5)
-                    .add(ones)
-                    .sub(ux3)
-                    .add(uy3)
-                    .sub(u215)
-                    .mult(one36thrho);
+  result['nNW'] = ones.mult(u2)
+                      .sub(uxuy2)
+                      .mult(4.5)
+                      .add(ones)
+                      .sub(ux3)
+                      .add(uy3)
+                      .sub(u215)
+                      .mult(one36thrho);
 
-    const nSW_ = ones.mult(u2)
-                    .add(uxuy2)
-                    .mult(4.5)
-                    .add(ones)
-                    .sub(ux3)
-                    .sub(uy3)
-                    .sub(u215)
-                    .mult(one36thrho);
+  result['nSW'] = ones.mult(u2)
+                      .add(uxuy2)
+                      .mult(4.5)
+                      .add(ones)
+                      .sub(ux3)
+                      .sub(uy3)
+                      .sub(u215)
+                      .mult(one36thrho);
 
-    const ux_ = ones.mult(newux);
-    const uy_ = ones.mult(newuy);
-    const rho_ = ones.mult(newrho);
+  result['ux'] = ones.mult(newux);
+  result['uy'] = ones.mult(newuy);
+  result['rho'] = ones.mult(newrho);
 
-    return {
-      n0_,
-      nE_,
-      nW_,
-      nN_,
-      nS_,
-      nNE_,
-      nSE_,
-      nNW_,
-      nSW_,
-      ux_,
-      uy_,
-      rho_,
-    };
-  });
 
   ['n0', 'nE', 'nW', 'nN', 'nS', 'nNE', 'nSE', 'nNW', 'nSW', 'ux', 'uy', 'rho'].forEach((quantity) => {
     state[quantity][piece].dispose();
-    state[quantity][piece] = result[`${quantity}_`];
+    state[quantity][piece] = result[quantity];
   });
 }
 
@@ -257,42 +236,33 @@ function macro() {
   } = state;
 
   rho.middle.dispose();
-  rho.middle = num.tidy(() => {
-    const result = n0.middle
-                    .add(nN.middle)
-                    .add(nS.middle)
-                    .add(nE.middle)
-                    .add(nW.middle)
-                    .add(nNW.middle)
-                    .add(nNE.middle)
-                    .add(nSW.middle)
-                    .add(nSE.middle);
-    return result;
-  });
+  rho.middle = n0.middle
+                 .add(nN.middle)
+                 .add(nS.middle)
+                 .add(nE.middle)
+                 .add(nW.middle)
+                 .add(nNW.middle)
+                 .add(nNE.middle)
+                 .add(nSW.middle)
+                 .add(nSE.middle);
 
   ux.middle.dispose();
-  ux.middle = num.tidy(() => {
-    const result = nE.middle
-                    .add(nNE.middle)
-                    .add(nSE.middle)
-                    .sub(nW.middle)
-                    .sub(nNW.middle)
-                    .sub(nSW.middle)
-                    .div(rho.middle);
-    return result;
-  });
+  ux.middle = nE.middle
+                .add(nNE.middle)
+                .add(nSE.middle)
+                .sub(nW.middle)
+                .sub(nNW.middle)
+                .sub(nSW.middle)
+                .div(rho.middle);
 
   uy.middle.dispose();
-  uy.middle = num.tidy(() => {
-    const result = nN.middle
-                    .add(nNE.middle)
-                    .add(nNW.middle)
-                    .sub(nS.middle)
-                    .sub(nSE.middle)
-                    .sub(nSW.middle)
-                    .div(rho.middle);
-    return result;
-  });
+  uy.middle = nN.middle
+                .add(nNE.middle)
+                .add(nNW.middle)
+                .sub(nS.middle)
+                .sub(nSE.middle)
+                .sub(nSW.middle)
+                .div(rho.middle);
 }
 
 // Compute microscopic density
@@ -312,165 +282,143 @@ function micro() {
     uy,
   } = state;
 
-  const result = num.tidy(() => {
-    // Helpful values
-    const shape = [params.m - 2, params.n - 2];
-    const ones = num.ones(shape);
-    const omega = 1 / (3 * params.viscosity + 0.5);
-    const { one36th, one9th, four9ths } = params;
-    const one36thrho = rho.middle.mult(one36th);
-    const one9thrho = rho.middle.mult(one9th);
-    const four9thsrho = rho.middle.mult(four9ths);
-    const ux3 = ux.middle.mult(3);
-    const uy3 = uy.middle.mult(3);
-    const ux2 = ux.middle.sq();
-    const uy2 = uy.middle.sq();
-    const uxuy2 = ux.middle.mult(uy.middle).mult(2);
-    const u2 = ux2.add(uy2);
-    const u215 = u2.mult(1.5);
+  // Helpful values
+  const shape = [params.m - 2, params.n - 2];
+  const ones = num.ones(shape);
+  const omega = 1 / (3 * params.viscosity + 0.5);
+  const { one36th, one9th, four9ths } = params;
+  const one36thrho = rho.middle.mult(one36th);
+  const one9thrho = rho.middle.mult(one9th);
+  const four9thsrho = rho.middle.mult(four9ths);
+  const ux3 = ux.middle.mult(3);
+  const uy3 = uy.middle.mult(3);
+  const ux2 = ux.middle.sq();
+  const uy2 = uy.middle.sq();
+  const uxuy2 = ux.middle.mult(uy.middle).mult(2);
+  const u2 = ux2.add(uy2);
+  const u215 = u2.mult(1.5);
 
-    const n0_ = n0.middle
-                    .add(ones
-                      .sub(u215)
-                      .mult(four9thsrho)
-                      .sub(n0.middle)
-                      .mult(omega));
+  const result = {};
+  result['n0'] = n0.middle
+                  .add(ones
+                    .sub(u215)
+                    .mult(four9thsrho)
+                    .sub(n0.middle)
+                    .mult(omega));
 
-    const nE_ = nE.middle
-                    .add(ux2
-                      .mult(4.5)
-                      .add(ones)
-                      .add(ux3)
-                      .sub(u215)
-                      .mult(one9thrho)
-                      .sub(nE.middle)
-                      .mult(omega));
+  result['nE'] = nE.middle
+                  .add(ux2
+                    .mult(4.5)
+                    .add(ones)
+                    .add(ux3)
+                    .sub(u215)
+                    .mult(one9thrho)
+                    .sub(nE.middle)
+                    .mult(omega));
 
-    const nW_ = nW.middle
-                    .add(ux2
-                      .mult(4.5)
-                      .add(ones)
-                      .sub(ux3)
-                      .sub(u215)
-                      .mult(one9thrho)
-                      .sub(nW.middle)
-                      .mult(omega));
+  result['nW'] = nW.middle
+                  .add(ux2
+                    .mult(4.5)
+                    .add(ones)
+                    .sub(ux3)
+                    .sub(u215)
+                    .mult(one9thrho)
+                    .sub(nW.middle)
+                    .mult(omega));
 
-    const nN_ = nN.middle
-                    .add(uy2
-                      .mult(4.5)
-                      .add(ones)
-                      .add(uy3)
-                      .sub(u215)
-                      .mult(one9thrho)
-                      .sub(nN.middle)
-                      .mult(omega));
+  result['nN'] = nN.middle
+                  .add(uy2
+                    .mult(4.5)
+                    .add(ones)
+                    .add(uy3)
+                    .sub(u215)
+                    .mult(one9thrho)
+                    .sub(nN.middle)
+                    .mult(omega));
 
-    const nS_ = nS.middle
-                    .add(uy2
-                      .mult(4.5)
-                      .add(ones)
-                      .sub(uy3)
-                      .sub(u215)
-                      .mult(one9thrho)
-                      .sub(nS.middle)
-                      .mult(omega));
+  result['nS'] = nS.middle
+                  .add(uy2
+                    .mult(4.5)
+                    .add(ones)
+                    .sub(uy3)
+                    .sub(u215)
+                    .mult(one9thrho)
+                    .sub(nS.middle)
+                    .mult(omega));
 
-    const nNE_ = nNE.middle
-                    .add(u2
-                      .add(uxuy2)
-                      .mult(4.5)
-                      .add(ones)
-                      .add(ux3)
-                      .add(uy3)
-                      .sub(u215)
-                      .mult(one36thrho)
-                      .sub(nNE.middle)
-                      .mult(omega));
+  result['nNE'] = nNE.middle
+                  .add(u2
+                    .add(uxuy2)
+                    .mult(4.5)
+                    .add(ones)
+                    .add(ux3)
+                    .add(uy3)
+                    .sub(u215)
+                    .mult(one36thrho)
+                    .sub(nNE.middle)
+                    .mult(omega));
 
-    const nSE_ = nSE.middle
-                    .add(u2
-                      .sub(uxuy2)
-                      .mult(4.5)
-                      .add(ones)
-                      .add(ux3)
-                      .sub(uy3)
-                      .sub(u215)
-                      .mult(one36thrho)
-                      .sub(nSE.middle)
-                      .mult(omega));
+  result['nSE'] = nSE.middle
+                  .add(u2
+                    .sub(uxuy2)
+                    .mult(4.5)
+                    .add(ones)
+                    .add(ux3)
+                    .sub(uy3)
+                    .sub(u215)
+                    .mult(one36thrho)
+                    .sub(nSE.middle)
+                    .mult(omega));
 
-    const nNW_ = nNW.middle
-                    .add(u2
-                      .sub(uxuy2)
-                      .mult(4.5)
-                      .add(ones)
-                      .sub(ux3)
-                      .add(uy3)
-                      .sub(u215)
-                      .mult(one36thrho)
-                      .sub(nNW.middle)
-                      .mult(omega));
+  result['nNW'] = nNW.middle
+                     .add(u2
+                       .sub(uxuy2)
+                       .mult(4.5)
+                       .add(ones)
+                       .sub(ux3)
+                       .add(uy3)
+                       .sub(u215)
+                       .mult(one36thrho)
+                       .sub(nNW.middle)
+                       .mult(omega));
 
-    const nSW_ = nSW.middle
-                    .add(u2
-                      .add(uxuy2)
-                      .mult(4.5)
-                      .add(ones)
-                      .sub(ux3)
-                      .sub(uy3)
-                      .sub(u215)
-                      .mult(one36thrho)
-                      .sub(nSW.middle)
-                      .mult(omega));
-
-    return {
-      n0_,
-      nE_,
-      nW_,
-      nN_,
-      nS_,
-      nNE_,
-      nSE_,
-      nNW_,
-      nSW_,
-    };
-  });
+  result['nSW'] = nSW.middle
+                     .add(u2
+                       .add(uxuy2)
+                       .mult(4.5)
+                       .add(ones)
+                       .sub(ux3)
+                       .sub(uy3)
+                       .sub(u215)
+                       .mult(one36thrho)
+                       .sub(nSW.middle)
+                       .mult(omega));
 
   ['n0', 'nE', 'nW', 'nN', 'nS', 'nNE', 'nSE', 'nNW', 'nSW'].forEach((quantity) => {
     state[quantity].middle.dispose();
-    state[quantity].middle = result[`${quantity}_`];
+    state[quantity].middle = result[quantity];
   });
 }
 
 // Handle outlet boundary conditions
 function outlet() {
-  const result = num.tidy(() => {
-    const { m } = params;
-    const eye = num.eye(m);
-    const shiftBottom = eye
-                        .slice([0], [m - 1])
-                        .concat(eye.slice([m - 2], [1]));
-    let nS = fuse(state.nS);
-    let nSE = fuse(state.nSE);
-    let nSW = fuse(state.nSW);
-    nS = shiftBottom.dot(nS);
-    nSE = shiftBottom.dot(nSE);
-    nSW = shiftBottom.dot(nSW);
-
-    return {
-      nS,
-      nSE,
-      nSW,
-    };
-  });
+  const result = {};
+  const { m } = params;
+  const eye = num.eye(m);
+  const shiftBottom = eye.slice([0], [m - 1])
+                         .concat(eye.slice([m - 2], [1]));
+  result['nS'] = fuse(state.nS);
+  result['nSE'] = fuse(state.nSE);
+  result['nSW'] = fuse(state.nSW);
+  result['nS'] = shiftBottom.dot(result['nS']);
+  result['nSE'] = shiftBottom.dot(result['nSE']);
+  result['nSW'] = shiftBottom.dot(result['nSW']);
 
   ['nS', 'nSE', 'nSW'].forEach((quantity) => {
     ['top', 'bottom', 'left', 'right', 'middle', 'tlc', 'trc', 'blc', 'brc'].forEach((piece) => {
       state[quantity][piece].dispose();
     });
     state[quantity] = fragment(result[quantity]);
-    result[quantity].dispose();
   });
 }
 
@@ -495,86 +443,83 @@ function stream() {
     nSE,
   } = state;
 
-  const result = num.tidy(() => {
-    const m = params.m - 2;
-    const eye = num.eye(m - 1);
-    const upperShift = eye.pad([[0, 1], [1, 0]]);
-    const lowerShift = eye.pad([[1, 0], [0, 1]]);
+  const result = {};
+  const m = params.m - 2;
+  const eye = num.eye(m - 1);
+  const upperShift = eye.pad([[0, 1], [1, 0]]);
+  const lowerShift = eye.pad([[1, 0], [0, 1]]);
 
-    // Move north-moving particles to the north
-    const nN_ = upperShift
-                  .dot(nN.middle)
-                  .slice([0, 0], [m - 1, m])
-                  .concat(nN.bottom);
+  // Move north-moving particles to the north
+  result['nN'] = upperShift.dot(nN.middle)
+                           .slice([0, 0], [m - 1, m])
+                           .concat(nN.bottom);
 
-    // Move northwest-moving particles to the northwest
-    const nNW_ = upperShift
-                  .dot(nNW.middle)
-                  .dot(lowerShift) // shift left
-                  .slice([0, 0], [m - 1, m])
-                  .concat(nNW.bottom)
-                  .slice([0, 0], [m, m - 1])
-                  .concat(nNW.right, 1);
+  // Move northwest-moving particles to the northwest
+  result['nNW'] = upperShift.dot(nNW.middle)
+                            .dot(lowerShift) // shift left
+                            .slice([0, 0], [m - 1, m])
+                            .concat(nNW.bottom)
+                            .slice([0, 0], [m, m - 1])
+                            .concat(nNW.right, 1);
 
-    // Move the east-moving particles to the east
-    const nE_ = nE.left
-                  .concat(nE.middle
-                    .dot(upperShift) // shift right
-                    .slice([0, 1], [m, m - 1]), 1);
+  // Move the east-moving particles to the east
+  result['nE'] = nE.left
+                   .concat(nE.middle
+                     .dot(upperShift) // shift right
+                     .slice([0, 1], [m, m - 1]), 1);
 
-    // Move the northeast-moving particles to the northeast
-    const nNE_ = nNE.left
-                  .concat(upperShift
-                    .dot(nNE.middle)
-                    .dot(upperShift) // shift right
-                    .slice([0, 0], [m - 1, m])
-                    .concat(nNE.bottom)
-                    .slice([0, 1], [m, m - 1]), 1);
+  // Move the northeast-moving particles to the northeast
+  result['nNE'] = nNE.left
+                     .concat(upperShift
+                       .dot(nNE.middle)
+                       .dot(upperShift) // shift right
+                       .slice([0, 0], [m - 1, m])
+                       .concat(nNE.bottom)
+                       .slice([0, 1], [m, m - 1]), 1);
 
-    // Move the south-moving particles to the south
-    const nS_ = nS.top
-                  .concat(lowerShift
-                    .dot(nS.middle)
-                    .slice([1, 0], [m - 1, m]));
+  // Move the south-moving particles to the south
+  result['nS'] = nS.top
+                   .concat(lowerShift
+                     .dot(nS.middle)
+                     .slice([1, 0], [m - 1, m]));
 
-    // Move southeast-moving particles to the southeast
-    const nSE_ = nSE.left
-                  .concat(nSE.top
-                    .concat(lowerShift
-                      .dot(nSE.middle)
-                      .dot(upperShift) // shift right
-                      .slice([1, 0], [m - 1, m]))
-                    .slice([0, 1], [m, m - 1]), 1);
+  // Move southeast-moving particles to the southeast
+  result['nSE'] = nSE.left
+                     .concat(nSE.top
+                       .concat(lowerShift
+                         .dot(nSE.middle)
+                         .dot(upperShift) // shift right
+                         .slice([1, 0], [m - 1, m]))
+                       .slice([0, 1], [m, m - 1]), 1);
 
-    // Move west-moving particles to the west
-    const nW_ = nW.middle
-                  .dot(lowerShift) // shift left
-                  .slice([0, 0], [m, m - 1])
-                  .concat(nW.right, 1);
+  // Move west-moving particles to the west
+  result['nW'] = nW.middle
+                   .dot(lowerShift) // shift left
+                   .slice([0, 0], [m, m - 1])
+                   .concat(nW.right, 1);
 
-    // Move southwest-moving particles to the southwest
-    const nSW_ = nSW.top
-                  .concat(lowerShift
-                    .dot(nSW.middle)
-                    .dot(lowerShift) // shift left
-                    .slice([0, 0], [m, m - 1])
-                    .concat(nSW.right, 1)
-                    .slice([1, 0], [m - 1, m]));
+  // Move southwest-moving particles to the southwest
+  result['nSW'] = nSW.top
+                     .concat(lowerShift
+                       .dot(nSW.middle)
+                       .dot(lowerShift) // shift left
+                       .slice([0, 0], [m, m - 1])
+                       .concat(nSW.right, 1)
+                       .slice([1, 0], [m - 1, m]));
 
-    return {
-      nE_,
-      nW_,
-      nN_,
-      nS_,
-      nNE_,
-      nSE_,
-      nNW_,
-      nSW_,
-    };
-  });
 
   ['nE', 'nW', 'nN', 'nS', 'nNE', 'nSE', 'nNW', 'nSW'].forEach((quantity) => {
     state[quantity].middle.dispose();
-    state[quantity].middle = result[`${quantity}_`];
+    state[quantity].middle = result[quantity];
+  });
+
+  keepState();
+}
+
+function keepState() {
+  ['n0', 'nE', 'nW', 'nN', 'nS', 'nNE', 'nSE', 'nNW', 'nSW'].forEach((quantity) => {
+    ['top', 'bottom', 'left', 'right', 'middle', 'tlc', 'trc', 'blc', 'brc'].forEach((piece) => {
+      num.keep(state[quantity][piece]);
+    });
   });
 }
