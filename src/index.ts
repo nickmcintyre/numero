@@ -61,8 +61,10 @@ import {
 declare const p5: any;
 
 p5.prototype.createTensor = createTensor;
+p5.prototype.registerMethod('init', startScope);
 p5.prototype.registerMethod('pre', startScope);
 p5.prototype.registerMethod('post', endScope);
+p5.prototype.registerMethod('remove', endScope);
 
 export {
   add,
