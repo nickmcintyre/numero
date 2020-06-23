@@ -5,7 +5,6 @@
 function setup() {
   print('=== Gaussian elimination with row operations ===');
   
-  num.startScope();
   let a = createTensor([[ 2,  1, -1,   8],
                         [-3, -1,  2, -11],
                         [-2,  1,  2,  -3]]);
@@ -28,5 +27,4 @@ function setup() {
   print(a.toString());
   a = a.mulRow(0, 0.5);
   print(a.toString());
-  num.endScope();
 }

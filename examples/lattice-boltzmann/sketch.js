@@ -77,8 +77,6 @@ function setTensors() {
   state.rho = fragment(num.ones(shape));
   state.ux = fragment(num.zeros(shape));
   state.uy = fragment(num.ones(shape).mult(params.u0));
-  // Barriers
-  barriers = fragment(num.zeros(shape));
 }
 
 // Break up a 2D tensor into pieces
