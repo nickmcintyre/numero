@@ -56,7 +56,7 @@ import {
   keep,
   dispose,
 } from './tensor/memory';
-
+import { fromImage, toImage } from './image/index';
 
 declare const p5: any;
 
@@ -120,4 +120,6 @@ export {
   dispose,
   tfc,
   Tensor,
+  fromImage,
+  toImage,
 };

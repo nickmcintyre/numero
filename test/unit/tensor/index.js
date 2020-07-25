@@ -45,7 +45,7 @@ describe('Tensor', function () {
         const t1 = pInst.createTensor(t0);
         expect(t1).to.be.an.instanceof(num.Tensor);
       });
-    })
+    });
 
     it('Should reject garbage arguments', function () {
       num.tidy(() => {

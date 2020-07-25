@@ -1,7 +1,6 @@
 import * as tfc from '@tensorflow/tfjs-core';
 import * as p5 from 'p5';
 
-
 /**
  * A class to describe a tensor, a generalization of vectors and matrices.
  * Tensors can be thought of as (possibly) multidimensional arrays that support
