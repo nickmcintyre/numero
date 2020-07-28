@@ -15,26 +15,24 @@ export const fromImage = function loadImageIntoTensor(
   numChannels?: number,
 ): Tensor {
   const t: Tensor = createTensor(tfc.browser.fromPixels(img.canvas, numChannels));
-  // t.tensor.
 
   return t;
 };
 
 /**
  * Creates a p5.Image from an existing tensor object.
- * 
+ *
  * @param t the image as a tensor
  * @returns the image
  */
-export const toImage = function drawTensorToImage(
-  t: Tensor,
-): p5.Image {
+export const toImage = function drawTensorToImage(t: Tensor): p5.Image {
   const { shape } = t.tensor;
   const height: number = shape[0];
   const width: number = shape[1];
   const depth: number = shape[2];
   const img: any = p5.prototype.createImage(width, height);
-  tfc.browser.toPixels(t.tensor.as3D(height, width, depth), img.canvas);
+  const intensor: tfc.Tensor = t.tensor.asType('int32');
+  tfc.browser.toPixels(intensor.as3D(height, width, depth), img.canvas);
 
   return img;
 };
