@@ -7,7 +7,7 @@ import { createTensor, Tensor } from '../tensor/index';
  * Creates a Tensor object from an existing p5.Image.
  *
  * @param img          the image
- * @param numChannels  (optional) the number of channels of the output tensor.
+ * @param numChannels  (optional) the number of channels of the output tensor
  * @returns            the image as a tensor
  */
 export const fromImage = function loadImageIntoTensor(
@@ -20,19 +20,18 @@ export const fromImage = function loadImageIntoTensor(
 };
 
 /**
- * Creates a p5.Image from an existing tensor object.
+ * Creates a p5.Image from an existing Tensor object.
  *
  * @param t the image as a tensor
  * @returns the image
  */
-export const toImage = function drawTensorToImage(t: Tensor): p5.Image {
+export const toImage = function drawTensorToImage(t: Tensor): Promise<p5.Image> {
   const { shape } = t.tensor;
   const height: number = shape[0];
   const width: number = shape[1];
   const depth: number = shape[2];
   const img: any = p5.prototype.createImage(width, height);
-  const intensor: tfc.Tensor = t.tensor.asType('int32');
-  tfc.browser.toPixels(intensor.as3D(height, width, depth), img.canvas);
+  const intensor: tfc.Tensor3D = t.tensor.toInt().as3D(height, width, depth);
 
-  return img;
+  return tfc.browser.toPixels(intensor, img.canvas).then(() => img);
 };

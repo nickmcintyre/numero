@@ -34,8 +34,9 @@ describe('Image', function () {
     it('Should accept a Tensor argument', function () {
       num.tidy(() => {
         const t = num.random([512, 512, 3]);
-        const img = num.toImage(t);
-        expect(img).to.be.an.instanceof(p5.Image);
+        num.toImage(t).then((img) => {
+          expect(img).to.be.an.instanceof(p5.Image);
+        });
       });
     });
   });
