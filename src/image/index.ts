@@ -31,7 +31,13 @@ export const toImage = function drawTensorToImage(t: Tensor): Promise<p5.Image> 
   const width: number = shape[1];
   const depth: number = shape[2];
   const img: any = p5.prototype.createImage(width, height);
-  const intensor: tfc.Tensor3D = t.tensor.toInt().as3D(height, width, depth);
+  const intensor: tfc.Tensor = t.tensor.toInt();
+  const t3D: tfc.Tensor3D = intensor.as3D(height, width, depth);
 
-  return tfc.browser.toPixels(intensor, img.canvas).then(() => img);
+  return tfc.browser.toPixels(t3D, img.canvas).then(() => {
+    intensor.dispose();
+    t3D.dispose();
+
+    return img;
+  });
 };

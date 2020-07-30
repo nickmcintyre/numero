@@ -1,5 +1,4 @@
 let original;
-let tensorFromImg;
 let imgFromTensor;
 let redFilter;
 let greenFilter;
@@ -10,9 +9,9 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(768, 768);
+  createCanvas(480, 480);
 
-  tensorFromImg = num.fromImage(original);
+  const tensorFromImg = num.fromImage(original);
   print('Tensor representation');
   print(tensorFromImg);
 
@@ -34,8 +33,9 @@ function setup() {
 function draw() {
   Promise.all([imgFromTensor, redFilter, greenFilter, blueFilter]).then((img) => {
     image(img[0], mouseX, mouseY);
-    image(img[1], 50, 100);
-    image(img[2], 100, 200);
-    image(img[3], 150, 300);
+    image(img[0], 0, 0);
+    image(img[1], 120, 0);
+    image(img[2], 240, 0);
+    image(img[3], 360, 0);
   });
 }

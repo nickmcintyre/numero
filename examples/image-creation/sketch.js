@@ -1,11 +1,14 @@
-let a;
-
 function setup() {
   createCanvas(400, 400);
+  randomImage();
+}
 
-  a = num.random([width, height, 3]);
-  a = a.mult(255);
-  num.toImage(a).then((img) => {
+function randomImage() {
+  const a = num.random([width, height, 3]);
+  const b = a.mult(255);
+  num.toImage(b).then((img) => {
     image(img, 0, 0);
+    num.dispose([a, b]);
+    randomImage();
   });
 }
