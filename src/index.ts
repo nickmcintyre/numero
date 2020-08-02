@@ -1,4 +1,6 @@
 import * as tfc from '@tensorflow/tfjs-core';
+import * as cpu from '@tensorflow/tfjs-backend-cpu';
+import * as webgl from '@tensorflow/tfjs-backend-webgl';
 
 import { Tensor, createTensor } from './tensor/index';
 import {
@@ -66,6 +68,8 @@ p5.prototype.registerMethod('pre', startScope);
 p5.prototype.registerMethod('post', endScope);
 p5.prototype.registerMethod('remove', endScope);
 
+const { setBackend, getBackend } = tfc;
+
 export {
   add,
   sub,
@@ -122,4 +126,8 @@ export {
   Tensor,
   fromImage,
   toImage,
+  getBackend,
+  setBackend,
+  cpu,
+  webgl,
 };

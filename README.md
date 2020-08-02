@@ -35,7 +35,7 @@ print(b.toString());
 ## Demo
 The fluid simulation below was created using a 2-dimensional [lattice Boltzmann method](https://en.wikipedia.org/wiki/Lattice_Boltzmann_methods).
 
-![A fluid simulation](examples/lattice-boltzmann/lbm.gif)
+![A fluid simulation](examples/fluid-simulation/lbm.gif)
 
 ## Contributing
 See [CONTRIBUTING](CONTRIBUTING.md).

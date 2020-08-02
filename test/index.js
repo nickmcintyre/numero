@@ -4,6 +4,10 @@
 describe('hello, número', function () {
   let pInst;
 
+  before(function () {
+    num.setBackend('cpu');
+  });
+
   beforeEach(function () {
     pInst = new p5(function () {});
   });
@@ -14,8 +18,7 @@ describe('hello, número', function () {
 
   describe('the math is mathing', function () {
     it('sure is', function () {
-      num.tfc.setBackend('cpu');
-      const c = num.tfc.tidy(() => {
+      const c = num.tidy(() => {
         const a = num.tfc.tensor1d([0, 1, 2, 3]);
         const b = num.tfc.scalar(2);
         return a.mul(b).arraySync();
