@@ -81,7 +81,7 @@ export class Tensor {
       return v.set(a);
     }
 
-    throw new Error('Tensor cannot be represented as 3D vector');
+    throw new Error('Tensor cannot be represented as 3D vector.');
   }
 
   /**

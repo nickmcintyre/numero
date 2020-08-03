@@ -921,5 +921,14 @@ describe('Universal Functions', function () {
         });
       });
     });
+
+    describe('sort()', function () {
+      it('Should return a sorted tensor', function () {
+        const t1 = pInst.createTensor([1, 2, 3]);
+        const t2 = num.sort(t1);
+        const t3 = pInst.createTensor([3, 2, 1]);
+        expect(t2.equals(t3)).to.equal(true);
+      });
+    });
   });
 });

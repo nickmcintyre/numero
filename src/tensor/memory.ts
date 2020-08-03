@@ -2,9 +2,6 @@ import * as tfc from '@tensorflow/tfjs-core';
 
 import { Tensor } from './index';
 
-declare const p5: any;
-
-
 // ===== Profiling and Management =====
 
 /**

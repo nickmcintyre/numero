@@ -2,7 +2,6 @@ import * as p5 from 'p5';
 
 import { Tensor } from './index';
 
-
 // ===== Calculation =====
 
 /**
@@ -46,7 +45,6 @@ export const mult = function tensorMult(
 ): Tensor {
   return a.mult(b);
 };
-
 
 /**
  * Divides two tensors element-wise.
@@ -375,7 +373,6 @@ export const eye = function tensorEye(numRows: number, numCols?: number): Tensor
   return Tensor.eye(numRows, numCols);
 };
 
-
 /**
  * Creates a tensor filled with a given value.
  *
@@ -600,4 +597,18 @@ export const stack = function tensorStack(
  */
 export const unstack = function tensorUnstack(t: Tensor, axis?: number): Tensor[] {
   return t.unstack(axis);
+};
+
+/**
+ * Sorts a tensor in descending order.
+ *
+ * @param t the input tensor
+ * @returns the sorted tensor
+ */
+export const sort = function tensorSort(t: Tensor): Tensor {
+  const k: number = t.tensor.shape[t.tensor.shape.length - 1];
+  const { values, indices } = t.tensor.topk(k, true);
+  indices.dispose();
+
+  return new Tensor(values);
 };

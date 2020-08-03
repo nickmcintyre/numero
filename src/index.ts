@@ -49,6 +49,7 @@ import {
   split,
   stack,
   unstack,
+  sort,
 } from './tensor/ufunc';
 import {
   memory,
@@ -59,6 +60,7 @@ import {
   dispose,
 } from './tensor/memory';
 import { fromImage, toImage } from './image/index';
+import { ptp, percentile, quantile } from './stats/index';
 
 declare const p5: any;
 
@@ -116,6 +118,7 @@ export {
   split,
   stack,
   unstack,
+  sort,
   memory,
   tidy,
   startScope,
@@ -130,4 +133,7 @@ export {
   setBackend,
   cpu,
   webgl,
+  ptp,
+  percentile,
+  quantile,
 };
