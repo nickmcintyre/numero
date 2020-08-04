@@ -64,6 +64,10 @@ import {
   ptp,
   percentile,
   quantile,
+  mean,
+  average,
+  sd,
+  variance,
 } from './stats/index';
 
 declare const p5: any;
@@ -140,4 +144,8 @@ export {
   ptp,
   percentile,
   quantile,
+  mean,
+  average,
+  sd,
+  variance,
 };

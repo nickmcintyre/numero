@@ -9,6 +9,7 @@ import * as p5 from 'p5';
  */
 export class Tensor {
   public tensor: tfc.Tensor;
+
   public shape: number[];
 
   private isComplex: boolean = false;
@@ -77,14 +78,36 @@ export class Tensor {
    * @returns the p5.Vector
    */
   toVector(): p5.Vector {
-    const shape = JSON.stringify(this.tensor.shape);
+    const shape = JSON.stringify(this.shape);
     if (shape === '[2]' || shape === '[3]') {
       const a = this.arraySync();
       const v = p5.prototype.createVector();
       return v.set(a);
     }
 
-    throw new Error('Tensor cannot be represented as 3D vector.');
+    throw new Error('Tensor cannot be represented as a 3D vector.');
+  }
+
+  /**
+   * Returns a representation of this tensor as a scalar.
+   *
+   * @returns the scalar
+   */
+  toScalar(): number {
+    const shape = JSON.stringify(this.shape);
+    switch (shape) {
+      case '[]': {
+        const a = this.arraySync();
+        return a;
+      }
+      case '[1]': {
+        const a = this.arraySync();
+        return a[0];
+      }
+      default: {
+        throw new Error('Tensor cannot be represented as a scalar.');
+      }
+    }
   }
 
   /**
@@ -904,14 +927,14 @@ export class Tensor {
    */
   addRows(r1: number, r2: number, c = 1): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      if (this.tensor.shape.length !== 2) {
+      if (this.shape.length !== 2) {
         throw new Error('Elementary row operations are only defined on matrices.');
       }
 
       const begin: tfc.Tensor = this.tensor.slice(0, r2);
       const row1: tfc.Tensor = this.tensor.slice(r1, 1);
       let row2: tfc.Tensor = this.tensor.slice(r2, 1);
-      const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.tensor.shape[0] - r2 - 1);
+      const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.shape[0] - r2 - 1);
       row2 = row2.add(row1.mul(c));
 
       return begin.concat([row2, final]);
@@ -931,14 +954,14 @@ export class Tensor {
    */
   subRows(r1: number, r2: number, c = 1): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      if (this.tensor.shape.length !== 2) {
+      if (this.shape.length !== 2) {
         throw new Error('Elementary row operations are only defined on matrices.');
       }
 
       const begin: tfc.Tensor = this.tensor.slice(0, r2);
       const row1: tfc.Tensor = this.tensor.slice(r1, 1);
       let row2: tfc.Tensor = this.tensor.slice(r2, 1);
-      const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.tensor.shape[0] - r2 - 1);
+      const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.shape[0] - r2 - 1);
       row2 = row2.sub(row1.mul(c));
 
       return begin.concat([row2, final]);
@@ -960,7 +983,7 @@ export class Tensor {
     const second: number = Math.max(r1, r2);
 
     const t: tfc.Tensor = tfc.tidy(() => {
-      if (this.tensor.shape.length !== 2) {
+      if (this.shape.length !== 2) {
         throw new Error('Elementary row operations are only defined on matrices.');
       }
 
@@ -968,7 +991,7 @@ export class Tensor {
       const row1: tfc.Tensor = this.tensor.slice(first, 1);
       const middle: tfc.Tensor = this.tensor.slice(first + 1, second - first - 1);
       const row2: tfc.Tensor = this.tensor.slice(second, 1);
-      const final: tfc.Tensor = this.tensor.slice(second + 1, this.tensor.shape[0] - second - 1);
+      const final: tfc.Tensor = this.tensor.slice(second + 1, this.shape[0] - second - 1);
 
       return begin.concat([row2, middle, row1, final]);
     });
@@ -986,13 +1009,13 @@ export class Tensor {
    */
   mulRow(r1: number, c: number): Tensor {
     const t: tfc.Tensor = tfc.tidy(() => {
-      if (this.tensor.shape.length !== 2) {
+      if (this.shape.length !== 2) {
         throw new Error('Elementary row operations are only defined on matrices.');
       }
 
       const begin: tfc.Tensor = this.tensor.slice(0, r1);
       let row1: tfc.Tensor = this.tensor.slice(r1, 1);
-      const final: tfc.Tensor = this.tensor.slice(r1 + 1, this.tensor.shape[0] - r1 - 1);
+      const final: tfc.Tensor = this.tensor.slice(r1 + 1, this.shape[0] - r1 - 1);
       row1 = row1.mul(c);
 
       return begin.concat([row1, final]);

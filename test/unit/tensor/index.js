@@ -100,6 +100,19 @@ describe('Tensor', function () {
       });
     });
 
+    describe('toScalar()', function () {
+      it('Should work with tensors that are scalars', function () {
+        const t = pInst.createTensor(2);
+        const s = t.toScalar();
+        expect(s).to.eq(2);
+      });
+
+      it('Should throw an error for tensors of any other shape', function () {
+        const t = pInst.createTensor([1, 2]);
+        expect(() => t.toScalar()).to.throw(Error);
+      });
+    });
+
     describe('dispose()', function () {
       it('Should dispose of tensors from memory', function () {
         const t = pInst.createTensor(1);
