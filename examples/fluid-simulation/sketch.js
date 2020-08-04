@@ -120,7 +120,7 @@ function equilibriate(piece, newux, newuy, newrho) {
   const result = {};
   // Helpful values
   const { one36th, one9th, four9ths } = params;
-  const ones = num.ones(state.n0[piece].tensor.shape);
+  const ones = num.ones(state.n0[piece].shape);
   const ux3 = newux * 3;
   const uy3 = newuy * 3;
   const ux2 = newux ** 2;

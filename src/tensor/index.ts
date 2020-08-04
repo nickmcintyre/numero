@@ -9,6 +9,7 @@ import * as p5 from 'p5';
  */
 export class Tensor {
   public tensor: tfc.Tensor;
+  public shape: number[];
 
   private isComplex: boolean = false;
 
@@ -32,6 +33,8 @@ export class Tensor {
     } else {
       throw new Error('Tensors must be created from Numbers, Arrays, or p5.Vectors.');
     }
+
+    this.shape = this.tensor.shape;
   }
 
   // ===== Utilities =====

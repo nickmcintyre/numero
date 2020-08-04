@@ -606,7 +606,7 @@ export const unstack = function tensorUnstack(t: Tensor, axis?: number): Tensor[
  * @returns the sorted tensor
  */
 export const sort = function tensorSort(t: Tensor): Tensor {
-  const k: number = t.tensor.shape[t.tensor.shape.length - 1];
+  const k: number = t.shape[t.shape.length - 1];
   const { values, indices } = t.tensor.topk(k, true);
   indices.dispose();
 

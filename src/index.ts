@@ -60,7 +60,11 @@ import {
   dispose,
 } from './tensor/memory';
 import { fromImage, toImage } from './image/index';
-import { ptp, percentile, quantile } from './stats/index';
+import {
+  ptp,
+  percentile,
+  quantile,
+} from './stats/index';
 
 declare const p5: any;
 
