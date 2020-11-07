@@ -1,6 +1,8 @@
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
 
+const INDEX_MODE = 0;
+
 describe('Tensor', function () {
   let pInst;
 
@@ -950,27 +952,27 @@ describe('Tensor', function () {
     describe('addRows()', function () {
       it('Should throw an error for rank 3 and above', function () {
         const t = pInst.createTensor([[[1, 2]], [[3, 4]], [[5, 6]]]);
-        expect(() => t.addRows(1, 2)).to.throw(Error);
+        expect(() => t.addRows(2, 1)).to.throw(Error);
       });
 
       it('Should properly add row 1 to row 2', function () {
         const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
         const t2 = pInst.createTensor([[1, 2], [3, 4], [8, 10]]);
-        const t3 = t1.addRows(1, 2);
+        const t3 = t1.addRows(2, 1);
         expect(t3.equals(t2)).to.equal(true);
       });
 
       it('Should properly add row 2 to row 0', function () {
         const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
         const t2 = pInst.createTensor([[6, 8], [3, 4], [5, 6]]);
-        const t3 = t1.addRows(2, 0);
+        const t3 = t1.addRows(0, 2);
         expect(t3.equals(t2)).to.equal(true);
       });
 
       it('Should properly add scalar multiples of two rows', function () {
         const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
         const t2 = pInst.createTensor([[1, 2], [5, 8], [5, 6]]);
-        const t3 = t1.addRows(0, 1, 2);
+        const t3 = t1.addRows(1, 0, 2);
         expect(t2.equals(t3)).to.equal(true);
       });
     });
@@ -978,27 +980,27 @@ describe('Tensor', function () {
     describe('subRows()', function () {
       it('Should throw an error for rank 3 and above', function () {
         const t = pInst.createTensor([[[1, 2]], [[3, 4]], [[5, 6]]]);
-        expect(() => t.subRows(1, 2)).to.throw(Error);
+        expect(() => t.subRows(2, 1)).to.throw(Error);
       });
 
       it('Should properly subtract row 1 from row 2', function () {
         const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
         const t2 = pInst.createTensor([[1, 2], [3, 4], [2, 2]]);
-        const t3 = t1.subRows(1, 2);
+        const t3 = t1.subRows(2, 1);
         expect(t3.equals(t2)).to.equal(true);
       });
 
       it('Should properly subtract row 2 from row 0', function () {
         const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
         const t2 = pInst.createTensor([[-4, -4], [3, 4], [5, 6]]);
-        const t3 = t1.subRows(2, 0);
+        const t3 = t1.subRows(0, 2);
         expect(t3.equals(t2)).to.equal(true);
       });
 
       it('Should properly subtract scalar multiples of two rows', function () {
         const t1 = pInst.createTensor([[1, 2], [3, 4], [5, 6]]);
         const t2 = pInst.createTensor([[-5, -6], [3, 4], [5, 6]]);
-        const t3 = t1.subRows(1, 0, 2);
+        const t3 = t1.subRows(0, 1, 2);
         expect(t2.equals(t3)).to.equal(true);
       });
     });

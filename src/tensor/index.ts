@@ -1,6 +1,8 @@
 import * as tfc from '@tensorflow/tfjs-core';
 import * as p5 from 'p5';
 
+declare const INDEX_MODE: number;
+
 /**
  * A class to describe a tensor, a generalization of vectors and matrices.
  * Tensors can be thought of as (possibly) multidimensional arrays that support
@@ -48,6 +50,13 @@ export class Tensor {
    */
   toString(): string {
     return this.tensor.toString();
+  }
+
+  /**
+   * Prints the string representation of the tensor to the console.
+   */
+  print() {
+    this.tensor.print();
   }
 
   /**
@@ -920,8 +929,8 @@ export class Tensor {
   /**
    * Adds two rows of a matrix.
    *
-   * @param r1 the index of the row being added to the other row
-   * @param r2 the index of the row being added to
+   * @param r1 the index of the row being added to
+   * @param r2 the index of the row being added to the other row
    * @param c  (optional) the constant multiplier for r1
    * @returns  the resulting matrix
    */
@@ -931,13 +940,18 @@ export class Tensor {
         throw new Error('Elementary row operations are only defined on matrices.');
       }
 
-      const begin: tfc.Tensor = this.tensor.slice(0, r2);
-      const row1: tfc.Tensor = this.tensor.slice(r1, 1);
-      let row2: tfc.Tensor = this.tensor.slice(r2, 1);
-      const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.shape[0] - r2 - 1);
-      row2 = row2.add(row1.mul(c));
+      if (INDEX_MODE === 1) {
+        r1 -= 1; // eslint-disable-line no-param-reassign
+        r2 -= 1; // eslint-disable-line no-param-reassign
+      }
 
-      return begin.concat([row2, final]);
+      const begin: tfc.Tensor = this.tensor.slice(0, r1);
+      let row1: tfc.Tensor = this.tensor.slice(r1, 1);
+      const row2: tfc.Tensor = this.tensor.slice(r2, 1);
+      const final: tfc.Tensor = this.tensor.slice(r1 + 1, this.shape[0] - r1 - 1);
+      row1 = row1.add(row2.mul(c));
+
+      return begin.concat([row1, final]);
     });
     const result: Tensor = new Tensor(t);
 
@@ -947,8 +961,8 @@ export class Tensor {
   /**
    * Subtracts two rows of a matrix.
    *
-   * @param r1 the index of the row being subtracted from the other row
-   * @param r2 the index of the row being subtracted from
+   * @param r1 the index of the row being subtracted from
+   * @param r2 the index of the row being subtracted from the other row
    * @param c  (optional) the constant multiplier for r1
    * @returns  the resulting matrix
    */
@@ -958,13 +972,18 @@ export class Tensor {
         throw new Error('Elementary row operations are only defined on matrices.');
       }
 
-      const begin: tfc.Tensor = this.tensor.slice(0, r2);
-      const row1: tfc.Tensor = this.tensor.slice(r1, 1);
-      let row2: tfc.Tensor = this.tensor.slice(r2, 1);
-      const final: tfc.Tensor = this.tensor.slice(r2 + 1, this.shape[0] - r2 - 1);
-      row2 = row2.sub(row1.mul(c));
+      if (INDEX_MODE === 1) {
+        r1 -= 1; // eslint-disable-line no-param-reassign
+        r2 -= 1; // eslint-disable-line no-param-reassign
+      }
 
-      return begin.concat([row2, final]);
+      const begin: tfc.Tensor = this.tensor.slice(0, r1);
+      let row1: tfc.Tensor = this.tensor.slice(r1, 1);
+      const row2: tfc.Tensor = this.tensor.slice(r2, 1);
+      const final: tfc.Tensor = this.tensor.slice(r1 + 1, this.shape[0] - r1 - 1);
+      row1 = row1.sub(row2.mul(c));
+
+      return begin.concat([row1, final]);
     });
     const result: Tensor = new Tensor(t);
 
@@ -979,6 +998,11 @@ export class Tensor {
    * @returns  the resulting matrix
    */
   swapRows(r1: number, r2: number): Tensor {
+    if (INDEX_MODE === 1) {
+      r1 -= 1; // eslint-disable-line no-param-reassign
+      r2 -= 1; // eslint-disable-line no-param-reassign
+    }
+
     const first: number = Math.min(r1, r2);
     const second: number = Math.max(r1, r2);
 
@@ -1013,6 +1037,10 @@ export class Tensor {
         throw new Error('Elementary row operations are only defined on matrices.');
       }
 
+      if (INDEX_MODE === 1) {
+        r1 -= 1; // eslint-disable-line no-param-reassign
+      }
+
       const begin: tfc.Tensor = this.tensor.slice(0, r1);
       let row1: tfc.Tensor = this.tensor.slice(r1, 1);
       const final: tfc.Tensor = this.tensor.slice(r1 + 1, this.shape[0] - r1 - 1);
@@ -1029,8 +1057,8 @@ export class Tensor {
 /**
  * Creates a new Tensor (the datatype for storing tensors).
  *
- * @param x   the numerical object used to create the tensor
- * @returns   the tensor
+ * @param x the numerical object used to create the tensor
+ * @returns the tensor
  */
 export const createTensor = function createTensorObject(
   x: number | number[] | p5.Vector | tfc.Tensor | Tensor,
