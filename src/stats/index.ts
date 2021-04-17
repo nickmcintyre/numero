@@ -1,4 +1,4 @@
-import * as tfc from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs';
 
 import { Tensor } from '../tensor/index';
 
@@ -135,7 +135,7 @@ export const average = function tensorWeightedAverage(
 export const sd = function tensorStandardDeviation(
   t: Tensor,
 ): Tensor {
-  const s: tfc.Tensor = tfc.tidy(() => {
+  const s: tf.Tensor = tf.tidy(() => {
     const avg: Tensor = mean(t);
     const diff: Tensor = t.sub(avg);
     const diffSquared: Tensor = diff.sq();

@@ -12,23 +12,23 @@ function setup() {
   a.print();
 
   print('Row 1 += 1.5 * Row 0');
-  a = a.addRows(0, 1, 1.5);
+  a = a.addRows(1, 0, 1.5);
   a.print();
 
   print('Row 2 += Row 0');
-  a = a.addRows(0, 2);
+  a = a.addRows(2, 0);
   a.print();
 
   print('Row 2 -= 4 * Row 1');
-  a = a.subRows(1, 2, 4);
+  a = a.subRows(2, 1, 4);
   a.print();
 
   print('Row 1 += 0.5 * Row 2');
-  a = a.addRows(2, 1, 0.5);
+  a = a.addRows(1, 2, 0.5);
   a.print();
 
   print('Row 0 -= Row 2');
-  a = a.subRows(2, 0);
+  a = a.subRows(0, 2);
   a.print();
 
   print('Row 1 *= 2');
@@ -40,7 +40,7 @@ function setup() {
   a.print();
 
   print('Row 0 -= Row 1');
-  a = a.subRows(1, 0);
+  a = a.subRows(0, 1);
   a.print();
 
   print('Row 0 *= 0.5');

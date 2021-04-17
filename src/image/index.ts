@@ -1,4 +1,4 @@
-import * as tfc from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs';
 import * as p5 from 'p5';
 
 import { createTensor, Tensor } from '../tensor/index';
@@ -14,7 +14,7 @@ export const fromImage = function loadImageIntoTensor(
   img: any,
   numChannels?: number,
 ): Tensor {
-  const t: Tensor = createTensor(tfc.browser.fromPixels(img.canvas, numChannels));
+  const t: Tensor = createTensor(tf.browser.fromPixels(img.canvas, numChannels));
 
   return t;
 };
@@ -31,10 +31,10 @@ export const toImage = function drawTensorToImage(t: Tensor): Promise<p5.Image> 
   const width: number = shape[1];
   const depth: number = shape[2];
   const img: any = p5.prototype.createImage(width, height);
-  const intensor: tfc.Tensor = t.tensor.toInt();
-  const t3D: tfc.Tensor3D = intensor.as3D(height, width, depth);
+  const intensor: tf.Tensor = t.tensor.toInt();
+  const t3D: tf.Tensor3D = intensor.as3D(height, width, depth);
 
-  return tfc.browser.toPixels(t3D, img.canvas).then(() => {
+  return tf.browser.toPixels(t3D, img.canvas).then(() => {
     intensor.dispose();
     t3D.dispose();
 

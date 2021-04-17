@@ -35,11 +35,11 @@ describe('Memory', function () {
 
   describe('tidy()', function () {
     it('Should clean up memory', function () {
-      const start = num.tfc.memory().numTensors;
+      const start = num.tf.memory().numTensors;
       num.tidy(() => {
-        const t = num.tfc.tensor([1, 2, 3]);
+        const t = num.tf.tensor([1, 2, 3]);
       });
-      const end = num.tfc.memory().numTensors;
+      const end = num.tf.memory().numTensors;
       expect(start).to.equal(end);
     });
 

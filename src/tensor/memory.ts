@@ -1,4 +1,4 @@
-import * as tfc from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs';
 
 import { Tensor } from './index';
 
@@ -9,7 +9,7 @@ import { Tensor } from './index';
  *
  * @returns information about tensors in memory
  */
-export const { memory } = tfc;
+export const { memory } = tf;
 
 /**
  * Executes the provided function and cleans up
@@ -21,21 +21,21 @@ export const { memory } = tfc;
  * @param fn        (optional) the function to execute
  * @returns         (optional) tensors
  */
-export const { tidy } = tfc;
+export const { tidy } = tf;
 
 /**
  * Start a scope. Use this with endScope() to
  * clean up all tensors allocated in a section
  * of code.
  */
-export const startScope = () => tfc.engine().startScope();
+export const startScope = () => tf.engine().startScope();
 
 /**
  * End a scope. Use this with startScope() to
  * clean up all tensors allocated in a section
  * of code.
  */
-export const endScope = () => tfc.engine().endScope();
+export const endScope = () => tf.engine().endScope();
 
 /**
  * Keeps a tensor from being disposed automatically.
@@ -44,9 +44,9 @@ export const endScope = () => tfc.engine().endScope();
  */
 export const keep = function keepInMemory(x: Tensor | Tensor[]) {
   if (x instanceof Tensor) {
-    tfc.keep(x.tensor);
+    tf.keep(x.tensor);
   } else if (x instanceof Array) {
-    x.forEach((t) => tfc.keep(t.tensor));
+    x.forEach((t) => tf.keep(t.tensor));
   }
 };
 

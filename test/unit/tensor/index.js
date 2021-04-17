@@ -1,8 +1,6 @@
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
 
-const INDEX_MODE = 0;
-
 describe('Tensor', function () {
   let pInst;
 
@@ -15,9 +13,9 @@ describe('Tensor', function () {
   });
 
   describe('Tensor', function () {
-    it('Should have a tfc.Tensor under the hood', function () {
+    it('Should have a tf.Tensor under the hood', function () {
       const t = pInst.createTensor([1, 2, 3]);
-      expect(t.tensor).to.be.an.instanceof(num.tfc.Tensor);
+      expect(t.tensor).to.be.an.instanceof(num.tf.Tensor);
     });
 
     it('Should have a shape', function () {
@@ -47,8 +45,8 @@ describe('Tensor', function () {
       expect(t).to.be.an.instanceof(num.Tensor);
     });
 
-    it('Should accept tfc.Tensor arguments', function () {
-      const t0 = num.tfc.tensor([1, 2]);
+    it('Should accept tf.Tensor arguments', function () {
+      const t0 = num.tf.tensor([1, 2]);
       const t1 = pInst.createTensor(t0);
       expect(t1).to.be.an.instanceof(num.Tensor);
     });

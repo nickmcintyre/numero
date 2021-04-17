@@ -19,8 +19,8 @@ describe('hello, número', function () {
   describe('the math is mathing', function () {
     it('sure is', function () {
       const c = num.tidy(() => {
-        const a = num.tfc.tensor1d([0, 1, 2, 3]);
-        const b = num.tfc.scalar(2);
+        const a = num.tf.tensor1d([0, 1, 2, 3]);
+        const b = num.tf.scalar(2);
         return a.mul(b).arraySync();
       });
       expect(c).to.eql([0, 2, 4, 6]);
