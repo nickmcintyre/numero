@@ -1,5 +1,6 @@
 import * as tf from '@tensorflow/tfjs';
-
+import * as dfd from './lib/danfo';
+import { DataFrame, createDataFrame } from './data/index';
 import { Tensor, createTensor } from './tensor/index';
 import {
   add,
@@ -70,6 +71,7 @@ import {
 
 declare const p5: any;
 
+p5.prototype.createDataFrame = createDataFrame;
 p5.prototype.createTensor = createTensor;
 p5.prototype.registerMethod('init', startScope);
 p5.prototype.registerMethod('pre', startScope);
@@ -144,4 +146,6 @@ export {
   average,
   sd,
   variance,
+  dfd,
+  DataFrame,
 };
