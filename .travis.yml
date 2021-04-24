@@ -8,3 +8,6 @@ addons:
 script:
   - npm run build
   - npm run test
+
+after_failure:
+  - cat node_modules/@tensorflow-models/speech-commands/package.json.rej
