@@ -1,9 +1,5 @@
 function setup() {
-  createCanvas(400, 400);
-
-  background(220);
-  textAlign(CENTER, CENTER);
-  textSize(16);
+  noCanvas()
 
   // Step 1: load data or create some data 
   const data = [
@@ -72,6 +68,6 @@ function setup() {
         console.error(error);
         return;
       }
-      text(result, width * 0.5, height * 0.5); // {label: 'red', confidence: 0.8};
+      console.log(result); // {label: 'red', confidence: 0.8};
   }
 }
