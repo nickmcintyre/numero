@@ -11,10 +11,9 @@ This project aims to bring the mathematical chops of [NumPy](https://numpy.org/)
 - Focus on beginners.
 - Complement core p5.js math functions and play nicely with p5.Vector.
 - Make the API familiar (e.g., `createTensor()`).
-- Let [ml5.js](https://ml5js.org/) handle machine learning.
 - Encourage all kinds of contributions.
 
-The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/), [Danfo.js](https://danfo.jsdata.org/), and [Math.js](https://mathjs.org/) under the hood.
+The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/), [Danfo.js](https://danfo.jsdata.org/), and [Math.js](https://mathjs.org/) under the hood. It bundles [ml5.js](https://ml5js.org/) to handle machine learning.
 
 ## Usage
 

@@ -1,0 +1,14 @@
+--- node_modules/@tensorflow-models/speech-commands/package.json	2021-04-23 21:11:04.000000000 -0500
++++ patches/speech-commands-fix.json	2021-04-23 21:13:08.000000000 -0500
+@@ -32,6 +32,11 @@
+     "url": "https://github.com/tensorflow/tfjs-models/issues"
+   },
+   "description": "Speech-command recognizer in TensorFlow.js",
++  "browser": {
++    "fs": false,
++    "path": false,
++    "os": false
++  },
+   "devDependencies": {
+     "@tensorflow/tfjs": "^1.1.2",
+     "@tensorflow/tfjs-node": "^1.1.2",

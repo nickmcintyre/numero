@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
 
-describe('Tensor', function () {
+describe('DataFrame', function () {
   let pInst;
 
   beforeEach(function () {

@@ -1,7 +1,8 @@
 import * as tf from '@tensorflow/tfjs';
 import * as dfd from './lib/danfo';
-import { DataFrame, createDataFrame } from './data/index';
-import { Tensor, createTensor } from './tensor/index';
+import * as ml5 from './lib/ml5';
+import { DataFrame, createDataFrame } from './data';
+import { Tensor, createTensor } from './tensor';
 import {
   add,
   sub,
@@ -58,7 +59,7 @@ import {
   keep,
   dispose,
 } from './tensor/memory';
-import { fromImage, toImage } from './image/index';
+import { fromImage, toImage } from './image';
 import {
   ptp,
   percentile,
@@ -67,9 +68,10 @@ import {
   average,
   sd,
   variance,
-} from './stats/index';
+} from './stats';
 
 declare const p5: any;
+declare const window: any;
 
 p5.prototype.createDataFrame = createDataFrame;
 p5.prototype.createTensor = createTensor;
@@ -77,6 +79,8 @@ p5.prototype.registerMethod('init', startScope);
 p5.prototype.registerMethod('pre', startScope);
 p5.prototype.registerMethod('post', endScope);
 p5.prototype.registerMethod('remove', endScope);
+
+window.ml5 = ml5.default;
 
 const { setBackend, getBackend } = tf;
 
