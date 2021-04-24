@@ -7,8 +7,7 @@
     "build": "webpack --config webpack.config.js",
     "test": "mocha-chrome test/test.html",
     "dev": "webpack --watch --config webpack.config.js",
-    "all": "npm run build && npm run test",
-    "postinstall": "./scripts/post-install.sh"
+    "all": "npm run build && npm run test"
   },
   "repository": "https://github.com/nickmcintyre/numero.git",
   "author": "Nick McIntyre <nick@mcintyre.io>",
