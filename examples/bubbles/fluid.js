@@ -7,7 +7,7 @@ class Fluid {
     this.dt = 0.01;
     this.params = {};
     this.state = {};
-    this.amplitude = 0.01;
+    this.amplitude = 0.001;
     this.setParameters();
     this.setTensors();
     this.bound();
@@ -474,6 +474,75 @@ class Fluid {
     });
   }
 
+  // Handle particle bounce-back from objects
+  bounce() {
+    const {
+      nN,
+      nS,
+      nE,
+      nW,
+      nNW,
+      nNE,
+      nSW,
+      nSE,
+      bar,
+    } = this.state;
+
+    const result = {};
+    const m = this.params.m - 2;
+    const eye = num.eye(m - 1);
+    const upperShift = eye.pad([[0, 1], [1, 0]]);
+    const lowerShift = eye.pad([[1, 0], [0, 1]]);
+
+    // Bounce north-moving particles to the south
+    let nSource = bar.middle.mult(nN.middle);
+    nS.middle = nS.middle.sub(
+      lowerShift.dot(bar.middle).mult(nS.middle),
+    ).add(lowerShift.dot(nSource));
+
+    // // Bounce northwest-moving particles to the southeast
+    nSource = bar.middle.mult(nNW.middle);
+    nSE.middle = nSE.middle.sub(
+      lowerShift.dot(bar.middle).dot(upperShift).mult(nSE.middle),
+    ).add(lowerShift.dot(nSource).dot(upperShift));
+
+    // // Bounce west-moving particles to the east
+    nSource = bar.middle.mult(nW.middle);
+    nE.middle = nE.middle.sub(
+      bar.middle.dot(upperShift).mult(nE.middle),
+    ).add(nSource.dot(upperShift));
+
+    // // Bounce northeast-moving particles to the southwest
+    nSource = bar.middle.mult(nNE.middle);
+    nSW.middle = nSW.middle.sub(
+      lowerShift.dot(bar.middle).dot(lowerShift).mult(nSW.middle),
+    ).add(lowerShift.dot(nSource).dot(lowerShift));
+
+    // // Bounce south-moving particles to the north
+    nSource = bar.middle.mult(nS.middle);
+    nN.middle = nN.middle.sub(
+      upperShift.dot(bar.middle).mult(nN.middle),
+    ).add(upperShift.dot(nSource));
+
+    // // Bounce southeast-moving particles to the northwest
+    nSource = bar.middle.mult(nSE.middle);
+    nNW.middle = nNW.middle.sub(
+      upperShift.dot(bar.middle).dot(lowerShift).mult(nNW.middle),
+    ).add(upperShift.dot(nSource).dot(lowerShift));
+
+    // // Bounce east-moving particles to the west
+    nSource = bar.middle.mult(nW.middle);
+    nE.middle = nE.middle.sub(
+      bar.middle.dot(upperShift).mult(nE.middle),
+    ).add(nSource.dot(upperShift));
+
+    // // Bounce southwest-moving particles to the northeast
+    nSource = bar.middle.mult(nSW.middle);
+    nNE.middle = nNE.middle.sub(
+      upperShift.dot(bar.middle).dot(upperShift).mult(nNE.middle),
+    ).add(upperShift.dot(nSource).dot(upperShift));
+  }
+
   keepState() {
     ['n0', 'nE', 'nW', 'nN', 'nS', 'nNE', 'nSE', 'nNW', 'nSW'].forEach((quantity) => {
       ['top', 'bottom', 'left', 'right', 'middle', 'tlc', 'trc', 'blc', 'brc'].forEach((piece) => {
@@ -488,6 +557,7 @@ class Fluid {
       this.t += this.dt;
       this.collide();
       this.stream();
+      this.bounce();
       this.keepState();
     }
   }

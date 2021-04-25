@@ -5,10 +5,10 @@ let fluid;
 
 function setup() {
   createCanvas(400, 400);
-  fluid = new Fluid('navy');
+  fluid = new Fluid('indigo');
 }
 
 function draw() {
   fluid.step();
-  fluid.draw('rho', 50, 100);
+  fluid.draw('rho', 40, 100);
 }
