@@ -562,7 +562,7 @@ class Fluid {
     }
   }
 
-  draw(param = 'uy', low = 0, high = 100) {
+  draw(param = 'uy', low = 0, high = 100, newHue = null) {
     // map tensor elements to the range 0-100
     let tensor = Fluid.fuse(this.state[param]);
     const tensorMin = tensor.min();
@@ -575,13 +575,13 @@ class Fluid {
     tensor = tensor.add(low);
     tensor = tensor.arraySync();
     // draw grid cells
-    colorMode(HSB);
+    const h = newHue || this.hue;
     const { m, n, gridSize } = this.params;
     for (let i = 0; i < m; i += 1) {
       const y = i * gridSize;
       for (let j = 0; j < n; j += 1) {
         const x = j * gridSize;
-        const c = color(this.hue, tensor[j][i], 100);
+        const c = color(h, tensor[j][i], 100);
         fill(c);
         stroke(c);
         square(x, y, gridSize);

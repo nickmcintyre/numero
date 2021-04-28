@@ -14,7 +14,7 @@ class Bubble {
   }
 
   // Subtract each p5.Vector coordinates from width, height
-  // then divide by gridSize
+  // then divide by gridSize.
   static scaleKeypoints(fluid, keypoints) {
     const scaled = [];
     const bigV = createVector(width, height);
@@ -25,7 +25,7 @@ class Bubble {
     return scaled;
   }
 
-  // Generate the convex hull for the set of keypoints
+  // Generate the convex hull for the set of keypoints.
   static convexHull(keypoints, lower, upper) {
     keypoints.sort((a, b) => (
       a.x === b.x ? a.y - b.y : a.x - b.x
@@ -65,7 +65,8 @@ class Bubble {
     return lower.concat(upper);
   }
 
-  // Decrease search area by finding the bounding rectangle around the convex hull
+  // Decrease search area by finding the bounding rectangle around the
+  // convex hull.
   static findEdges(hull) {
     const edges = {
       left: {
@@ -96,7 +97,8 @@ class Bubble {
     return edges;
   }
 
-  // Place convex hull (1) in bounding box (0)
+  // Place convex hull (1) in bounding box (0).
+  // TODO: this seems broken
   static fillHull(edges, lower, upper) {
     const m = floor(edges.upper.y - edges.lower.y);
     const n = floor(edges.right.x - edges.left.x);
@@ -110,18 +112,18 @@ class Bubble {
           const y = edges.lower.y + j;
           let interior = true;
 
-          // for the lower hull, check to see that each test point is > y
+          // For the lower hull, check to see that each test point is > y.
           for (let k = 1; k < lower.length; k += 1) {
-            const eq = linear(lower[k], lower[k - 1]);
-            if (y < eq.m * x + eq.b) {
+            const f = linear(lower[k], lower[k - 1]);
+            if (y < f(x)) {
               interior = false;
             }
           }
 
-          // for the upper hull, check to see that each test point is < y
+          // For the upper hull, check to see that each test point is < y.
           for (let k = 1; k < upper.length; k += 1) {
-            const eq = linear(upper[k], upper[k - 1]);
-            if (y > eq.m * x + eq.b) {
+            const f = linear(upper[k], upper[k - 1]);
+            if (y > f(x)) {
               interior = false;
             }
           }
@@ -138,7 +140,7 @@ class Bubble {
     return result;
   }
 
-  // Add hull and bounding box as barriers
+  // Add hull and bounding box as barriers.
   static addHull(fluid, bbox, edges) {
     const { m, n } = fluid.params;
 
@@ -156,9 +158,9 @@ class Bubble {
     }
   }
 
-  // Outline poses (people) moving in a fluid
+  // Outline poses (people) moving in a fluid.
   static envelop(poses, fluid) {
-    // assign to barrier
+    // Assign to barrier.
     for (let i = 0; i < poses.length; i += 1) {
       const { pose } = poses[i];
       let keypoints = Bubble.getKeypoints(pose);
@@ -173,12 +175,12 @@ class Bubble {
   }
 }
 
-// Generate a linear function between two points
+// Compute parameters for a linear function between two points.
 function linear(p0, p1) {
   const dy = p1.y - p0.y;
   const dx = p1.x - p0.x === 0 ? 0.00000001 : p1.x - p0.x; // TODO: Fix this
   const m = dy / dx;
   const b = p1.y - m * p1.x;
 
-  return { m, b };
+  return (x) => m * x + b;
 }
