@@ -1,6 +1,14 @@
 import * as tf from '@tensorflow/tfjs';
+import * as math from 'mathjs';
 import * as dfd from './lib/danfo';
 import * as ml5 from './lib/ml5';
+import {
+  compile,
+  derivative,
+  evaluate,
+  parse,
+  simplify,
+} from './algebra';
 import { DataFrame, createDataFrame } from './data';
 import { Tensor, createTensor } from './tensor';
 import {
@@ -85,6 +93,19 @@ window.ml5 = ml5.default;
 const { setBackend, getBackend } = tf;
 
 export {
+  // CAS
+  math,
+  compile,
+  derivative,
+  evaluate,
+  parse,
+  simplify,
+  // Data
+  dfd,
+  DataFrame,
+  // Tensor
+  tf,
+  Tensor,
   add,
   sub,
   mult,
@@ -137,8 +158,6 @@ export {
   endScope,
   keep,
   dispose,
-  tf,
-  Tensor,
   fromImage,
   toImage,
   getBackend,
@@ -150,6 +169,4 @@ export {
   average,
   sd,
   variance,
-  dfd,
-  DataFrame,
 };

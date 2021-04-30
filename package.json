@@ -14,7 +14,10 @@
   "author": "Nick McIntyre <nick@mcintyre.io>",
   "license": "MIT",
   "devDependencies": {
+    "@tensorflow/tfjs-converter": "^1.2.9",
+    "@tensorflow/tfjs-core": "^1.2.9",
     "@types/chai": "^4.2.12",
+    "@types/mathjs": "^6.0.11",
     "@types/mocha": "^8.0.3",
     "@types/p5": "^0.9.1",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
@@ -23,15 +26,15 @@
     "eslint": "^7.9.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
+    "katex": "^0.13.3",
     "mocha": "^8.1.3",
     "mocha-chrome": "^2.2.0",
     "p5": "^1.1.9",
+    "p5.touchgui": "^0.5.2",
     "ts-loader": "^8.0.4",
     "typescript": "^3.9.7",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12",
-    "@tensorflow/tfjs-core": "^1.2.9",
-    "@tensorflow/tfjs-converter": "^1.2.9"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "@magenta/sketch": "0.2.0",
