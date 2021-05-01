@@ -2,6 +2,7 @@ import * as tf from '@tensorflow/tfjs';
 import * as math from 'mathjs';
 import * as dfd from './lib/danfo';
 import * as ml5 from './lib/ml5';
+import { Turtle } from './lib/turtle';
 import {
   compile,
   derivative,
@@ -169,4 +170,6 @@ export {
   average,
   sd,
   variance,
+  // Turtle
+  Turtle,
 };
