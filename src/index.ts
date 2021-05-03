@@ -10,7 +10,11 @@ import {
   parse,
   simplify,
 } from './algebra';
-import { DataFrame, createDataFrame } from './data';
+import {
+  DataFrame,
+  createDataFrame,
+  loadDataFrame,
+} from './data';
 import { Tensor, createTensor } from './tensor';
 import {
   add,
@@ -83,6 +87,7 @@ declare const p5: any;
 declare const window: any;
 
 p5.prototype.createDataFrame = createDataFrame;
+p5.prototype.loadDataFrame = loadDataFrame;
 p5.prototype.createTensor = createTensor;
 p5.prototype.registerMethod('init', startScope);
 p5.prototype.registerMethod('pre', startScope);

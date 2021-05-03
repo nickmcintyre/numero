@@ -15,7 +15,7 @@ describe('DataFrame', function () {
   describe('DataFrame', function () {
     it('Should have a dfd.DataFrame under the hood', function () {
       const df = pInst.createDataFrame([[1, 2, 3], [4, 5, 6]]);
-      expect(df.dataframe).to.be.an.instanceof(num.dfd.DataFrame);
+      expect(df).to.be.an.instanceof(num.DataFrame);
     });
   });
 
@@ -49,6 +49,14 @@ describe('DataFrame', function () {
 
     it('Should reject garbage arguments', function () {
       expect(() => pInst.createDataFrame("I'm only happy when it rains")).to.throw(Error);
+    });
+  });
+
+  describe('loadDataFrame()', function () {
+    it('Should load csv files', function () {
+      pInst.loadDataFrame('https://assets.computiful.org/pre-alpha/who_life_expectancy.csv', 'csv', (df) => {
+        expect(df).to.be.an.instanceof(num.dfd.DataFrame);
+      });
     });
   });
 });
