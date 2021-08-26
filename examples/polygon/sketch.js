@@ -6,9 +6,9 @@ function setup() {
   noLoop();
   angleMode(DEGREES);
   
-  numSides = createSlider(3, 20, 3, 1);
-  numSides.position(100, 300);
-  numSides.style('width', '200px');
+  sidesSlider = createSlider(3, 20, 3, 1);
+  sidesSlider.position(100, 300);
+  sidesSlider.style('width', '200px');
   button = createButton('Redraw');
   button.style('width', '100px');
   button.position(150, 350);
@@ -19,15 +19,14 @@ function setup() {
 
 function draw() {
   background('darkorchid');
-  polygon(100, numSides.value());
+  polygon(100, sidesSlider.value());
   fill('darkturquoise');
   noStroke();
   text('3', 100, 330);
   text('20', 290, 330);
 }
 
-function polygon(diameter) {
-  let n = numSides.value();
+function polygon(diameter, n) {
   let interiorAngle = 180 * (n - 2) / n;
   let turnAngle = 180 - interiorAngle;
   let sideLength = 0.5 * diameter * sin(interiorAngle);

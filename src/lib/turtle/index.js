@@ -94,14 +94,14 @@ export class Turtle
         var currAngleMode = this._angleMode;
 
         // switch to DEGREES
-        angleMode(DEGREES);
+        this.buff.angleMode(this.buff.DEGREES);
 
         // apply -90 correction since in logo 0 degrees is up
-        var x2 = this.turtle.x + d * cos(this.turtle.angle - 90);
-        var y2 = this.turtle.y + d * sin(this.turtle.angle - 90);
+        var x2 = this.turtle.x + d * this.buff.cos(this.turtle.angle - 90);
+        var y2 = this.turtle.y + d * this.buff.sin(this.turtle.angle - 90);
 
         // restore original angleMode
-        angleMode(currAngleMode);
+        this.buff.angleMode(currAngleMode);
         
         if (this.turtle.pen)
         {
