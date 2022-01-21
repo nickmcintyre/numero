@@ -13,7 +13,7 @@ This project aims to bring the mathematical chops of [NumPy](https://numpy.org/)
 - Make the API familiar (e.g., `createTensor()`).
 - Encourage all kinds of contributions.
 
-The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/), [Danfo.js](https://danfo.jsdata.org/), and [Math.js](https://mathjs.org/) under the hood. It bundles [ml5.js](https://ml5js.org/) to handle machine learning.
+The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/) and [Math.js](https://mathjs.org/) under the hood. It bundles [ml5.js](https://ml5js.org/) for machine learning and [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX) for drawing with turtles.
 
 ## Usage
 

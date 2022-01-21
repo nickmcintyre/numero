@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs';
 import * as math from 'mathjs';
-import * as dfd from './lib/danfo';
 import * as ml5 from './lib/ml5';
 import { Turtle } from './lib/turtle';
 import {
@@ -10,11 +9,6 @@ import {
   parse,
   simplify,
 } from './algebra';
-import {
-  DataFrame,
-  createDataFrame,
-  loadDataFrame,
-} from './data';
 import { Tensor, createTensor } from './tensor';
 import {
   add,
@@ -86,8 +80,6 @@ import {
 declare const p5: any;
 declare const window: any;
 
-p5.prototype.createDataFrame = createDataFrame;
-p5.prototype.loadDataFrame = loadDataFrame;
 p5.prototype.createTensor = createTensor;
 p5.prototype.registerMethod('init', startScope);
 p5.prototype.registerMethod('pre', startScope);
@@ -106,9 +98,6 @@ export {
   evaluate,
   parse,
   simplify,
-  // Data
-  dfd,
-  DataFrame,
   // Tensor
   tf,
   Tensor,

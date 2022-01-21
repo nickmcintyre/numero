@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "test": "mocha-chrome test/test.html",
+    "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "dev": "webpack --watch --config webpack.config.js",
     "all": "npm run build && npm run test",
     "postinstall": "./scripts/post-install.sh"
@@ -16,25 +16,27 @@
   "devDependencies": {
     "@tensorflow/tfjs-converter": "^1.2.9",
     "@tensorflow/tfjs-core": "^1.2.9",
-    "@types/chai": "^4.2.12",
-    "@types/mathjs": "^6.0.11",
-    "@types/mocha": "^8.0.3",
-    "@types/p5": "^0.9.1",
-    "@typescript-eslint/eslint-plugin": "^3.10.1",
-    "@typescript-eslint/parser": "^3.10.1",
-    "chai": "^4.2.0",
-    "eslint": "^7.9.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "katex": "^0.13.3",
-    "mocha": "^8.1.3",
-    "mocha-chrome": "^2.2.0",
-    "p5": "^1.1.9",
-    "p5.touchgui": "^0.5.2",
-    "ts-loader": "^8.0.4",
-    "typescript": "^3.9.7",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "@types/chai": "^4.3.0",
+    "@types/mathjs": "^9.4.2",
+    "@types/mocha": "^9.1.0",
+    "@types/p5": "^1.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "chai": "^4.3.4",
+    "eslint": "^8.7.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "karma": "^6.3.11",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-mocha": "^2.0.1",
+    "katex": "^0.15.2",
+    "mocha": "^9.1.4",
+    "p5": "^1.4.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1"
   },
   "dependencies": {
     "@magenta/sketch": "0.2.0",
@@ -52,9 +54,7 @@
     "axios": "^0.21.1",
     "events": "^3.0.0",
     "face-api.js": "~0.22.2",
-    "onchange": "^6.1.0",
-    "mathjs": "^7.5.1",
-    "table": "^5.4.6",
-    "xlsx": "^0.16.9"
+    "mathjs": "^10.1.0",
+    "onchange": "^6.1.0"
   }
 }

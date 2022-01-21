@@ -14,7 +14,7 @@ describe('ml5', function () {
 
   describe('window.ml5', function () {
     it('Should exist', function () {
-      expect(ml5.version).to.equal('0.6.1');
+      expect(ml5.version).to.equal('0.8.0');
     });
   });
 });
