@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "12.22.0"
+  - "16.13.0"
 
 addons:
   chrome: stable
@@ -8,6 +8,3 @@ addons:
 script:
   - npm run build
   - npm run test
-
-after_failure:
-  - cat node_modules/@tensorflow-models/speech-commands/package.json.rej

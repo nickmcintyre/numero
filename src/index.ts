@@ -1,6 +1,8 @@
-import * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs-core';
+import * as cpu from '@tensorflow/tfjs-backend-cpu';
+import * as webgl from '@tensorflow/tfjs-backend-webgl';
+import * as wasm from '@tensorflow/tfjs-backend-wasm';
 import * as math from 'mathjs';
-import * as ml5 from './lib/ml5';
 import { Turtle } from './lib/turtle';
 import {
   compile,
@@ -78,15 +80,12 @@ import {
 } from './stats';
 
 declare const p5: any;
-declare const window: any;
 
 p5.prototype.createTensor = createTensor;
 p5.prototype.registerMethod('init', startScope);
 p5.prototype.registerMethod('pre', startScope);
 p5.prototype.registerMethod('post', endScope);
 p5.prototype.registerMethod('remove', endScope);
-
-window.ml5 = ml5.default;
 
 const { setBackend, getBackend } = tf;
 
@@ -157,6 +156,9 @@ export {
   toImage,
   getBackend,
   setBackend,
+  cpu,
+  webgl,
+  wasm,
   ptp,
   percentile,
   quantile,

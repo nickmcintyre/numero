@@ -6,14 +6,14 @@
 
 [![Build Status](https://travis-ci.com/nickmcintyre/numero.svg?branch=master)](https://travis-ci.com/nickmcintyre/numero)
 
-This project aims to bring the mathematical chops of [NumPy](https://numpy.org/), [pandas](https://pandas.pydata.org/), and [SymPy](https://www.sympy.org/en/index.html) to the [p5.js](https://p5js.org/) ecosystem. A few guiding principles are:
+This addon library for p5.js turns the "software sketchbook" into a beginner-friendly environment for technical computing. It provides the following features:
 
-- Focus on beginners.
-- Complement core p5.js math functions and play nicely with p5.Vector.
-- Make the API familiar (e.g., `createTensor()`).
-- Encourage all kinds of contributions.
+- A tensor object (similar to [NumPy](https://numpy.org/) arrays)
+- A computer algebra system (similar to [SymPy](https://www.sympy.org/en/index.html))
+- A plotting API (similar to [Matplotlib](https://matplotlib.org/) -- coming soon!)
+- A drawing turtle (because they're awesome)
 
-The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/) and [Math.js](https://mathjs.org/) under the hood. It bundles [ml5.js](https://ml5js.org/) for machine learning and [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX) for drawing with turtles.
+The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/) and [Math.js](https://mathjs.org/) under the hood. It bundles [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX) for drawing with turtles.
 
 ## Usage
 
