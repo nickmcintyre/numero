@@ -1,6 +1,6 @@
 {
   "name": "numero",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "A friendly and intuitive math library for p5.js",
   "main": "index.js",
   "scripts": {
@@ -35,10 +35,7 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "@tensorflow/tfjs-core": "^2.8.6",
-    "@tensorflow/tfjs-backend-cpu": "^2.8.6",
-    "@tensorflow/tfjs-backend-wasm": "^2.8.6",
-    "@tensorflow/tfjs-backend-webgl": "^2.8.6",
+    "@tensorflow/tfjs": "^3.13.0",
     "mathjs": "^10.1.1"
   }
 }

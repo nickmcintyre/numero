@@ -1,16 +1,19 @@
 # número
+
 ![número](numero.png)
 > A friendly and intuitive math library for p5.js
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
-[![Build Status](https://travis-ci.com/nickmcintyre/numero.svg?branch=master)](https://travis-ci.com/nickmcintyre/numero)
+[![Build Status](https://app.travis-ci.com/nickmcintyre/numero.svg?branch=main)](https://app.travis-ci.com/nickmcintyre/numero)
 
 This addon library for p5.js turns the "software sketchbook" into a beginner-friendly environment for technical computing. It provides the following features:
 
 - A tensor object (similar to [NumPy](https://numpy.org/) arrays)
 - A computer algebra system (similar to [SymPy](https://www.sympy.org/en/index.html))
 - A plotting API (similar to [Matplotlib](https://matplotlib.org/) -- coming soon!)
+- A supercharged p5.Table (similar to [pandas](https://pandas.pydata.org/) DataFrames -- coming soon!)
+- A machine learning API (similar to [Keras](https://keras.io/) -- coming soon!)
 - A drawing turtle (because they're awesome)
 
 The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/) and [Math.js](https://mathjs.org/) under the hood. It bundles [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX) for drawing with turtles.
@@ -27,11 +30,13 @@ b.print();
 ```
 
 ## Demo
+
 The fluid simulation below was created using a 2-dimensional [lattice Boltzmann method](https://en.wikipedia.org/wiki/Lattice_Boltzmann_methods).
 
 ![A fluid simulation](examples/fluid-simulation/lbm.gif)
 
 ## Contributing
+
 See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Contributors ✨

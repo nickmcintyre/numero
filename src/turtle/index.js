@@ -1,36 +1,18 @@
-/*
-    Turtle Graphics Library for p5.js
-    Great for education!
-
-    Author: codeguppy.com (the p5.js based coding site for kids, teens and creative adults)
-    
-    Library supports two modes:
-        - Easy Mode / Default turtle mode (global API such as: forward(), left(), right(), etc.)
-        - Multiple turtles mode ( let turtle = createTurtle(); turtle.forward(); etc. );
-
-    Please refers to included examples for usage examples
-
-    CC BY 2.0  (https://creativecommons.org/licenses/by/2.0/)
-*/
-
 export class Turtle {
-  // turtle;
-  // buff
-
-  constructor(buff) {
-    this.buff = buff;
+  constructor(pInst) {
+    this.pInst = pInst;
 
     this.turtle = {};
     this.home();
   }
 
   home() {
-    this.turtle.x = this.buff.width / 2;
-    this.turtle.y = this.buff.height / 2;
+    this.turtle.x = this.pInst.width / 2;
+    this.turtle.y = this.pInst.height / 2;
     this.turtle.angle = 0;
 
     this.turtle.pen = true;
-    this.turtle.pencolor = "Black";
+    this.turtle.pencolor = "black";
     this.turtle.penwidth = 1;
   }
 
@@ -80,23 +62,23 @@ export class Turtle {
     const currAngleMode = this._angleMode;
 
     // switch to DEGREES
-    this.buff.angleMode(this.buff.DEGREES);
+    this.pInst.angleMode(this.pInst.DEGREES);
 
     // apply -90 correction since in logo 0 degrees is up
-    const x2 = this.turtle.x + d * this.buff.cos(this.turtle.angle - 90);
-    const y2 = this.turtle.y + d * this.buff.sin(this.turtle.angle - 90);
+    const x2 = this.turtle.x + d * this.pInst.cos(this.turtle.angle - 90);
+    const y2 = this.turtle.y + d * this.pInst.sin(this.turtle.angle - 90);
 
     // restore original angleMode
-    this.buff.angleMode(currAngleMode);
+    this.pInst.angleMode(currAngleMode);
 
     if (this.turtle.pen) {
-      this.buff.push();
+      this.pInst.push();
 
-      this.buff.strokeWeight(this.turtle.penwidth);
-      this.buff.stroke(this.turtle.pencolor);
-      this.buff.line(this.turtle.x, this.turtle.y, x2, y2);
+      this.pInst.strokeWeight(this.turtle.penwidth);
+      this.pInst.stroke(this.turtle.pencolor);
+      this.pInst.line(this.turtle.x, this.turtle.y, x2, y2);
 
-      this.buff.pop();
+      this.pInst.pop();
     }
 
     this.turtle.x = x2;
@@ -110,13 +92,13 @@ export class Turtle {
   circle(r) {
     if (!this.turtle.pen) return;
 
-    this.buff.push();
+    this.pInst.push();
 
-    this.buff.strokeWeight(this.turtle.penwidth);
-    this.buff.stroke(this.turtle.pencolor);
-    this.buff.circle(this.turtle.x, this.turtle.y, 2 * r);
+    this.pInst.strokeWeight(this.turtle.penwidth);
+    this.pInst.stroke(this.turtle.pencolor);
+    this.pInst.circle(this.turtle.x, this.turtle.y, 2 * r);
 
-    this.buff.pop();
+    this.pInst.pop();
   }
 }
 

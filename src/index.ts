@@ -1,9 +1,6 @@
-import * as tf from '@tensorflow/tfjs-core';
-import * as cpu from '@tensorflow/tfjs-backend-cpu';
-import * as webgl from '@tensorflow/tfjs-backend-webgl';
-import * as wasm from '@tensorflow/tfjs-backend-wasm';
+import * as tf from '@tensorflow/tfjs';
 import * as math from 'mathjs';
-import { Turtle } from './lib/turtle';
+import { Turtle } from './turtle';
 import {
   compile,
   derivative,
@@ -156,9 +153,6 @@ export {
   toImage,
   getBackend,
   setBackend,
-  cpu,
-  webgl,
-  wasm,
   ptp,
   percentile,
   quantile,
