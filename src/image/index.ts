@@ -3,6 +3,8 @@ import * as p5 from 'p5';
 
 import { createTensor, Tensor } from '../tensor/index';
 
+const { createImage } = p5.prototype;
+
 /**
  * Creates a Tensor object from an existing p5.Image.
  *
@@ -30,7 +32,7 @@ export const toImage = function drawTensorToImage(t: Tensor): Promise<p5.Image> 
   const height: number = shape[0];
   const width: number = shape[1];
   const depth: number = shape[2];
-  const img: any = p5.prototype.createImage(width, height);
+  const img: any = createImage(width, height);
   const intensor: tf.Tensor = t.tensor.toInt();
   const t3D: tf.Tensor3D = intensor.as3D(height, width, depth);
 

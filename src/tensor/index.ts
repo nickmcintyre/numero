@@ -1,6 +1,8 @@
 import * as tf from '@tensorflow/tfjs';
 import * as p5 from 'p5';
 
+const { createVector } = p5.prototype;
+
 /**
  * A class to describe a tensor, a generalization of vectors and matrices.
  * Tensors can be thought of as (possibly) multidimensional arrays that support
@@ -88,7 +90,7 @@ export class Tensor {
     const shape = JSON.stringify(this.shape);
     if (shape === '[2]' || shape === '[3]') {
       const a = this.arraySync();
-      const v = p5.prototype.createVector();
+      const v = createVector();
       return v.set(a);
     }
 

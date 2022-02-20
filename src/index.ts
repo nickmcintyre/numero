@@ -75,6 +75,13 @@ import {
   sd,
   variance,
 } from './stats';
+import {
+  figure,
+  axes,
+  basePlot,
+  plot,
+  scatter,
+} from './plot'
 
 declare const p5: any;
 
@@ -85,6 +92,44 @@ p5.prototype.registerMethod('post', endScope);
 p5.prototype.registerMethod('remove', endScope);
 
 const { setBackend, getBackend } = tf;
+
+p5.prototype.figure = function drawFigure(): object {
+  return figure(this);
+};
+
+p5.prototype.axes = function drawAxes(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  steps: number=7
+) {
+  axes(this, x, y, w, h, steps);
+};
+
+p5.prototype.basePlot = function drawBasePlot(
+  x: number[],
+  y: number[],
+  numTicks: number = 7,
+): object {
+  return basePlot(this, x, y, numTicks);
+};
+
+p5.prototype.plot = function drawLinePlot(
+  x: number[],
+  y: number[],
+  numTicks: number = 7
+) {
+  plot(this, x, y, numTicks);
+};
+
+p5.prototype.scatter = function drawScatterPlot(
+  x: number[],
+  y: number[],
+  numTicks: number = 7
+) {
+  scatter(this, x, y, numTicks);
+};
 
 export {
   // CAS
@@ -162,4 +207,10 @@ export {
   variance,
   // Turtle
   Turtle,
+  // plot
+  figure,
+  axes,
+  basePlot,
+  plot,
+  scatter
 };
