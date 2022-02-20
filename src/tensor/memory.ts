@@ -39,7 +39,7 @@ export const endScope = () => tf.engine().endScope();
 
 /**
  * Keeps a tensor from being disposed automatically.
- * 
+ *
  * @param tensor the tensor or tensors to be kept in memory
  */
 export const keep = function keepInMemory(x: Tensor | Tensor[]) {
@@ -52,7 +52,7 @@ export const keep = function keepInMemory(x: Tensor | Tensor[]) {
 
 /**
  * Manually dispose of a tensor.
- * 
+ *
  * @param x the tensor or tensors to be disposed of
  */
 export const dispose = function disposeFromMemory(x: Tensor | Tensor[]) {

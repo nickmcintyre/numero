@@ -81,7 +81,7 @@ import {
   basePlot,
   plot,
   scatter,
-} from './plot'
+} from './plot';
 
 declare const p5: any;
 
@@ -102,7 +102,7 @@ p5.prototype.axes = function drawAxes(
   y: number,
   w: number,
   h: number,
-  steps: number=7
+  steps: number = 7,
 ) {
   axes(this, x, y, w, h, steps);
 };
@@ -118,7 +118,7 @@ p5.prototype.basePlot = function drawBasePlot(
 p5.prototype.plot = function drawLinePlot(
   x: number[],
   y: number[],
-  numTicks: number = 7
+  numTicks: number = 7,
 ) {
   plot(this, x, y, numTicks);
 };
@@ -126,7 +126,7 @@ p5.prototype.plot = function drawLinePlot(
 p5.prototype.scatter = function drawScatterPlot(
   x: number[],
   y: number[],
-  numTicks: number = 7
+  numTicks: number = 7,
 ) {
   scatter(this, x, y, numTicks);
 };
@@ -212,5 +212,5 @@ export {
   axes,
   basePlot,
   plot,
-  scatter
+  scatter,
 };

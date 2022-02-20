@@ -3,13 +3,13 @@ import * as p5 from 'p5';
 const {
   min,
   max,
-  map
+  map,
 } = p5.prototype;
 
 /**
  * Constructs a figure to contain plotting elements such as axes,
  * lines, markers, etc.
- * 
+ *
  * @param pInst the p5 instance used for rendering
  * @returns     an object describing the figure
  */
@@ -21,18 +21,20 @@ export const figure = function drawFigure(pInst: any): object {
   const oy = littlePad;
   const width = pInst.width - (littlePad + bigPad);
   const height = pInst.height - (littlePad + bigPad);
-  pInst.stroke("black");
+  pInst.stroke('black');
   pInst.strokeWeight(1);
-  pInst.fill("white");
+  pInst.fill('white');
   pInst.rect(ox, oy, width, height);
   pInst.pop();
 
-  return { ox, oy, width, height, bigPad, littlePad };
-}
+  return {
+    ox, oy, width, height, bigPad, littlePad,
+  };
+};
 
 /**
  * Constructs a pair of x and y-axes.
- * 
+ *
  * @param pInst     the p5 instance used for rendering
  * @param ox        the origin's x-coordinate
  * @param oy        the origin's y-coordinate
@@ -41,26 +43,26 @@ export const figure = function drawFigure(pInst: any): object {
  * @param numTicks  the number of tick marks
  */
 export const axes = function drawAxes(
-    pInst: any,
-    ox: number,
-    oy: number,
-    width: number,
-    height: number,
-    numTicks: number=7,
-    margin: number=20
+  pInst: any,
+  ox: number,
+  oy: number,
+  width: number,
+  height: number,
+  numTicks: number = 7,
+  margin: number = 20,
 ) {
   pInst.push();
   pInst.translate(ox, oy);
 
   pInst.push();
-  pInst.stroke("black");
+  pInst.stroke('black');
   pInst.strokeWeight(1);
   pInst.line(0, 0, width, 0);
   pInst.line(0, 0, 0, height);
   pInst.pop();
 
   pInst.push();
-  pInst.stroke("black");
+  pInst.stroke('black');
   pInst.strokeWeight(1);
   const dx = (width - 2 * margin) / (numTicks - 1);
   for (let i = 0; i < numTicks; i += 1) {
@@ -70,7 +72,7 @@ export const axes = function drawAxes(
   pInst.pop();
 
   pInst.push();
-  pInst.stroke("black");
+  pInst.stroke('black');
   pInst.strokeWeight(1);
   const dy = (height - 2 * margin) / (numTicks - 1);
   for (let i = 0; i < numTicks; i += 1) {
@@ -84,18 +86,18 @@ export const axes = function drawAxes(
 
 /**
  * Constructs an empty plot.
- * 
+ *
  * @param pInst     the p5 instance used for rendering
  * @param x         the x-values to be plotted
  * @param y         the y-values to be plotted
  * @param numTicks  (optional) the number of tick marks
  * @returns         an object describing the plot
  */
-export const basePlot = function(
+export const basePlot = function drawBasePlot(
   pInst: any,
   x: number[],
   y: number[],
-  numTicks: number = 7
+  numTicks: number = 7,
 ): object {
   const {
     ox,
@@ -103,7 +105,7 @@ export const basePlot = function(
     width,
     height,
     bigPad,
-    littlePad
+    littlePad,
   } = pInst.figure();
 
   pInst.push();
@@ -116,7 +118,7 @@ export const basePlot = function(
     width,
     height,
     numTicks,
-    margin
+    margin,
   );
   pInst.pop();
 
@@ -134,7 +136,7 @@ export const basePlot = function(
   pInst.push();
   pInst.textAlign(pInst.CENTER, pInst.CENTER);
   pInst.noStroke();
-  pInst.fill("black");
+  pInst.fill('black');
   pInst.translate(xstart, oy + height + margin);
   const dx = (width - 2 * margin) / (numTicks - 1);
   for (let i = 0; i < numTicks; i += 1) {
@@ -154,7 +156,7 @@ export const basePlot = function(
   pInst.push();
   pInst.textAlign(pInst.CENTER, pInst.CENTER);
   pInst.noStroke();
-  pInst.fill("black");
+  pInst.fill('black');
   pInst.translate(ox - margin, ystart);
   const dy = (height - 2 * margin) / (numTicks - 1);
   for (let i = 0; i < numTicks; i += 1) {
@@ -177,14 +179,13 @@ export const basePlot = function(
     ymax,
     pad: bigPad + margin,
     width: width - 2 * margin,
-    height: height - 2 * margin
+    height: height - 2 * margin,
   };
 };
 
-
 /**
  * Constructs a line plot from arrays of x and y-values.
- * 
+ *
  * @param pInst     the p5 instance used for rendering
  * @param x         the x-values to be plotted
  * @param y         the y-values to be plotted
@@ -194,7 +195,7 @@ export const plot = function drawLinePlot(
   pInst: any,
   x: number[],
   y: number[],
-  numTicks: number = 7
+  numTicks: number = 7,
 ) {
   if (!(x instanceof Array) || !(y instanceof Array)) {
     throw new Error('plots must be created from Arrays.');
@@ -210,7 +211,7 @@ export const plot = function drawLinePlot(
     ymax,
     pad,
     width,
-    height
+    height,
   } = pInst.basePlot(x, y, numTicks);
 
   pInst.push();
@@ -228,7 +229,7 @@ export const plot = function drawLinePlot(
 
 /**
  * Constructs a scatter plot from arrays of x and y-values.
- * 
+ *
  * @param pInst     the p5 instance used for rendering
  * @param x         the x-values to be plotted
  * @param y         the y-values to be plotted
@@ -238,14 +239,14 @@ export const scatter = function drawScatterPlot(
   pInst: any,
   x: number[],
   y: number[],
-  numTicks: number = 7
+  numTicks: number = 7,
 ) {
   if (!(x instanceof Array) || !(y instanceof Array)) {
     throw new Error('plots must be created from Arrays.');
   } else if (x.length !== y.length) {
     throw new Error('x and y Arrays must be the same length.');
   }
-  
+
   // Summarize data
   const {
     xmin,
@@ -254,7 +255,7 @@ export const scatter = function drawScatterPlot(
     ymax,
     pad,
     width,
-    height
+    height,
   } = pInst.basePlot(x, y, numTicks);
 
   pInst.push();

@@ -12,7 +12,7 @@ export class Turtle {
     this.turtle.angle = 0;
 
     this.turtle.pen = true;
-    this.turtle.pencolor = "black";
+    this.turtle.pencolor = 'black';
     this.turtle.penwidth = 1;
   }
 
