@@ -44,9 +44,7 @@ describe('Memory', function () {
     });
 
     it('Should return tensors', function () {
-      const t = num.tidy(() => {
-        return pInst.createTensor([1, 2, 3]);
-      });
+      const t = num.tidy(() => pInst.createTensor([1, 2, 3]));
       expect(t).to.be.an.instanceof(num.Tensor);
     });
   });

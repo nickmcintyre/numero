@@ -82,6 +82,13 @@ import {
   plot,
   scatter,
 } from './plot';
+import {
+  tableMean,
+  tableMedian,
+  tableMax,
+  tableMin,
+  tableSd,
+} from './table';
 
 declare const p5: any;
 
@@ -129,6 +136,26 @@ p5.prototype.scatter = function drawScatterPlot(
   numTicks: number = 7,
 ) {
   scatter(this, x, y, numTicks);
+};
+
+p5.Table.prototype.mean = function computeMean(column: string): any {
+  return tableMean(this, column);
+};
+
+p5.Table.prototype.median = function computeMedian(column: string): any {
+  return tableMedian(this, column);
+};
+
+p5.Table.prototype.max = function computeMax(column: string): any {
+  return tableMax(this, column);
+};
+
+p5.Table.prototype.min = function computeMin(column: string): any {
+  return tableMin(this, column);
+};
+
+p5.Table.prototype.sd = function computeSd(column: string): any {
+  return tableSd(this, column);
 };
 
 export {

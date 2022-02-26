@@ -21,12 +21,12 @@ describe('Plotting', function () {
     it('Should return a description object', function () {
       const obj = pInst.figure();
       const props = ['ox', 'oy', 'width', 'height', 'bigPad', 'littlePad'];
-      props.forEach(p => {
+      props.forEach((p) => {
         expect(obj).to.have.property(p);
       });
     });
   });
-    
+
   describe('axes()', function () {
     it('Should exist', function () {
       expect(num.axes).to.be.an.instanceof(Function);
@@ -43,7 +43,7 @@ describe('Plotting', function () {
     it('Should return a description object', function () {
       const obj = pInst.basePlot();
       const props = ['xmin', 'xmax', 'ymin', 'ymax', 'pad', 'width', 'height'];
-      props.forEach(p => {
+      props.forEach((p) => {
         expect(obj).to.have.property(p);
       });
     });
