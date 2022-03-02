@@ -346,8 +346,8 @@ export const tan = function tensorTan(t: Tensor): Tensor {
  * @returns    the complex tensor
  */
 export const complex = function tensorComplex(
-  real: number | Tensor,
-  imag: number | Tensor,
+  real: number | number[] | Tensor,
+  imag: number | number[] | Tensor,
 ): Tensor {
   return Tensor.complex(real, imag);
 };
@@ -611,4 +611,19 @@ export const sort = function tensorSort(t: Tensor): Tensor {
   indices.dispose();
 
   return new Tensor(values);
+};
+
+// ===== Spectral =====
+
+/**
+ * Computes the 1-dimensional discrete Fourier transform
+ * over the inner-most dimension of input.
+ *
+ * @param x the complex Tensor to compute an FFT over
+ * @returns the transformed Tensor
+ */
+export const fft = function tensorFFT(x: Tensor): Tensor {
+  const X: Tensor = x.fft();
+
+  return X;
 };

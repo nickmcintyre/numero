@@ -503,6 +503,18 @@ export class Tensor {
     return result;
   }
 
+  // ===== Spectral =====
+
+  fft(): Tensor {
+    if (this.isComplex) {
+      const t: tf.Tensor = this.tensor.fft();
+      const result: Tensor = new Tensor(t);
+      result.isComplex = true;
+      return result;
+    }
+    throw new Error('Tensor must be complex to compute FFT.');
+  }
+
   // ===== Reduction =====
 
   /**
@@ -632,18 +644,24 @@ export class Tensor {
    * @param imag the imaginary component(s)
    * @returns    the complex tensor
    */
-  static complex(real: number | Tensor, imag: number | Tensor): Tensor {
+  static complex(
+    real: number | number[] | Tensor,
+    imag: number | number[] | Tensor,
+  ): Tensor {
     const t: tf.Tensor = tf.tidy(() => {
       let re: tf.Tensor;
       let im: tf.Tensor;
-      if (typeof real === 'number' && typeof imag === 'number') {
+      if (
+        (typeof real === 'number' && typeof imag === 'number')
+        || (real instanceof Array && imag instanceof Array)
+      ) {
         re = tf.tensor(real);
         im = tf.tensor(imag);
       } else if (real instanceof Tensor && imag instanceof Tensor) {
         re = tf.clone(real.tensor);
         im = tf.clone(imag.tensor);
       } else {
-        throw new Error('Components must be either Numbers or Tensors');
+        throw new Error('Components must be either Numbers, Arrays, or Tensors');
       }
 
       return tf.complex(re, im);

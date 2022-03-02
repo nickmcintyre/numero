@@ -536,6 +536,22 @@ describe('Tensor', function () {
     });
   });
 
+  describe('Spectral', function () {
+    describe('fft()', function () {
+      it('Should require a complex tensor', function () {
+        const x = pInst.createTensor([1, 2, 3]);
+        expect(() => x.fft()).to.throw(Error);
+      });
+
+      it('Should compute an FFT of a complex tensor', function () {
+        const x = num.complex([1, 0], [0, 0]);
+        const X = x.fft();
+        const Y = num.complex([1, 1], [0, 0]);
+        expect(X.equals(Y)).to.equal(true);
+      });
+    });
+  });
+
   describe('Reduction', function () {
     describe('sum()', function () {
       it('Should return a tensor', function () {
@@ -648,6 +664,16 @@ describe('Tensor', function () {
       it('Should accept two Number arguments', function () {
         const real = 2;
         const imag = 5;
+        const z = num.Tensor.complex(real, imag);
+        const a = pInst.createTensor(real);
+        const b = pInst.createTensor(imag);
+        expect(z.real().equals(a)).to.equal(true);
+        expect(z.imag().equals(b)).to.equal(true);
+      });
+
+      it('Should accept two Array arguments', function () {
+        const real = [1, 0];
+        const imag = [0, 0];
         const z = num.Tensor.complex(real, imag);
         const a = pInst.createTensor(real);
         const b = pInst.createTensor(imag);

@@ -56,6 +56,7 @@ import {
   stack,
   unstack,
   sort,
+  fft,
 } from './tensor/ufunc';
 import {
   memory,
@@ -215,6 +216,7 @@ export {
   stack,
   unstack,
   sort,
+  fft,
   memory,
   tidy,
   startScope,

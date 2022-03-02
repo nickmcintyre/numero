@@ -572,6 +572,14 @@ describe('Universal Functions', function () {
         });
       });
 
+      it('Should accept two Array arguments', function () {
+        const real = [1, 0];
+        const imag = [0, 0];
+        const z = num.complex(real, imag);
+        expect(z.real().equals(real)).to.equal(true);
+        expect(z.imag().equals(imag)).to.equal(true);
+      });
+
       it('Should accept two tensor arguments', function () {
         num.tidy(() => {
           const real = pInst.createTensor(2);
@@ -928,6 +936,17 @@ describe('Universal Functions', function () {
         const t2 = num.sort(t1);
         const t3 = pInst.createTensor([3, 2, 1]);
         expect(t2.equals(t3)).to.equal(true);
+      });
+    });
+  });
+
+  describe('Spectral', function () {
+    describe('fft()', function () {
+      it('Should compute an FFT of a complex tensor', function () {
+        const x = num.complex([1, 0], [0, 0]);
+        const X = num.fft(x);
+        const Y = num.complex([1, 1], [0, 0]);
+        expect(X.equals(Y)).to.equal(true);
       });
     });
   });
