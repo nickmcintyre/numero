@@ -89,10 +89,14 @@ import {
   tableMax,
   tableMin,
   tableSd,
+  tableConcat,
+  tableMerge,
+  tableMap,
 } from './table';
 
 declare const p5: any;
 
+// Tensor
 p5.prototype.createTensor = createTensor;
 p5.prototype.registerMethod('init', startScope);
 p5.prototype.registerMethod('pre', startScope);
@@ -101,6 +105,7 @@ p5.prototype.registerMethod('remove', endScope);
 
 const { setBackend, getBackend } = tf;
 
+// Plotting
 p5.prototype.figure = function drawFigure(): object {
   return figure(this);
 };
@@ -139,6 +144,7 @@ p5.prototype.scatter = function drawScatterPlot(
   scatter(this, x, y, numTicks);
 };
 
+// p5.Table
 p5.Table.prototype.mean = function computeMean(column: string): any {
   return tableMean(this, column);
 };
@@ -157,6 +163,18 @@ p5.Table.prototype.min = function computeMin(column: string): any {
 
 p5.Table.prototype.sd = function computeSd(column: string): any {
   return tableSd(this, column);
+};
+
+p5.Table.prototype.concat = function computeConcat(table: any, axis: number = 0): any {
+  return tableConcat(this, table, axis);
+};
+
+p5.Table.prototype.map = function computeMap(func: Function): any {
+  return tableMap(this, func);
+};
+
+p5.Table.prototype.merge = function computeMerge(table: any, key: string): any {
+  return tableMerge(this, table, key);
 };
 
 export {
