@@ -7,5 +7,10 @@
     "module": "es6",
     "target": "es5",
     "moduleResolution": "node"
+  },
+  "exclude": ["examples/*", "test/*"],
+  "typedocOptions": {
+    "entryPoints": ["src/index.ts"],
+    "out": "docs"
   }
 }
