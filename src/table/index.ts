@@ -6,7 +6,7 @@ import * as math from 'mathjs';
  *
  * @param table  the p5.Table to analyze
  * @param column (optional) the name of the column to analyze
- * @returns      the count
+ * @returns      the count, either as a number or as a table
  */
 export const tableCount = function computeCount(
   table: p5.Table,
@@ -32,7 +32,7 @@ export const tableCount = function computeCount(
  *
  * @param table  the p5.Table to analyze
  * @param column (optional) the name of the column to analyze
- * @returns      the mean
+ * @returns      the mean, either as a number or as a table
  */
 export const tableMean = function computeMean(table: p5.Table, column?: string): number | p5.Table {
   if (column === undefined) {
@@ -54,8 +54,8 @@ export const tableMean = function computeMean(table: p5.Table, column?: string):
  * Computes the median of a column.
  *
  * @param table  the p5.Table to analyze
- * @param column the name of the column to analyze
- * @returns      the median
+ * @param column (optional) the name of the column to analyze
+ * @returns      the median, either as a number or as a table
  */
 export const tableMedian = function computeMedian(
   table: p5.Table,
@@ -80,8 +80,8 @@ export const tableMedian = function computeMedian(
  * Computes the maximum of a column.
  *
  * @param table  the p5.Table to analyze
- * @param column the name of the column to analyze
- * @returns      the maximum
+ * @param column (optional) the name of the column to analyze
+ * @returns      the maximum, either as a number or as a table
  */
 export const tableMax = function computeMax(table: p5.Table, column?: string): number | p5.Table {
   if (column === undefined) {
@@ -103,8 +103,8 @@ export const tableMax = function computeMax(table: p5.Table, column?: string): n
  * Computes the minimum of a column.
  *
  * @param table  the p5.Table to analyze
- * @param column the name of the column to analyze
- * @returns      the minimum
+ * @param column (optional) the name of the column to analyze
+ * @returns      the minimum, either as a number or as a table
  */
 export const tableMin = function computeMin(table: p5.Table, column?: string): number | p5.Table {
   if (column === undefined) {
@@ -126,8 +126,8 @@ export const tableMin = function computeMin(table: p5.Table, column?: string): n
  * Computes the standard deviation of a column.
  *
  * @param table  the p5.Table to analyze
- * @param column the name of the column to analyze
- * @returns      the standard deviation
+ * @param column (optional) the name of the column to analyze
+ * @returns      the standard deviation, either as a number or as a table
  */
 export const tableSd = function computeSd(table: p5.Table, column?: string): number | p5.Table {
   if (column === undefined) {
@@ -146,25 +146,36 @@ export const tableSd = function computeSd(table: p5.Table, column?: string): num
 };
 
 /**
- * Computes the summary statistics of a column.
+ * Computes the summary statistics of a p5.Table.
  *
  * @param table the p5.Table to analyze
  * @returns     the table of summary stats
  */
 export const tableDescribe = function computeDescription(table: p5.Table): p5.Table {
   const output: p5.Table = new p5.Table();
-  output.columns = table.columns;
+  output.columns = ['stat', ...table.columns];
   const countRow: p5.TableRow = output.addRow();
+  countRow.set('stat', 'count');
   const countTable: number | p5.Table = tableCount(table);
   const meanRow: p5.TableRow = output.addRow();
+  meanRow.set('stat', 'mean');
   const meanTable: number | p5.Table = tableMean(table);
   const sdRow: p5.TableRow = output.addRow();
+  sdRow.set('stat', 'sd');
   const sdTable: number | p5.Table = tableSd(table);
   const minRow: p5.TableRow = output.addRow();
+  minRow.set('stat', 'min');
   const minTable: number | p5.Table = tableMin(table);
+  const row25: p5.TableRow = output.addRow();
+  row25.set('stat', '25%');
+  const row50: p5.TableRow = output.addRow();
+  row50.set('stat', '50%');
+  const row75: p5.TableRow = output.addRow();
+  row75.set('stat', '75%');
   const maxRow: p5.TableRow = output.addRow();
+  maxRow.set('stat', 'max');
   const maxTable: number | p5.Table = tableMax(table);
-  output.columns.forEach((column) => {
+  table.columns.forEach((column) => {
     // @ts-ignore
     countRow.set(column, countTable.get(0, column));
     // @ts-ignore
@@ -176,12 +187,9 @@ export const tableDescribe = function computeDescription(table: p5.Table): p5.Ta
     // @ts-ignore
     maxRow.set(column, maxTable.get(0, column));
   });
-  const row25: p5.TableRow = output.addRow();
-  const row50: p5.TableRow = output.addRow();
-  const row75: p5.TableRow = output.addRow();
-  output.columns.forEach((column) => {
+  table.columns.forEach((column) => {
     const min: number = output.getNum(3, column);
-    const max: number = output.getNum(4, column);
+    const max: number = output.getNum(7, column);
     const range: number = max - min;
     row25.set(column, min + 0.25 * range);
     row50.set(column, min + 0.50 * range);
@@ -198,7 +206,11 @@ export const tableDescribe = function computeDescription(table: p5.Table): p5.Ta
  * @param axis (optional) the axis along which to concatenate
  * @returns    the combined table
  */
-export const tableConcat = function concat(t1: p5.Table, t2: p5.Table, axis: number = 0): p5.Table {
+export const tableConcat = function computeConcat(
+  t1: p5.Table,
+  t2: p5.Table,
+  axis: number = 0,
+): p5.Table {
   if (axis === 0) {
     const output: p5.Table = new p5.Table();
     const sameColumns: boolean = t1.columns.every(
@@ -208,30 +220,29 @@ export const tableConcat = function concat(t1: p5.Table, t2: p5.Table, axis: num
       output.columns = t1.columns.slice();
       t1.rows.forEach((row) => output.addRow(row));
       t2.rows.forEach((row) => output.addRow(row));
-    } else {
-      const columns: string[] = [];
-      t1.columns.forEach((c) => columns.push(c));
-      t2.columns.forEach((c) => {
-        if (columns.indexOf(c) < 0) {
-          columns.push(c);
-        }
-      });
-      output.columns = columns;
-      t1.rows.forEach((row) => {
-        const newRow: p5.TableRow = output.addRow();
-        output.columns.forEach((col) => newRow.set(col, row.get(col)));
-      });
-      t2.rows.forEach((row) => {
-        const newRow: p5.TableRow = output.addRow();
-        output.columns.forEach((col) => newRow.set(col, row.get(col)));
-      });
-      t1.clearRows();
-      const t1c: string[] = t1.columns.slice();
-      t1c.forEach((col) => t1.removeColumn(col));
-      output.columns.forEach((col) => t1.addColumn(col));
-      output.rows.forEach((row) => t1.addRow(row));
+      return output;
     }
-
+    const columns: string[] = [];
+    t1.columns.forEach((c) => columns.push(c));
+    t2.columns.forEach((c) => {
+      if (columns.indexOf(c) < 0) {
+        columns.push(c);
+      }
+    });
+    output.columns = columns;
+    t1.rows.forEach((row) => {
+      const newRow: p5.TableRow = output.addRow();
+      output.columns.forEach((col) => newRow.set(col, row.get(col)));
+    });
+    t2.rows.forEach((row) => {
+      const newRow: p5.TableRow = output.addRow();
+      output.columns.forEach((col) => newRow.set(col, row.get(col)));
+    });
+    t1.clearRows();
+    const t1c: string[] = t1.columns.slice();
+    t1c.forEach((col) => t1.removeColumn(col));
+    output.columns.forEach((col) => t1.addColumn(col));
+    output.rows.forEach((row) => t1.addRow(row));
     return output;
   }
   if (axis === 1) {
@@ -319,6 +330,110 @@ export const tableMerge = function computeMerge(
       });
     });
   });
+  return output;
+};
+
+/**
+ * Checks whether p5.Table elements are null-ish.
+ *
+ * @param table the table to analyze
+ * @returns     a table of booleans showing whether each
+ *              element is null-ish
+ */
+export const tableIsNull = function computeIsNull(table: p5.Table) {
+  const output: p5.Table = new p5.Table();
+  output.columns = table.columns;
+  table.rows.forEach((row) => {
+    const newRow: p5.TableRow = output.addRow();
+    output.columns.forEach((column) => {
+      const value: any = row.get(column);
+      if (value === undefined || value === null || Number.isNaN(value)) {
+        // @ts-ignore
+        newRow.set(column, true);
+      } else {
+        // @ts-ignore
+        newRow.set(column, false);
+      }
+    });
+  });
+  return output;
+};
+
+/**
+ * Checks whether p5.Table elements are defined.
+ *
+ * @param table the table to analyze
+ * @returns     a table of booleans showing whether each
+ *              element is defined
+ */
+export const tableNotNull = function computeNotNull(table: p5.Table) {
+  const output: p5.Table = new p5.Table();
+  output.columns = table.columns;
+  table.rows.forEach((row) => {
+    const newRow: p5.TableRow = output.addRow();
+    output.columns.forEach((column) => {
+      const value: any = row.get(column);
+      if (value === undefined || value === null || Number.isNaN(value)) {
+        // @ts-ignore
+        newRow.set(column, false);
+      } else {
+        // @ts-ignore
+        newRow.set(column, true);
+      }
+    });
+  });
+  return output;
+};
+
+/**
+ * Checks whether any of the elements in a column are truthy.
+ *
+ * @param table  the table to analyze
+ * @param column (optional) the name of the column to analyze
+ * @returns      a boolean or table of booleans showing whether
+ *               each element is defined
+ */
+export const tableAny = function computeAny(table: p5.Table, column?: string): boolean | p5.Table {
+  if (column === undefined) {
+    const output: p5.Table = new p5.Table();
+    output.columns = table.columns;
+    const row: p5.TableRow = output.addRow();
+    output.columns.forEach((c) => {
+      const col: any[] = table.getColumn(c);
+      const value: boolean = col.reduce((prev, curr) => prev || curr);
+      // @ts-ignore
+      row.set(c, value);
+    });
+    return output;
+  }
+  const col: any[] = table.getColumn(column);
+  const output: boolean = col.reduce((prev, curr) => prev || curr);
+  return output;
+};
+
+/**
+ * Checks whether all of the elements in a column are truthy.
+ *
+ * @param table  the table to analyze
+ * @param column (optional) the name of the column to analyze
+ * @returns      a boolean or table of booleans showing whether
+ *               each element is defined
+ */
+export const tableAll = function computeAll(table: p5.Table, column?: string): boolean | p5.Table {
+  if (column === undefined) {
+    const output: p5.Table = new p5.Table();
+    output.columns = table.columns;
+    const row: p5.TableRow = output.addRow();
+    output.columns.forEach((c) => {
+      const col: any[] = table.getColumn(c);
+      const value: boolean = col.reduce((prev, curr) => prev && curr);
+      // @ts-ignore
+      row.set(c, value);
+    });
+    return output;
+  }
+  const col: any[] = table.getColumn(column);
+  const output: boolean = col.reduce((prev, curr) => prev && curr);
   return output;
 };
 

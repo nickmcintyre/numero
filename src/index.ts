@@ -93,13 +93,20 @@ import {
   tableDescribe,
   tableConcat,
   tableMerge,
+  tableIsNull,
+  tableNotNull,
+  tableAny,
+  tableAll,
   tableMap,
   tableIsIn,
 } from './table';
 
 declare const p5: any;
 
-// Tensor
+// ====================
+//        Tensor
+// ====================
+
 p5.prototype.createTensor = createTensor;
 p5.prototype.registerMethod('init', startScope);
 p5.prototype.registerMethod('pre', startScope);
@@ -108,7 +115,10 @@ p5.prototype.registerMethod('remove', endScope);
 
 const { setBackend, getBackend } = tf;
 
-// Plotting
+// ====================
+//      Plotting
+// ====================
+
 p5.prototype.figure = function drawFigure(): object {
   return figure(this);
 };
@@ -147,7 +157,10 @@ p5.prototype.scatter = function drawScatterPlot(
   scatter(this, x, y, numTicks);
 };
 
-// p5.Table
+// ====================
+//      p5.Table
+// ====================
+
 p5.Table.prototype.count = function computeCount(column: string): any {
   return tableCount(this, column);
 };
@@ -180,17 +193,37 @@ p5.Table.prototype.concat = function computeConcat(table: any, axis: number = 0)
   return tableConcat(this, table, axis);
 };
 
-p5.Table.prototype.map = function computeMap(func: Function): any {
-  return tableMap(this, func);
-};
-
 p5.Table.prototype.merge = function computeMerge(table: any, key: string): any {
   return tableMerge(this, table, key);
+};
+
+p5.Table.prototype.isNull = function computeIsNull(): any {
+  return tableIsNull(this);
+};
+
+p5.Table.prototype.notNull = function computeNotNull(): any {
+  return tableNotNull(this);
+};
+
+p5.Table.prototype.any = function computeAny(column?: string): any {
+  return tableAny(this, column);
+};
+
+p5.Table.prototype.all = function computeAll(column?: string): any {
+  return tableAll(this, column);
+};
+
+p5.Table.prototype.map = function computeMap(func: Function): any {
+  return tableMap(this, func);
 };
 
 p5.Table.prototype.isin = function computeIsIn(values: any[]): any {
   return tableIsIn(this, values);
 };
+
+// ====================
+//       Exports
+// ====================
 
 export {
   // CAS
