@@ -2,13 +2,39 @@ import * as p5 from 'p5';
 import * as math from 'mathjs';
 
 /**
+ * Computes the number of cells with values in a column.
+ *
+ * @param table  the p5.Table to analyze
+ * @param column (optional) the name of the column to analyze
+ * @returns      the count
+ */
+export const tableCount = function computeCount(
+  table: p5.Table,
+  column?: string,
+): number | p5.Table {
+  if (column === undefined) {
+    const output: p5.Table = new p5.Table();
+    output.columns = table.columns;
+    const row: p5.TableRow = output.addRow();
+    table.columns.forEach((c) => {
+      const data: number[] = table.getColumn(c).map((x: string) => parseFloat(x));
+      const count: number = data.filter((x) => x).length;
+      row.setNum(c, count);
+    });
+    return output;
+  }
+  const data: number[] = table.getColumn(column).map((x: string) => parseFloat(x));
+  return data.filter((x) => x).length;
+};
+
+/**
  * Computes the mean of a column.
  *
  * @param table  the p5.Table to analyze
- * @param column the name of the column to analyze
+ * @param column (optional) the name of the column to analyze
  * @returns      the mean
  */
-export const tableMean = function computeMean(table: p5.Table, column: string): number | p5.Table {
+export const tableMean = function computeMean(table: p5.Table, column?: string): number | p5.Table {
   if (column === undefined) {
     const output: p5.Table = new p5.Table();
     output.columns = table.columns;
@@ -33,7 +59,7 @@ export const tableMean = function computeMean(table: p5.Table, column: string): 
  */
 export const tableMedian = function computeMedian(
   table: p5.Table,
-  column: string,
+  column?: string,
 ): number | p5.Table {
   if (column === undefined) {
     const output: p5.Table = new p5.Table();
@@ -57,7 +83,7 @@ export const tableMedian = function computeMedian(
  * @param column the name of the column to analyze
  * @returns      the maximum
  */
-export const tableMax = function computeMax(table: p5.Table, column: string): number | p5.Table {
+export const tableMax = function computeMax(table: p5.Table, column?: string): number | p5.Table {
   if (column === undefined) {
     const output: p5.Table = new p5.Table();
     output.columns = table.columns;
@@ -80,7 +106,7 @@ export const tableMax = function computeMax(table: p5.Table, column: string): nu
  * @param column the name of the column to analyze
  * @returns      the minimum
  */
-export const tableMin = function computeMin(table: p5.Table, column: string): number | p5.Table {
+export const tableMin = function computeMin(table: p5.Table, column?: string): number | p5.Table {
   if (column === undefined) {
     const output: p5.Table = new p5.Table();
     output.columns = table.columns;
@@ -103,7 +129,7 @@ export const tableMin = function computeMin(table: p5.Table, column: string): nu
  * @param column the name of the column to analyze
  * @returns      the standard deviation
  */
-export const tableSd = function computeSd(table: p5.Table, column: string): number | p5.Table {
+export const tableSd = function computeSd(table: p5.Table, column?: string): number | p5.Table {
   if (column === undefined) {
     const output: p5.Table = new p5.Table();
     output.columns = table.columns;
@@ -117,6 +143,51 @@ export const tableSd = function computeSd(table: p5.Table, column: string): numb
   }
   const data: number[] = table.getColumn(column).map((x: string) => parseFloat(x));
   return math.std(data);
+};
+
+/**
+ * Computes the summary statistics of a column.
+ *
+ * @param table the p5.Table to analyze
+ * @returns     the table of summary stats
+ */
+export const tableDescribe = function computeDescription(table: p5.Table): p5.Table {
+  const output: p5.Table = new p5.Table();
+  output.columns = table.columns;
+  const countRow: p5.TableRow = output.addRow();
+  const countTable: number | p5.Table = tableCount(table);
+  const meanRow: p5.TableRow = output.addRow();
+  const meanTable: number | p5.Table = tableMean(table);
+  const sdRow: p5.TableRow = output.addRow();
+  const sdTable: number | p5.Table = tableSd(table);
+  const minRow: p5.TableRow = output.addRow();
+  const minTable: number | p5.Table = tableMin(table);
+  const maxRow: p5.TableRow = output.addRow();
+  const maxTable: number | p5.Table = tableMax(table);
+  output.columns.forEach((column) => {
+    // @ts-ignore
+    countRow.set(column, countTable.get(0, column));
+    // @ts-ignore
+    meanRow.set(column, meanTable.get(0, column));
+    // @ts-ignore
+    sdRow.set(column, sdTable.get(0, column));
+    // @ts-ignore
+    minRow.set(column, minTable.get(0, column));
+    // @ts-ignore
+    maxRow.set(column, maxTable.get(0, column));
+  });
+  const row25: p5.TableRow = output.addRow();
+  const row50: p5.TableRow = output.addRow();
+  const row75: p5.TableRow = output.addRow();
+  output.columns.forEach((column) => {
+    const min: number = output.getNum(3, column);
+    const max: number = output.getNum(4, column);
+    const range: number = max - min;
+    row25.set(column, min + 0.25 * range);
+    row50.set(column, min + 0.50 * range);
+    row75.set(column, min + 0.75 * range);
+  });
+  return output;
 };
 
 /**
@@ -169,7 +240,6 @@ export const tableConcat = function concat(t1: p5.Table, t2: p5.Table, axis: num
     t1.columns.forEach((c) => columns.push(c));
     t2.columns.forEach((c) => columns.push(c));
     output.columns = columns;
-
     const tables = {};
     let shorter: string;
     let longer: string;
@@ -184,7 +254,6 @@ export const tableConcat = function concat(t1: p5.Table, t2: p5.Table, axis: num
       tables[shorter] = t1;
       tables[longer] = t2;
     }
-
     const numShort: number = tables[shorter].rows.length;
     const numLong: number = tables[longer].rows.length;
     for (let i = 0; i < numLong; i += 1) {
@@ -200,13 +269,11 @@ export const tableConcat = function concat(t1: p5.Table, t2: p5.Table, axis: num
         });
       }
     }
-
     t1.clearRows();
     const t1c: string[] = t1.columns.slice();
     t1c.forEach((col) => t1.removeColumn(col));
     output.columns.forEach((col) => t1.addColumn(col));
     output.rows.forEach((row) => t1.addRow(row));
-
     return output;
   }
   throw new Error('axis argument must be 0 or 1.');
@@ -218,6 +285,7 @@ export const tableConcat = function concat(t1: p5.Table, t2: p5.Table, axis: num
  * @param left  the first table to merge
  * @param right the second table to merge
  * @param key   the key upon which to merge
+ * @returns     the merged table
  */
 export const tableMerge = function computeMerge(
   left: p5.Table,
@@ -251,7 +319,6 @@ export const tableMerge = function computeMerge(
       });
     });
   });
-
   return output;
 };
 
@@ -260,6 +327,7 @@ export const tableMerge = function computeMerge(
  *
  * @param table the table
  * @param func  the function to apply
+ * @returns     the transformed table
  */
 export const tableMap = function computeMap(table: p5.Table, func: Function): p5.Table {
   const output: p5.Table = new p5.Table();
@@ -268,6 +336,36 @@ export const tableMap = function computeMap(table: p5.Table, func: Function): p5
     const newRow: p5.TableRow = output.addRow();
     output.columns.forEach((col) => {
       newRow.set(col, func(row.get(col)));
+    });
+  });
+  return output;
+};
+
+/**
+ * Checks whether values are present in a table.
+ *
+ * @param table  the p5.Table to analyze
+ * @param values the values to check
+ * @returns      a table of booleans showing whether each
+ *               element is contained in values
+ */
+export const tableIsIn = function computeIsIn(table: p5.Table, values: any[]): p5.Table {
+  const output: p5.Table = new p5.Table();
+  output.columns = table.columns;
+  table.rows.forEach((row) => {
+    const newRow: p5.TableRow = output.addRow();
+    output.columns.forEach((column) => {
+      // @ts-ignore
+      newRow.set(column, false);
+      const tableVal: any = row.get(column);
+      values.every((value) => {
+        if (tableVal === value) {
+          // @ts-ignore
+          newRow.set(column, true);
+          return false;
+        }
+        return true;
+      });
     });
   });
   return output;

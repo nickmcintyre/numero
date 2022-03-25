@@ -12,6 +12,66 @@ describe('p5.Table', function () {
     pInst.remove();
   });
 
+  describe('count()', function () {
+    it('Should calculate the count of a column', function () {
+      const t = new p5.Table();
+      t.columns = ['a', 'b', 'c'];
+      let row = t.addRow();
+      row.setNum('a', 1);
+      row.setNum('b', 2);
+      row.setNum('c', 3);
+      row = t.addRow();
+      row.setNum('a', 4);
+      row.setNum('b', 5);
+      row.setNum('c', 6);
+      row = t.addRow();
+      row.setNum('a', 7);
+      row.setNum('b', 8);
+      row.setNum('c', 9);
+      expect(t.count('a')).to.eq(3);
+      expect(t.count('b')).to.eq(3);
+      expect(t.count('c')).to.eq(3);
+    });
+
+    it('Should should not count undefined', function () {
+      const t = new p5.Table();
+      t.columns = ['a', 'b', 'c'];
+      let row = t.addRow();
+      row.setNum('a', 1);
+      row.setNum('b', 2);
+      row.setNum('c', 3);
+      row = t.addRow();
+      row.setNum('a', 4);
+      row.setNum('b', undefined);
+      row.setNum('c', 6);
+      row = t.addRow();
+      row.setNum('a', 7);
+      row.setNum('b', 8);
+      row.setNum('c', 9);
+      expect(t.count('a')).to.eq(3);
+      expect(t.count('b')).to.eq(2);
+      expect(t.count('c')).to.eq(3);
+    });
+
+    it('Should should not count undefined', function () {
+      const t = new p5.Table();
+      t.columns = ['a', 'b', 'c'];
+      let row = t.addRow();
+      row.setNum('a', 1);
+      row.setNum('b', 2);
+      row.setNum('c', 3);
+      row = t.addRow();
+      row.setNum('a', 4);
+      row.setNum('b', undefined);
+      row.setNum('c', 6);
+      row = t.addRow();
+      row.setNum('a', 7);
+      row.setNum('b', 8);
+      row.setNum('c', 9);
+      expect(t.count().getRow(0).arr).to.eql([3, 2, 3]);
+    });
+  });
+
   describe('mean()', function () {
     it('Should calculate the mean of a column', function () {
       const t = new p5.Table();
@@ -477,6 +537,70 @@ describe('p5.Table', function () {
       expect(t2.get(1, 'a')).to.eq(16);
       expect(t2.get(1, 'b')).to.eq(25);
       expect(t2.get(1, 'c')).to.eq(36);
+    });
+  });
+
+  describe('isin()', function () {
+    it('Should return a table of truth values', function () {
+      const t1 = new p5.Table();
+      t1.columns = ['a', 'b', 'c'];
+      let row = t1.addRow();
+      row.setNum('a', 1);
+      row.setNum('b', 2);
+      row.setNum('c', 3);
+      row = t1.addRow();
+      row.setNum('a', 4);
+      row.setNum('b', 5);
+      row.setNum('c', 6);
+      const t2 = t1.isin([1, 5]);
+      expect(t2.get(0, 'a')).to.be.true;
+      expect(t2.get(0, 'b')).to.be.false;
+      expect(t2.get(0, 'c')).to.be.false;
+      expect(t2.get(1, 'a')).to.be.false;
+      expect(t2.get(1, 'b')).to.be.true;
+      expect(t2.get(1, 'c')).to.be.false;
+    });
+  });
+
+  describe('describe()', function () {
+    it('Should return a table with numeric columns', function () {
+      const t1 = new p5.Table();
+      t1.columns = ['a', 'b', 'c'];
+      let row = t1.addRow();
+      row.setNum('a', 1);
+      row.setNum('b', 2);
+      row.setNum('c', 3);
+      row = t1.addRow();
+      row.setNum('a', 4);
+      row.setNum('b', 5);
+      row.setNum('c', 6);
+      row = t1.addRow();
+      row.setNum('a', 7);
+      row.setNum('b', 8);
+      row.setNum('c', 9);
+      const t2 = t1.describe();
+      expect(t2.columns).to.eql(['a', 'b', 'c']);
+    });
+
+    it('Should compute summary statistics for each numeric column', function () {
+      const t1 = new p5.Table();
+      t1.columns = ['a', 'b', 'c'];
+      let row = t1.addRow();
+      row.setNum('a', 1);
+      row.setNum('b', 2);
+      row.setNum('c', 3);
+      row = t1.addRow();
+      row.setNum('a', 4);
+      row.setNum('b', 5);
+      row.setNum('c', 6);
+      row = t1.addRow();
+      row.setNum('a', 7);
+      row.setNum('b', 8);
+      row.setNum('c', 9);
+      const t2 = t1.describe();
+      expect(t2.getColumn('a')).to.eql([3, 4, 3, 1, 7, 2.5, 4, 5.5]);
+      expect(t2.getColumn('b')).to.eql([3, 5, 3, 2, 8, 3.5, 5, 6.5]);
+      expect(t2.getColumn('c')).to.eql([3, 6, 3, 3, 9, 4.5, 6, 7.5]);
     });
   });
 });

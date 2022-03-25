@@ -84,14 +84,17 @@ import {
   scatter,
 } from './plot';
 import {
+  tableCount,
   tableMean,
   tableMedian,
   tableMax,
   tableMin,
   tableSd,
+  tableDescribe,
   tableConcat,
   tableMerge,
   tableMap,
+  tableIsIn,
 } from './table';
 
 declare const p5: any;
@@ -145,6 +148,10 @@ p5.prototype.scatter = function drawScatterPlot(
 };
 
 // p5.Table
+p5.Table.prototype.count = function computeCount(column: string): any {
+  return tableCount(this, column);
+};
+
 p5.Table.prototype.mean = function computeMean(column: string): any {
   return tableMean(this, column);
 };
@@ -165,6 +172,10 @@ p5.Table.prototype.sd = function computeSd(column: string): any {
   return tableSd(this, column);
 };
 
+p5.Table.prototype.describe = function computeDescription(): any {
+  return tableDescribe(this);
+};
+
 p5.Table.prototype.concat = function computeConcat(table: any, axis: number = 0): any {
   return tableConcat(this, table, axis);
 };
@@ -175,6 +186,10 @@ p5.Table.prototype.map = function computeMap(func: Function): any {
 
 p5.Table.prototype.merge = function computeMerge(table: any, key: string): any {
   return tableMerge(this, table, key);
+};
+
+p5.Table.prototype.isin = function computeIsIn(values: any[]): any {
+  return tableIsIn(this, values);
 };
 
 export {
