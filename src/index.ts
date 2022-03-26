@@ -99,6 +99,7 @@ import {
   tableAll,
   tableMap,
   tableIsIn,
+  tableGroupby,
 } from './table';
 
 declare const p5: any;
@@ -219,6 +220,10 @@ p5.Table.prototype.map = function computeMap(func: Function): any {
 
 p5.Table.prototype.isin = function computeIsIn(values: any[]): any {
   return tableIsIn(this, values);
+};
+
+p5.Table.prototype.groupby = function computeGroupby(column: string): object {
+  return tableGroupby(this, column);
 };
 
 // ====================

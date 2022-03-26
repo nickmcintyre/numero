@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 import * as math from 'mathjs';
 
 /**
- * Computes the number of cells with values in a column.
+ * Computes the number of cells with values in a column or set of columns.
  *
  * @param table  the p5.Table to analyze
  * @param column (optional) the name of the column to analyze
@@ -28,7 +28,7 @@ export const tableCount = function computeCount(
 };
 
 /**
- * Computes the mean of a column.
+ * Computes the mean of a column or set of columns.
  *
  * @param table  the p5.Table to analyze
  * @param column (optional) the name of the column to analyze
@@ -51,7 +51,7 @@ export const tableMean = function computeMean(table: p5.Table, column?: string):
 };
 
 /**
- * Computes the median of a column.
+ * Computes the median of a column or set of columns.
  *
  * @param table  the p5.Table to analyze
  * @param column (optional) the name of the column to analyze
@@ -77,7 +77,7 @@ export const tableMedian = function computeMedian(
 };
 
 /**
- * Computes the maximum of a column.
+ * Computes the maximum of a column or set of columns.
  *
  * @param table  the p5.Table to analyze
  * @param column (optional) the name of the column to analyze
@@ -100,7 +100,7 @@ export const tableMax = function computeMax(table: p5.Table, column?: string): n
 };
 
 /**
- * Computes the minimum of a column.
+ * Computes the minimum of a column or set of columns.
  *
  * @param table  the p5.Table to analyze
  * @param column (optional) the name of the column to analyze
@@ -123,7 +123,7 @@ export const tableMin = function computeMin(table: p5.Table, column?: string): n
 };
 
 /**
- * Computes the standard deviation of a column.
+ * Computes the standard deviation of a column or set of columns.
  *
  * @param table  the p5.Table to analyze
  * @param column (optional) the name of the column to analyze
@@ -483,5 +483,143 @@ export const tableIsIn = function computeIsIn(table: p5.Table, values: any[]): p
       });
     });
   });
+  return output;
+};
+
+/**
+ * A class to describe a p5.Table grouped by elements in a given column.
+ */
+class GroupedTable {
+  public table: p5.Table;
+
+  public by: string;
+
+  public groups: object;
+
+  private outputColumns: string[];
+
+  /**
+   * Constructs a new GroupedTable.
+   *
+   * @param table  the table to analyze
+   * @param by     the column to use for generating groups
+   */
+  constructor(table: p5.Table, by: string) {
+    this.table = table;
+    this.by = by;
+    this.createGroups();
+  }
+
+  /**
+   * Creates groups of p5.Tables based on unique elements of
+   * the given column.
+   */
+  createGroups() {
+    this.groups = {};
+    const { columns } = this.table;
+    this.outputColumns = columns.filter((c) => c !== this.by);
+    const groupNames: Set<string> = new Set();
+    this.table.getColumn(this.by).forEach((el) => groupNames.add(el));
+    groupNames.forEach((group) => {
+      const groupTable: p5.Table = new p5.Table();
+      groupTable.columns = columns.slice();
+      const rows: p5.TableRow[] = this.table.findRows(group, this.by);
+      rows.forEach((row) => groupTable.addRow(row));
+      groupTable.removeColumn(this.by);
+      this.groups[group] = groupTable;
+    });
+  }
+
+  /**
+   * Applies a statistical function to each group and creates a
+   * summary p5.Table with a row for each group.
+   *
+   * @param func the statistical function to apply
+   * @returns    summary stats for each group
+   */
+  computeStat(func: Function): p5.Table {
+    const output: p5.Table = new p5.Table();
+    output.columns = this.outputColumns;
+    const groupNames: string[] = Object.keys(this.groups);
+    groupNames.forEach((group) => {
+      // @ts-ignore
+      const statTable: p5.Table = func(this.groups[group]);
+      const row: p5.TableRow = statTable.getRow(0);
+      output.addRow(row);
+    });
+    output.addColumn(this.by);
+    for (let i = 0; i < groupNames.length; i += 1) {
+      output.set(i, this.by, groupNames[i]);
+    }
+    return output;
+  }
+
+  /**
+   * Computes the number of cells with values in each group in the
+   * p5.Table.
+   *
+   * @returns the count per group
+   */
+  count(): p5.Table {
+    return this.computeStat(tableCount);
+  }
+
+  /**
+   * Computes the mean of each group in the p5.Table.
+   *
+   * @returns the mean per group
+   */
+  mean(): p5.Table {
+    return this.computeStat(tableMean);
+  }
+
+  /**
+   * Computes the median of each group in the p5.Table.
+   *
+   * @returns the median per group
+   */
+  median(): p5.Table {
+    return this.computeStat(tableMedian);
+  }
+
+  /**
+   * Computes the maximum of each group in the p5.Table.
+   *
+   * @returns the max per group
+   */
+  max(): p5.Table {
+    return this.computeStat(tableMax);
+  }
+
+  /**
+   * Computes the minimum of each group in the p5.Table.
+   *
+   * @returns the min per group
+   */
+  min(): p5.Table {
+    return this.computeStat(tableMin);
+  }
+
+  /**
+   * Computes the standard deviation of each group in the p5.Table.
+   *
+   * @returns the sd per group
+   */
+  sd(): p5.Table {
+    return this.computeStat(tableSd);
+  }
+}
+
+/**
+ * Splits a p5.Table into unique groups based on the elements
+ * of a given column.
+ *
+ * @param table  the table to analyze
+ * @param column the column to use for generating groups
+ * @returns      the rows of the table grouped by values in
+ *               the given column
+ */
+export const tableGroupby = function computeGroupby(table: p5.Table, column: string): GroupedTable {
+  const output: GroupedTable = new GroupedTable(table, column);
   return output;
 };
