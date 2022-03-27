@@ -101,6 +101,7 @@ import {
   tableIsIn,
   tableGroupby,
 } from './table';
+import { toDateTime } from './time';
 
 declare const p5: any;
 
@@ -313,4 +314,6 @@ export {
   basePlot,
   plot,
   scatter,
+  // time
+  toDateTime,
 };

@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@tensorflow/tfjs": "^3.13.0",
+    "dayjs": "^1.11.0",
     "mathjs": "^10.1.1"
   }
 }
