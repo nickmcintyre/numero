@@ -1,270 +1,127 @@
-import * as p5 from 'p5';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import * as _p5 from 'p5';
+import { Props, defaultProps } from './utils';
+import { pointGeom } from './geom';
+import { drawAxes, drawGrid } from './guide';
+import { inferTypes } from './utils'
+import {
+  drawBackground,
+  drawTitle,
+  drawXLabel,
+  drawYLabel,
+} from './annotation';
 
-const {
-  min,
-  max,
-  map,
-} = p5.prototype;
+declare const p5: any;
 
-/**
- * Constructs a figure to contain plotting elements such as axes,
- * lines, markers, etc.
- *
- * @param pInst the p5 instance used for rendering
- * @returns     an object describing the figure
- */
-export const figure = function drawFigure(pInst: any): object {
-  pInst.push();
-  const bigPad = 40;
-  const littlePad = 10;
-  const ox = bigPad;
-  const oy = littlePad;
-  const width = pInst.width - (littlePad + bigPad);
-  const height = pInst.height - (littlePad + bigPad);
-  pInst.stroke('black');
-  pInst.strokeWeight(1);
-  pInst.fill('white');
-  pInst.rect(ox, oy, width, height);
-  pInst.pop();
+interface Layer {
+  props: Props;
+  operation(props: Props): void;
+}
 
-  return {
-    ox, oy, width, height, bigPad, littlePad,
-  };
-};
+class Plot {
+  pInst: _p5;
 
-/**
- * Constructs a pair of x and y-axes.
- *
- * @param pInst     the p5 instance used for rendering
- * @param ox        the origin's x-coordinate
- * @param oy        the origin's y-coordinate
- * @param width     the width of the axes
- * @param height    the height of the eaxes
- * @param numTicks  the number of tick marks
- */
-export const axes = function drawAxes(
-  pInst: any,
-  ox: number,
-  oy: number,
-  width: number,
-  height: number,
-  numTicks: number = 7,
-  margin: number = 20,
-) {
-  pInst.push();
-  pInst.translate(ox, oy);
+  props: Props;
 
-  pInst.push();
-  pInst.stroke('black');
-  pInst.strokeWeight(1);
-  pInst.line(0, 0, width, 0);
-  pInst.line(0, 0, 0, height);
-  pInst.pop();
+  layers: Layer[];
 
-  pInst.push();
-  pInst.stroke('black');
-  pInst.strokeWeight(1);
-  const dx = (width - 2 * margin) / (numTicks - 1);
-  for (let i = 0; i < numTicks; i += 1) {
-    const x = margin + i * dx;
-    pInst.line(x, 0, x, 5);
+  constructor(pInst: _p5, raw: any) {
+    this.pInst = pInst;
+    this.props = defaultProps(pInst, raw);
+    this.layers = [];
+    this.wrangle();
   }
-  pInst.pop();
 
-  pInst.push();
-  pInst.stroke('black');
-  pInst.strokeWeight(1);
-  const dy = (height - 2 * margin) / (numTicks - 1);
-  for (let i = 0; i < numTicks; i += 1) {
-    const y = margin + i * dy;
-    pInst.line(0, y, 5, y);
-  }
-  pInst.pop();
-
-  pInst.pop();
-};
-
-/**
- * Constructs an empty plot.
- *
- * @param pInst     the p5 instance used for rendering
- * @param x         the x-values to be plotted
- * @param y         the y-values to be plotted
- * @param numTicks  (optional) the number of tick marks
- * @returns         an object describing the plot
- */
-export const basePlot = function drawBasePlot(
-  pInst: any,
-  x: number[],
-  y: number[],
-  numTicks: number = 7,
-): object {
-  const {
-    ox,
-    oy,
-    width,
-    height,
-    bigPad,
-    littlePad,
-  } = pInst.figure();
-
-  pInst.push();
-  pInst.scale(1, -1);
-  pInst.translate(0, -pInst.height - littlePad + bigPad);
-  const margin = 20;
-  pInst.axes(
-    ox,
-    oy,
-    width,
-    height,
-    numTicks,
-    margin,
-  );
-  pInst.pop();
-
-  // Summarize data
-  const xmin = min(x);
-  const xmax = max(x);
-  const xrange = xmax - xmin;
-  const ymin = min(y);
-  const ymax = max(y);
-  const yrange = ymax - ymin;
-  const xstart = ox + margin;
-  const ystart = oy + margin;
-
-  // Draw x labels
-  pInst.push();
-  pInst.textAlign(pInst.CENTER, pInst.CENTER);
-  pInst.noStroke();
-  pInst.fill('black');
-  pInst.translate(xstart, oy + height + margin);
-  const dx = (width - 2 * margin) / (numTicks - 1);
-  for (let i = 0; i < numTicks; i += 1) {
-    let n = xmin + (i / (numTicks - 1)) * xrange;
-    if (pInst.abs(n) < 1) {
-      n = pInst.nf(n, 1, 2);
-    } else if (pInst.abs(n) < 10) {
-      n = pInst.nf(n, 1, 1);
-    } else {
-      n = pInst.round(n);
+  wrangle(): void {
+    if (this.props.dataset.raw.data instanceof _p5.Table) {
+      inferTypes(this.props.dataset.raw.data);
     }
-    pInst.text(n, i * dx, 0);
   }
-  pInst.pop();
 
-  // Draw y labels
-  pInst.push();
-  pInst.textAlign(pInst.CENTER, pInst.CENTER);
-  pInst.noStroke();
-  pInst.fill('black');
-  pInst.translate(ox - margin, ystart);
-  const dy = (height - 2 * margin) / (numTicks - 1);
-  for (let i = 0; i < numTicks; i += 1) {
-    let n = ymax - (i / (numTicks - 1)) * yrange;
-    if (pInst.abs(n) < 1) {
-      n = pInst.nf(n, 1, 2);
-    } else if (pInst.abs(n) < 10) {
-      n = pInst.nf(n, 1, 1);
-    } else {
-      n = pInst.round(n);
-    }
-    pInst.text(n, 0, i * dy);
+  annotations(): void {
+    this.background();
+    this.title();
+    this.xlabel();
+    this.ylabel();
+    this.gridLines();
+    this.axes();
   }
-  pInst.pop();
 
-  return {
-    xmin,
-    xmax,
-    ymin,
-    ymax,
-    pad: bigPad + margin,
-    width: width - 2 * margin,
-    height: height - 2 * margin,
-  };
+  render(): void {
+    this.annotations();
+    this.layers.forEach((layer: Layer) => layer.operation(layer.props));
+  }
+
+  clear(): void {
+    this.layers = [];
+  }
+
+  title(title?: string) {
+    this.props.title = title || this.props.title;
+    drawTitle(this.props);
+  }
+
+  xlabel(label?: string) {
+    this.props.xLabel = label || this.props.xLabel;
+    drawXLabel(this.props);
+  }
+
+  ylabel(label?: string) {
+    this.props.yLabel = label || this.props.yLabel;
+    drawYLabel(this.props);
+  }
+
+  gridLines(props?: Props) {
+    this.props = { ...this.props, ...props };
+    drawGrid(this.props);
+  }
+
+  axes(props?: Props) {
+    this.props = { ...this.props, ...props };
+    drawAxes(this.props);
+  }
+
+  background(color?: any) {
+    this.props.backgroundColor = color || this.props.backgroundColor;
+    drawBackground(this.props);
+  }
+
+  point(props?: Props): void {
+    this.props = { ...this.props, ...props };
+    this.layers.push({ props: this.props, operation: pointGeom });
+  }
+}
+
+// eslint-disable-next-line no-underscore-dangle
+p5.prototype.registerMethod('init', function _trackPlots() {
+  // eslint-disable-next-line no-underscore-dangle
+  this._plots = [];
+});
+
+p5.prototype.createPlot = function _createPlot(data: any): Plot {
+  const plot: Plot = new Plot(this, data);
+  // eslint-disable-next-line no-underscore-dangle
+  this._plots.push(plot);
+  return plot;
 };
 
-/**
- * Constructs a line plot from arrays of x and y-values.
- *
- * @param pInst     the p5 instance used for rendering
- * @param x         the x-values to be plotted
- * @param y         the y-values to be plotted
- * @param numTicks  (optional) the number of tick marks
- */
-export const plot = function drawLinePlot(
-  pInst: any,
-  x: number[],
-  y: number[],
-  numTicks: number = 7,
-) {
-  if (!(x instanceof Array) || !(y instanceof Array)) {
-    throw new Error('plots must be created from Arrays.');
-  } else if (x.length !== y.length) {
-    throw new Error('x and y Arrays must be the same length.');
-  }
+p5.prototype.registerMethod('post', function _drawPlots() {
+  // eslint-disable-next-line no-underscore-dangle
+  this._plots.forEach((plot: Plot) => {
+    const {
+      pg,
+      plotX,
+      plotY,
+    } = plot.props;
+    plot.render();
+    this.image(pg, plotX, plotY, pg.width, pg.height);
+    plot.clear();
+  });
+});
 
-  // Summarize data
-  const {
-    xmin,
-    xmax,
-    ymin,
-    ymax,
-    pad,
-    width,
-    height,
-  } = pInst.basePlot(x, y, numTicks);
-
-  pInst.push();
-  pInst.scale(1, -1);
-  pInst.translate(pad, -pInst.height + pad);
-  for (let i = 0; i < x.length - 1; i += 1) {
-    const x1 = map(x[i], xmin, xmax, 0, width);
-    const y1 = map(y[i], ymin, ymax, 0, height);
-    const x2 = map(x[i + 1], xmin, xmax, 0, width);
-    const y2 = map(y[i + 1], ymin, ymax, 0, height);
-    pInst.line(x1, y1, x2, y2);
-  }
-  pInst.pop();
-};
-
-/**
- * Constructs a scatter plot from arrays of x and y-values.
- *
- * @param pInst     the p5 instance used for rendering
- * @param x         the x-values to be plotted
- * @param y         the y-values to be plotted
- * @param numTicks  (optional) the number of tick marks
- */
-export const scatter = function drawScatterPlot(
-  pInst: any,
-  x: number[],
-  y: number[],
-  numTicks: number = 7,
-) {
-  if (!(x instanceof Array) || !(y instanceof Array)) {
-    throw new Error('plots must be created from Arrays.');
-  } else if (x.length !== y.length) {
-    throw new Error('x and y Arrays must be the same length.');
-  }
-
-  // Summarize data
-  const {
-    xmin,
-    xmax,
-    ymin,
-    ymax,
-    pad,
-    width,
-    height,
-  } = pInst.basePlot(x, y, numTicks);
-
-  pInst.push();
-  pInst.scale(1, -1);
-  pInst.translate(pad, -pInst.height + pad);
-  for (let i = 0; i < x.length; i += 1) {
-    const xval = map(x[i], xmin, xmax, 0, width);
-    const yval = map(y[i], ymin, ymax, 0, height);
-    pInst.point(xval, yval);
-  }
-  pInst.pop();
-};
+p5.prototype.registerMethod('remove', function _removeFigures() {
+  // eslint-disable-next-line no-underscore-dangle
+  this._plots.forEach((plot: Plot) => plot.props.pg.remove());
+  // eslint-disable-next-line no-underscore-dangle
+  this._plots = undefined;
+});

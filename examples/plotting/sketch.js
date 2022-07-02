@@ -1,14 +1,22 @@
-const x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const y = x.map(xval => xval ** 2);
+let iris
+let plot
+
+function preload() {
+  iris = loadTable('iris.csv', 'csv', 'header')
+}
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(400, 400)
+
+  plot = createPlot(iris)
 }
 
 function draw() {
-  background(220);
-  stroke("red");
-  strokeWeight(5);
-  // plot(x, y);
-  scatter(x, y);
+  plot.title('Iris sepals')
+  plot.xlabel('Width')
+  plot.ylabel('Height')
+  plot.point({
+    x: 'SepalWidth',
+    y: 'SepalLength',
+  })
 }

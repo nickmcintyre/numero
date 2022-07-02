@@ -11,17 +11,68 @@ This addon library for p5.js turns the "software sketchbook" into a beginner-fri
 
 - A tensor object (similar to [NumPy](https://numpy.org/) arrays)
 - A computer algebra system (similar to [SymPy](https://www.sympy.org/en/index.html))
-- A plotting API (similar to [Matplotlib](https://matplotlib.org/) -- coming soon!)
-- A supercharged p5.Table (similar to [pandas](https://pandas.pydata.org/) DataFrames -- coming soon!)
-- A machine learning API (similar to [Keras](https://keras.io/) -- coming soon!)
+- A grammar of graphics (similar to [ggplot2](https://ggplot2.tidyverse.org/))
+- A supercharged p5.Table (similar to [pandas](https://pandas.pydata.org/) DataFrames)
+- A machine learning API (similar to [scikit-learn](https://scikit-learn.org/stable/index.html) -- coming soon!)
 - A drawing turtle (because they're awesome)
 
-The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/) and [Math.js](https://mathjs.org/) under the hood. It bundles [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX) for drawing with turtles.
+The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [Day.js](https://day.js.org/), [Math.js](https://mathjs.org/), and [TensorFlow.js](https://js.tensorflow.org/api/latest/) under the hood. It bundles [p5.dataframe](https://github.com/nickmcintyre/p5.dataframe), [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX), and [wildflower](https://github.com/nickmcintyre/wildflower).
 
 ## Usage
 
+### Plotting
+View the [plotting example](/examples/plotting/).
 ```javascript
-// A little matrix-vector multiplication
+let iris
+let plot
+
+function preload() {
+  iris = loadTable('iris.csv', 'csv', 'header')
+}
+
+function setup() {
+  createCanvas(400, 400)
+
+  plot = createPlot(iris)
+}
+
+function draw() {
+  plot.title('Iris sepals')
+  plot.xlabel('Width')
+  plot.ylabel('Height')
+  plot.point({
+    x: 'SepalWidth',
+    y: 'SepalLength',
+  })
+}
+```
+
+### Tables
+View the [tables example](/examples/tables/).
+```javascript
+let iris
+
+function preload() {
+  iris = loadTable('iris.csv', 'csv', 'header')
+}
+
+function setup() {
+  noCanvas()
+  iris.inferTypes()
+  // print('The iris dataset')
+  // iris.print()
+  print('Iris dataset summary by column')
+  let summary = iris.describe()
+  summary.print()
+  print('Mean by species')
+  let mean = iris.groupby('Species').mean()
+  mean.print()
+}
+```
+
+### Matrix-vector multiplication
+View the [matrix-vector example](/examples/matrix-vector/).
+```javascript
 const a = createTensor([[1, 2], [3, 4]]);
 const x = createTensor([5, 6]);
 const b = a.dot(x);
@@ -31,7 +82,7 @@ b.print();
 
 ## Demo
 
-The fluid simulation below was created using a 2-dimensional [lattice Boltzmann method](https://en.wikipedia.org/wiki/Lattice_Boltzmann_methods).
+The [fluid simulation](/examples/fluid-simulation/) below was created using a 2-dimensional [lattice Boltzmann method](https://en.wikipedia.org/wiki/Lattice_Boltzmann_methods).
 
 ![A fluid simulation](examples/fluid-simulation/lbm.gif)
 
