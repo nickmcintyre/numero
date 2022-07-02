@@ -1,3 +1,5 @@
+import * as dayjs from 'dayjs';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Table, TableRow } from 'p5';
 
 declare module 'p5' {
@@ -19,7 +21,23 @@ declare module 'p5' {
  * @param {string} [column] the column to print
  */
 Table.prototype.print = function _print(column?: string): void {
-  const tableObject: object = this.getObject(column);
+  let tableObject: object;
+  if (column && dayjs.isDayjs(this.get(0, column))) {
+    tableObject = {};
+    for (let row = 0; row < this.getRowCount(); row += 1) {
+      tableObject[row] = {};
+      tableObject[row][column] = this.get(row, column).toString();
+    }
+  } else {
+    tableObject = this.getObject();
+    this.columns.forEach((col: string) => {
+      if (dayjs.isDayjs(this.get(0, col))) {
+        for (let row = 0; row < this.getRowCount(); row += 1) {
+          tableObject[row][col] = tableObject[row][col].toString();
+        }
+      }
+    });
+  }
   // eslint-disable-next-line no-console
   console.table(tableObject);
 };
@@ -58,7 +76,7 @@ Table.prototype.inferTypes = function _inferTypes(): void {
  */
 Table.prototype.isNull = function _isNull(): Table {
   const output: Table = new Table();
-  output.columns = this.columns;
+  output.columns = this.columns.slice();
   this.rows.forEach((row: TableRow) => {
     const newRow: TableRow = output.addRow();
     output.columns.forEach((column) => {
@@ -83,7 +101,7 @@ Table.prototype.isNull = function _isNull(): Table {
  */
 Table.prototype.notNull = function _notNull(): Table {
   const output: Table = new Table();
-  output.columns = this.columns;
+  output.columns = this.columns.slice();
   this.rows.forEach((row: TableRow) => {
     const newRow: TableRow = output.addRow();
     output.columns.forEach((column: string) => {
@@ -110,7 +128,7 @@ Table.prototype.notNull = function _notNull(): Table {
 Table.prototype.any = function _any(column?: string): boolean | Table {
   if (column === undefined) {
     const output: Table = new Table();
-    output.columns = this.columns;
+    output.columns = this.columns.slice();
     const row: TableRow = output.addRow();
     output.columns.forEach((col: string) => {
       const c: any[] = this.getColumn(col);
@@ -135,7 +153,7 @@ Table.prototype.any = function _any(column?: string): boolean | Table {
 Table.prototype.all = function _all(column?: string): boolean | Table {
   if (column === undefined) {
     const output: Table = new Table();
-    output.columns = this.columns;
+    output.columns = this.columns.slice();
     const row: TableRow = output.addRow();
     output.columns.forEach((col: string) => {
       const c: any[] = this.getColumn(col);
@@ -158,7 +176,7 @@ Table.prototype.all = function _all(column?: string): boolean | Table {
  */
 Table.prototype.map = function _map(func: Function): Table {
   const output: Table = new Table();
-  output.columns = this.columns;
+  output.columns = this.columns.slice();
   this.rows.forEach((row: TableRow) => {
     const newRow: TableRow = output.addRow();
     output.columns.forEach((col: string) => {
@@ -177,7 +195,7 @@ Table.prototype.map = function _map(func: Function): Table {
  */
 Table.prototype.isin = function _isin(values: any[]): Table {
   const output: Table = new Table();
-  output.columns = this.columns;
+  output.columns = this.columns.slice();
   this.rows.forEach((row) => {
     const newRow: TableRow = output.addRow();
     output.columns.forEach((col: string) => {
