@@ -1,6 +1,11 @@
-import { scaleXContinuous, scaleYContinuous } from "./continuous";
+import {
+  linspace,
+  scaleXContinuous,
+  scaleYContinuous,
+} from "./continuous";
 
 export {
+  linspace,
   scaleXContinuous,
   scaleYContinuous,
 };

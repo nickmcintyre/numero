@@ -20,7 +20,7 @@ The library is written in [TypeScript](http://www.typescriptlang.org/) and uses 
 
 ## Usage
 
-### Plotting
+### Plots
 View the [plotting example](/examples/plotting/).
 ```javascript
 let iris
@@ -38,12 +38,13 @@ function setup() {
 
 function draw() {
   plot.title('Iris sepals')
-  plot.xlabel('Width')
-  plot.ylabel('Height')
+  plot.xlabel('Width (cm)')
+  plot.ylabel('Height (cm)')
   plot.point({
     x: 'SepalWidth',
     y: 'SepalLength',
   })
+  plot.render()
 }
 ```
 
@@ -70,7 +71,7 @@ function setup() {
 }
 ```
 
-### Matrix-vector multiplication
+### Tensors
 View the [matrix-vector example](/examples/matrix-vector/).
 ```javascript
 const a = createTensor([[1, 2], [3, 4]]);

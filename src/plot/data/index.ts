@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Table } from 'p5';
+import { Bin, bin } from '../stat';
 import { range, Range } from '../utils';
 
 interface Element {
@@ -38,26 +39,39 @@ export interface SortedData {
   yRange: Range;
 }
 
+export interface BinnedData {
+  x: string;
+  numBins: number;
+  data: Bin;
+  xRange?: Range;
+}
+
 export class Dataset {
   raw: RawData;
 
   sorted: SortedData[];
 
+  binned: BinnedData[];
+
   constructor(data: DataObject | Table) {
     this.raw = { data };
     this.sorted = [];
+    this.binned = [];
+  }
+
+  getRaw(x: string): number[] {
+    let xData: number[];
+    if (this.raw.data instanceof Table) {
+      xData = this.raw.data.getColumn(x);
+    } else if (this.raw.data instanceof Object) {
+      xData = this.raw.data[x];
+    }
+    return xData;
   }
 
   sort(x: string, y: string): SortedData {
-    let xData: number[];
-    let yData: number[];
-    if (this.raw.data instanceof Table) {
-      xData = this.raw.data.getColumn(x);
-      yData = this.raw.data.getColumn(y);
-    } else if (this.raw.data instanceof Object) {
-      xData = this.raw.data[x];
-      yData = this.raw.data[y];
-    }
+    const xData: number[] = this.getRaw(x);
+    const yData: number[] = this.getRaw(y);
     const indices: number[] = sortIndices(xData);
     const newData: DataObject = {
       x: indices.map((i) => xData[i]),
@@ -74,7 +88,7 @@ export class Dataset {
     return pair;
   }
 
-  get(x: string, y: string): SortedData {
+  getSorted(x: string, y: string): SortedData {
     let data: any;
     this.sorted.forEach((pair: SortedData) => {
       if (pair.x === x && pair.y === y) {
@@ -87,20 +101,28 @@ export class Dataset {
     return data;
   }
 
-  // equals(x: number[], y: number[]) {
-  //   if (this.raw.data instanceof Table) {
-  //     const xData: number[] = this.raw.data.getColumn(this.raw.x);
-  //     const yData: number[] = this.raw.data.getColumn(this.raw.y);
-  //     xData.forEach((value, index): void | boolean => {
-  //       if (value !== x[index]) return false;
-  //     });
-  //     yData.forEach((value, index): void | boolean => {
-  //       if (value !== y[index]) return false;
-  //     });
-  //     return true;
-  //   }
-  //   if (this.raw.data instanceof Object) {
-  //     return x === this.raw.data[this.raw.x] && y === this.raw.data[this.raw.y];
-  //   }
-  // }
+  bin(x: string, numBins: number = 20): BinnedData {
+    const xData: number[] = this.getRaw(x);
+    const newData: BinnedData = {
+      x,
+      numBins,
+      data: bin(xData, numBins),
+    };
+    newData.xRange = range(newData.data.count);
+    this.binned.push(newData);
+    return newData;
+  }
+
+  getBinned(x: string, numBins: number = 20): BinnedData {
+    let data: any;
+    this.binned.forEach((b: BinnedData) => {
+      if (b.x === x && b.numBins === numBins) {
+        data = b;
+      }
+    });
+    if (!data) {
+      data = this.bin(x, numBins);
+    }
+    return data;
+  }
 }

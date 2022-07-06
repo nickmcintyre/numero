@@ -6,25 +6,19 @@ const drawXGrid = (props: Props): void => {
     pg,
     originX,
     originY,
-    width,
     height,
-    majorTicks,
     minorTicks,
-    annotaionsPalette,
+    annotationsPalette,
   } = props;
   pg.push();
-  pg.stroke(annotaionsPalette.gridColor);
+  pg.stroke(annotationsPalette.gridColor);
   pg.strokeWeight(1);
   pg.translate(originX, originY);
-  const { numXTicks, dx } = scaleXContinuous({
-    width,
-    majorTicks,
-    minorTicks,
-  });
-  for (let i = 0; i <= numXTicks; i += 1) {
-    const tickX: number = dx * (i + 1);
+  const xTicks: number[] = scaleXContinuous(props);
+  for (let i = 0; i <= xTicks.length; i += 1) {
+    const x: number = xTicks[i];
     if (i % (minorTicks + 1) === 0) {
-      pg.line(tickX, -1, tickX, -height);
+      pg.line(x, -1, x, -height);
     }
   }
   pg.pop();
@@ -36,30 +30,24 @@ const drawYGrid = (props: Props): void => {
     originX,
     originY,
     width,
-    height,
-    majorTicks,
     minorTicks,
-    annotaionsPalette,
+    annotationsPalette,
   } = props;
   pg.push();
-  pg.stroke(annotaionsPalette.gridColor);
+  pg.stroke(annotationsPalette.gridColor);
   pg.strokeWeight(1);
   pg.translate(originX, originY);
-  const { numYTicks, dy } = scaleYContinuous({
-    height,
-    majorTicks,
-    minorTicks,
-  });
-  for (let i = 0; i <= numYTicks; i += 1) {
-    const tickY: number = -dy * (i + 1);
+  const yTicks: number[] = scaleYContinuous(props);
+  for (let i = 0; i <= yTicks.length; i += 1) {
+    const y: number = -yTicks[i];
     if (i % (minorTicks + 1) === 0) {
-      pg.line(1, tickY, width, tickY);
+      pg.line(1, y, width, y);
     }
   }
   pg.pop();
 };
 
-export default (props) => {
+export default (props: Props) => {
   drawXGrid(props);
   drawYGrid(props);
 };

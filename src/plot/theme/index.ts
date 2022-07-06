@@ -2,8 +2,10 @@ export const annotations = {
   default: {
     fontColor: 'black',
     axesColor: 'black',
+    axesWeight: 1,
     gridColor: 'white',
     backgroundColor: 'gainsboro',
+    marginColor: 'white',
   },
 };
 

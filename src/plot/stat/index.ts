@@ -1,2 +1,8 @@
-// eslint-disable-next-line import/prefer-default-export
-export const identity = (x: number): number => x;
+import { Bin, bin } from './bin';
+import identity from './identity';
+
+export {
+  Bin,
+  bin,
+  identity,
+};
