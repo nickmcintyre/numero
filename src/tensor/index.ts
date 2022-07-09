@@ -66,8 +66,15 @@ export class Tensor {
    * @returns the (possibly nested) array of values
    */
   async array(): Promise<any> {
-    const vals = await this.tensor.array();
-
+    if (this.isComplex) {
+      const real: any = await this.real().array();
+      const imag: any = await this.imag().array();
+      return {
+        real,
+        imag,
+      };
+    }
+    const vals: any = await this.tensor.array();
     return vals;
   }
 
@@ -78,6 +85,14 @@ export class Tensor {
    * @returns the (possibly nested) array of values
    */
   arraySync(): any {
+    if (this.isComplex) {
+      const real: any = this.real().arraySync();
+      const imag: any = this.imag().arraySync();
+      return {
+        real,
+        imag,
+      };
+    }
     return this.tensor.arraySync();
   }
 

@@ -83,6 +83,20 @@ describe('Tensor', function () {
         const t = pInst.createTensor(a);
         expect(t.arraySync()).to.eql(a);
       });
+
+      it('Should return real and complex numbers', function () {
+        const t = num.Tensor.complex(2, 5);
+        const { real, imag } = t.arraySync();
+        expect(real).to.equal(2);
+        expect(imag).to.equal(5);
+      });
+
+      it('Should return real and complex arrays', function () {
+        const t = num.Tensor.complex([1, 2], [3, 4]);
+        const { real, imag } = t.arraySync();
+        expect(real).to.eql([1, 2]);
+        expect(imag).to.eql([3, 4]);
+      });
     });
 
     describe('toVector()', function () {
