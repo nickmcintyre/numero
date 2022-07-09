@@ -1,33 +1,33 @@
 // Heavily inspired by NanoNeuron
 // https://github.com/trekhleb/nano-neuron
 // MIT License
-let numPoints = 100;
-let data = {
+const numPoints = 100;
+const data = {
   x: [],
   y: [],
 };
 let epoch = 0;
-let learningRate = 0.0005;
-let neuron = {
+const learningRate = 0.0005;
+const neuron = {
   W: 0.5,
   b: 0,
 };
-let grad = {
+const grad = {
   W: null,
   b: null,
 };
 
 // 1. Generate data set
 function fahr(cels) {
-  let W = 1.8;
-  let b = 32;
+  const W = 1.8;
+  const b = 32;
   return W * cels + b;
 }
 
 function generateData() {
   for (let x = 0; x < numPoints; x += 1) {
     data.x.push(x);
-    let y = fahr(x);
+    const y = fahr(x);
     data.y.push(y);
   }
 }
@@ -44,7 +44,7 @@ function error(yHat, y) {
 function forwardProp() {
   let err = 0;
   for (let i = 0; i < numPoints; i += 1) {
-    let yHat = predict(data.x[i]);
+    const yHat = predict(data.x[i]);
     err += error(yHat, data.y[i]);
   }
   err /= numPoints;
@@ -56,7 +56,7 @@ function gradient() {
   let dW = 0;
   let db = 0;
   for (let i = 0; i < numPoints; i += 1) {
-    let scope = {
+    const scope = {
       W: neuron.W,
       b: neuron.b,
       x: data.x[i],
@@ -71,7 +71,7 @@ function gradient() {
 }
 
 function backProp() {
-  let [dW, db] = gradient();
+  const [dW, db] = gradient();
   neuron.W -= learningRate * dW;
   neuron.b -= learningRate * db;
 }

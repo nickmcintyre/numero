@@ -5,7 +5,7 @@ function setup() {
   createCanvas(400, 400);
   noLoop();
   angleMode(DEGREES);
-  
+
   sidesSlider = createSlider(3, 20, 3, 1);
   sidesSlider.position(100, 300);
   sidesSlider.style('width', '200px');
@@ -27,14 +27,14 @@ function draw() {
 }
 
 function polygon(diameter, n) {
-  let interiorAngle = 180 * (n - 2) / n;
-  let turnAngle = 180 - interiorAngle;
-  let sideLength = 0.5 * diameter * sin(interiorAngle);
-  let x = 0.5 * (width - diameter * sin(0.5 * interiorAngle));
-  let y = 0.5 * height;
+  const interiorAngle = 180 * (n - 2) / n;
+  const turnAngle = 180 - interiorAngle;
+  const sideLength = 0.5 * diameter * sin(interiorAngle);
+  const x = 0.5 * (width - diameter * sin(0.5 * interiorAngle));
+  const y = 0.5 * height;
   setposition(x, y);
   pencolor('darkturquoise');
-  for(let i = 0; i < n; i += 1) {
+  for (let i = 0; i < n; i += 1) {
     forward(sideLength);
     right(turnAngle);
   }

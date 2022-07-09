@@ -235,12 +235,12 @@ function diff(increment, zeta) {
 
   dTheta = num.stack(dTheta);
   const t = dTheta.sin()
-                  .mult(coupling)
-                  .sum(1)
-                  .div(networkSize)
-                  .add(zeta)
-                  .add(naturalFrequency);
-  
+    .mult(coupling)
+    .sum(1)
+    .div(networkSize)
+    .add(zeta)
+    .add(naturalFrequency);
+
   const result = createTensor(t);
 
   return result;

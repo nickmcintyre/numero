@@ -23,51 +23,53 @@ The library is written in [TypeScript](http://www.typescriptlang.org/) and uses 
 ### Plots
 View the [plotting example](/examples/plotting/).
 ```javascript
-let iris
-let plot
+let iris;
+let plot;
 
 function preload() {
-  iris = loadTable('iris.csv', 'csv', 'header')
+  iris = loadTable('iris.csv', 'csv', 'header');
 }
 
 function setup() {
-  createCanvas(400, 400)
+  createCanvas(400, 400);
 
-  plot = createPlot(iris)
+  plot = createPlot(iris);
+
+  noLoop();
 }
 
 function draw() {
-  plot.title('Iris sepals')
-  plot.xlabel('Width (cm)')
-  plot.ylabel('Height (cm)')
+  plot.title('Iris sepals');
+  plot.xlabel('Width (cm)');
+  plot.ylabel('Height (cm)');
   plot.point({
     x: 'SepalWidth',
     y: 'SepalLength',
-  })
-  plot.render()
+  });
+  plot.render();
 }
 ```
 
 ### Tables
 View the [tables example](/examples/tables/).
 ```javascript
-let iris
+let iris;
 
 function preload() {
-  iris = loadTable('iris.csv', 'csv', 'header')
+  iris = loadTable('iris.csv', 'csv', 'header');
 }
 
 function setup() {
-  noCanvas()
-  iris.inferTypes()
-  // print('The iris dataset')
-  // iris.print()
-  print('Iris dataset summary by column')
-  let summary = iris.describe()
-  summary.print()
-  print('Mean by species')
-  let mean = iris.groupby('Species').mean()
-  mean.print()
+  noCanvas();
+  iris.inferTypes();
+  // print('The iris dataset');
+  // iris.print();
+  print('Iris dataset summary by column');
+  let summary = iris.describe();
+  summary.print();
+  print('Mean by species');
+  let mean = iris.groupby('Species').mean();
+  mean.print();
 }
 ```
 
