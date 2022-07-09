@@ -165,9 +165,9 @@ describe('Grouping', function () {
       const t2 = t1.groupby('Animal').sd();
       expect(t2.columns).to.eql(['Max Speed', 'Animal']);
       expect(t2.get(0, 'Animal')).to.eql('Falcon');
-      expect(t2.get(0, 'Max Speed')).to.be.closeTo(7.07, 0.01);
+      expect(t2.get(0, 'Max Speed')).to.be.closeTo(5, 0.01);
       expect(t2.get(1, 'Animal')).to.eql('Parrot');
-      expect(t2.get(1, 'Max Speed')).to.be.closeTo(1.41, 0.01);
+      expect(t2.get(1, 'Max Speed')).to.be.closeTo(1, 0.01);
     });
   });
 });

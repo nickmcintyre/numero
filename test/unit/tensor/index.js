@@ -779,7 +779,7 @@ describe('Tensor', function () {
         const t = num.Tensor.randomGaussian([n], 5, 1);
         const x = t.arraySync();
         const mean = x.reduce((a, b) => a + b) / n;
-        const sd = Math.sqrt(x.reduce((a, b) => a + (b - mean) ** 2) / (n - 1));
+        const sd = Math.sqrt(x.reduce((a, b) => a + (b - mean) ** 2) / n);
         expect(mean).to.be.closeTo(5, 0.01);
         expect(sd).to.be.closeTo(1, 0.01);
       });

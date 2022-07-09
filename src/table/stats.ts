@@ -1,4 +1,4 @@
-import * as math from 'mathjs';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Table, TableRow } from 'p5';
 
 declare module 'p5' {
@@ -27,27 +27,57 @@ const summaryTable = function _summaryTable(table: Table): Table {
 };
 
 /**
- * Computes the number of cells with values in a column or set of columns.
+ * Computes a summary statistic along a column.
  *
- * @param {string} [column] the name of the column to analyze
- * @returns                 the count, either as a number or as a table
+ * @param {p5.Table} table the table to analyze
+ * @param {string} column  the name of the column to analyze
+ * @param {Function} func  the statistical function to apply
+ * @param {any[]} [args]   positional arguments for func
+ * @returns                the statistic, either as a number or as a table
  */
-Table.prototype.count = function _count(column: string): number | Table {
+const computeStat = (
+  table: Table,
+  column: string,
+  func: Function,
+  args?: any[],
+): number | Table => {
   if (column === undefined) {
-    const output: Table = summaryTable(this);
-    this.columns.forEach((col: string) => {
-      const data: any[] = this.getColumn(col);
+    const output: Table = summaryTable(table);
+    table.columns.forEach((col: string) => {
+      const data: any[] = table.getColumn(col);
       if (typeof data[0] === 'number') {
-        const count: number = data.filter((x) => x).length;
-        output.setNum(0, col, count);
+        const value: number = func(data, ...args);
+        output.setNum(0, col, value);
       } else {
         output.set(0, col, undefined);
       }
     });
     return output;
   }
-  const data: number[] = this.getColumn(column);
-  return data.filter((x: number) => x).length;
+  const data: number[] = table.getColumn(column);
+  return func(data, ...args);
+};
+
+/**
+ * Computes the number of cells with values in a column or set of columns.
+ *
+ * @param {string} [column] the name of the column to analyze
+ * @returns                 the count, either as a number or as a table
+ */
+Table.prototype.count = function _count(column: string): number | Table {
+  const count = (array: number[]) => array.filter((x) => x).length;
+  return computeStat(this, column, count, []);
+};
+
+/**
+ * Computes the arithmetic mean of an array.
+ *
+ * @param {number[]} array the array of numbers
+ * @returns                the mean
+ */
+const mean = (array: number[]): number => {
+  const sum: number = array.reduce((a, b) => a + b);
+  return sum / array.length;
 };
 
 /**
@@ -57,21 +87,29 @@ Table.prototype.count = function _count(column: string): number | Table {
  * @returns                 the mean, either as a number or as a table
  */
 Table.prototype.mean = function _mean(column: string): number | Table {
-  if (column === undefined) {
-    const output: Table = summaryTable(this);
-    this.columns.forEach((col: string) => {
-      const data: any[] = this.getColumn(col);
-      if (typeof data[0] === 'number') {
-        const mean: number = math.mean(data);
-        output.setNum(0, col, mean);
-      } else {
-        output.set(0, col, undefined);
-      }
-    });
-    return output;
+  return computeStat(this, column, mean, []);
+};
+
+/**
+ * Computes the median of an array.
+ *
+ * @param {number[]} array the array of numbers
+ * @returns                the median
+ */
+const median = (array: number[]): number => {
+  const n: number = array.length;
+  if (n === 1) {
+    return array[0];
   }
-  const data: number[] = this.getColumn(column);
-  return math.mean(data);
+  const a = array.slice();
+  a.sort();
+  if (n % 2 === 0) {
+    const left: number = Math.floor(n / 2) - 1;
+    const right: number = Math.floor(n / 2);
+    return (a[left] + a[right]) / 2;
+  }
+  const middle: number = Math.floor(n / 2);
+  return a[middle];
 };
 
 /**
@@ -81,21 +119,7 @@ Table.prototype.mean = function _mean(column: string): number | Table {
  * @returns                 the median, either as a number or as a table
  */
 Table.prototype.median = function _median(column: string): number | Table {
-  if (column === undefined) {
-    const output: Table = summaryTable(this);
-    this.columns.forEach((col: string) => {
-      const data: any[] = this.getColumn(col);
-      if (typeof data[0] === 'number') {
-        const median: number = math.median(data);
-        output.setNum(0, col, median);
-      } else {
-        output.set(0, col, undefined);
-      }
-    });
-    return output;
-  }
-  const data: number[] = this.getColumn(column);
-  return math.median(data);
+  return computeStat(this, column, median, []);
 };
 
 /**
@@ -105,21 +129,8 @@ Table.prototype.median = function _median(column: string): number | Table {
  * @returns                 the maximum, either as a number or as a table
  */
 Table.prototype.max = function _max(column: string): number | Table {
-  if (column === undefined) {
-    const output: Table = summaryTable(this);
-    this.columns.forEach((col: string) => {
-      const data: any[] = this.getColumn(col);
-      if (typeof data[0] === 'number') {
-        const max: number = math.max(data);
-        output.setNum(0, col, max);
-      } else {
-        output.set(0, col, undefined);
-      }
-    });
-    return output;
-  }
-  const data: number[] = this.getColumn(column);
-  return math.max(data);
+  const max = (array: number[]) => Math.max(...array);
+  return computeStat(this, column, max, []);
 };
 
 /**
@@ -129,51 +140,42 @@ Table.prototype.max = function _max(column: string): number | Table {
  * @returns                 the minimum, either as a number or as a table
  */
 Table.prototype.min = function _min(column: string): number | Table {
-  if (column === undefined) {
-    const output: Table = summaryTable(this);
-    this.columns.forEach((col: string) => {
-      const data: any[] = this.getColumn(col);
-      if (typeof data[0] === 'number') {
-        const min: number = math.min(data);
-        output.setNum(0, col, min);
-      } else {
-        output.set(0, col, undefined);
-      }
-    });
-    return output;
-  }
-  const data: number[] = this.getColumn(column);
-  return math.min(data);
+  const min = (array: number[]) => Math.min(...array);
+  return computeStat(this, column, min, []);
+};
+
+/**
+ * Computes the standard deviation of an array.
+ *
+ * @param {number[]} array  the array of numbers
+ * @param {number} [ddof]   the delta degrees of freedom is used to divide the sum
+ *                          of squared errors: sum(se) / (n - ddof)
+ * @returns                 the standard deviation
+ */
+const sd = (array: number[], ddof: number = 0): number => {
+  const n: number = array.length;
+  const mu: number = mean(array);
+  const se: number[] = array.map((a) => (a - mu) ** 2);
+  const variance = se.reduce((a, b) => a + b) / (n - ddof);
+  return Math.sqrt(variance);
 };
 
 /**
  * Computes the standard deviation of a column or set of columns.
  *
  * @param {string} [column] the name of the column to analyze
+ * @param {number} [ddof]   the delta degrees of freedom is used to divide the sum
+ *                          of squared errors: sum(se) / (n - ddof)
  * @returns                 the standard deviation, either as a number or as a table
  */
-Table.prototype.sd = function _sd(column: string): number | Table {
-  if (column === undefined) {
-    const output: Table = summaryTable(this);
-    this.columns.forEach((col: string) => {
-      const data: any[] = this.getColumn(col);
-      if (typeof data[0] === 'number') {
-        const sd: any = math.std(data);
-        output.setNum(0, col, sd);
-      } else {
-        output.set(0, col, undefined);
-      }
-    });
-    return output;
-  }
-  const data: any = this.getColumn(column);
-  return math.std(data);
+Table.prototype.sd = function _sd(column: string, ddof: number = 0): number | Table {
+  return computeStat(this, column, sd, [ddof]);
 };
 
 /**
  * Computes the summary statistics of a p5.Table.
  *
- * @returns     the table of summary stats
+ * @returns the table of summary stats
  */
 Table.prototype.describe = function _describe(): Table {
   const output: Table = new Table();

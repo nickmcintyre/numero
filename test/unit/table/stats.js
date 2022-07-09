@@ -250,9 +250,9 @@ describe('Statistics', function () {
       row.setNum('a', 7);
       row.setNum('b', 8);
       row.setNum('c', 9);
-      expect(t.sd('a')).to.eq(3);
-      expect(t.sd('b')).to.eq(3);
-      expect(t.sd('c')).to.eq(3);
+      expect(t.sd('a')).to.be.closeTo(2.449, 0.001);
+      expect(t.sd('b')).to.be.closeTo(2.449, 0.001);
+      expect(t.sd('c')).to.be.closeTo(2.449, 0.001);
     });
 
     it('Should calculate the standard deviation of all columns', function () {
@@ -270,7 +270,9 @@ describe('Statistics', function () {
       row.setNum('a', 7);
       row.setNum('b', 8);
       row.setNum('c', 9);
-      expect(t.sd().getRow(0).arr).to.eql([3, 3, 3]);
+      t.sd().getRow(0).arr.forEach((sd) => {
+        expect(sd).to.be.closeTo(2.449, 0.001);
+      });
     });
   });
 
@@ -329,9 +331,21 @@ describe('Statistics', function () {
       row.setNum('b', 8);
       row.setNum('c', 9);
       const t2 = t1.describe();
-      expect(t2.getColumn('a')).to.eql([3, 4, 3, 1, 2.5, 4, 5.5, 7]);
-      expect(t2.getColumn('b')).to.eql([3, 5, 3, 2, 3.5, 5, 6.5, 8]);
-      expect(t2.getColumn('c')).to.eql([3, 6, 3, 3, 4.5, 6, 7.5, 9]);
+      let col = t2.getColumn('a');
+      let values = [3, 4, 2.449, 1, 2.5, 4, 5.5, 7];
+      for (let i = 0; i < values.length; i += 1) {
+        expect(col[i]).to.be.closeTo(values[i], 0.001);
+      }
+      col = t2.getColumn('b');
+      values = [3, 5, 2.449, 2, 3.5, 5, 6.5, 8];
+      for (let i = 0; i < values.length; i += 1) {
+        expect(col[i]).to.be.closeTo(values[i], 0.001);
+      }
+      col = t2.getColumn('c');
+      values = [3, 6, 2.449, 3, 4.5, 6, 7.5, 9];
+      for (let i = 0; i < values.length; i += 1) {
+        expect(col[i]).to.be.closeTo(values[i], 0.001);
+      }
     });
   });
 });
