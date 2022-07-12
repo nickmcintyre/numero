@@ -74,6 +74,66 @@ describe('Statistics', function () {
     });
   });
 
+  describe('sum()', function () {
+    it('Should calculate the sum of a column', function () {
+      const t = new p5.Table();
+      t.columns = ['a', 'b', 'c'];
+      let row = t.addRow();
+      row.setNum('a', 1);
+      row.setNum('b', 2);
+      row.setNum('c', 3);
+      row = t.addRow();
+      row.setNum('a', 4);
+      row.setNum('b', 5);
+      row.setNum('c', 6);
+      row = t.addRow();
+      row.setNum('a', 7);
+      row.setNum('b', 8);
+      row.setNum('c', 9);
+      expect(t.sum('a')).to.eq(12);
+      expect(t.sum('b')).to.eq(15);
+      expect(t.sum('c')).to.eq(18);
+    });
+
+    it('Should should not add undefined', function () {
+      const t = new p5.Table();
+      t.columns = ['a', 'b', 'c'];
+      let row = t.addRow();
+      row.setNum('a', 1);
+      row.setNum('b', 2);
+      row.setNum('c', 3);
+      row = t.addRow();
+      row.setNum('a', 4);
+      row.setNum('b', undefined);
+      row.setNum('c', 6);
+      row = t.addRow();
+      row.setNum('a', 7);
+      row.setNum('b', 8);
+      row.setNum('c', 9);
+      expect(t.sum('a')).to.eq(12);
+      expect(t.sum('b')).to.eq(10);
+      expect(t.sum('c')).to.eq(18);
+    });
+
+    it('Should should calculate the sum of all columns', function () {
+      const t = new p5.Table();
+      t.columns = ['a', 'b', 'c'];
+      let row = t.addRow();
+      row.setNum('a', 1);
+      row.setNum('b', 2);
+      row.setNum('c', 3);
+      row = t.addRow();
+      row.setNum('a', 4);
+      row.setNum('b', undefined);
+      row.setNum('c', 6);
+      row = t.addRow();
+      row.setNum('a', 7);
+      row.setNum('b', 8);
+      row.setNum('c', 9);
+      expect(t.sum().getRow(0).arr).to.eql([12, 10, 18]);
+    });
+  });
+
   describe('mean()', function () {
     it('Should calculate the mean of a column', function () {
       const t = new p5.Table();

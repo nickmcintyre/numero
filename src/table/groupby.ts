@@ -61,6 +61,8 @@ class GroupedTable {
       let statTable: Table;
       if (stat === 'count') {
         statTable = this.groups[group].count();
+      } else if (stat === 'sum') {
+        statTable = this.groups[group].sum();
       } else if (stat === 'mean') {
         statTable = this.groups[group].mean();
       } else if (stat === 'median') {
@@ -90,6 +92,15 @@ class GroupedTable {
    */
   count(): Table {
     return this.computeStat('count');
+  }
+
+  /**
+   * Computes the sum of each group in the p5.Table.
+   *
+   * @returns the sum per group
+   */
+  sum(): Table {
+    return this.computeStat('sum');
   }
 
   /**

@@ -2,10 +2,33 @@ import { Table, TableRow } from 'p5';
 
 declare module 'p5' {
   interface Table {
+    rename(from: string, to: string): void;
     concat(other: Table, axis: number): Table;
     merge(other: Table, key: string): Table;
   }
 }
+
+/**
+ * Changes the name of a column if it is present.
+ *
+ * @param {string} from the current column name
+ * @param {string} to   the new column name
+ */
+Table.prototype.rename = function _rename(from: string, to: string): void {
+  const index: number = this.columns.indexOf(from);
+  if (index < 0) {
+    throw new Error('The original column is not present in the table.');
+  }
+  this.columns[index] = to;
+  this.rows.forEach((row: TableRow) => {
+    // @ts-ignore
+    // eslint-disable-next-line no-param-reassign
+    row.obj[to] = row.obj[from];
+    // @ts-ignore
+    // eslint-disable-next-line no-param-reassign
+    delete row.obj[from];
+  });
+};
 
 /**
  * Concatenates two p5.Tables along a specified axis.

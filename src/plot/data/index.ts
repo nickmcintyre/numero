@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Table } from 'p5';
+import * as dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
+import { Table, TableRow } from 'p5';
 import { Bin, bin } from '../stat';
 import { range, Range } from '../utils';
 
@@ -24,6 +26,7 @@ const sortIndices = (array: number[]): number[] => {
 
 export interface RawData {
   data: object | Table;
+  time?: string[];
 }
 
 export interface DataObject {
@@ -54,7 +57,7 @@ export class Dataset {
   binned: BinnedData[];
 
   constructor(data: DataObject | Table) {
-    this.raw = { data };
+    this.raw = { data, time: [] };
     this.sorted = [];
     this.binned = [];
   }
@@ -63,6 +66,15 @@ export class Dataset {
     let xData: number[];
     if (this.raw.data instanceof Table) {
       xData = this.raw.data.getColumn(x);
+      if (this.raw.time.includes(x)) return xData;
+      if (dayjs.isDayjs(xData[0])) {
+        this.raw.time.push(x);
+        this.raw.data.rows.forEach((row: TableRow) => {
+          const ms: Dayjs = row.getDateTime(x);
+          row.set(x, ms.toDate().getTime());
+        });
+        xData = this.raw.data.getColumn(x);
+      }
     } else if (this.raw.data instanceof Object) {
       xData = this.raw.data[x];
     }

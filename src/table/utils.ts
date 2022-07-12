@@ -10,7 +10,7 @@ declare module 'p5' {
     notNull(): Table;
     any(column?: string): boolean | Table;
     all(column?: string): boolean | Table;
-    map(func: Function): Table;
+    map(func: Function, column?: string): Table;
     isin(values: any[]): Table;
   }
 }
@@ -29,7 +29,7 @@ Table.prototype.print = function _print(column?: string): void {
       tableObject[row][column] = this.get(row, column).toString();
     }
   } else {
-    tableObject = this.getObject();
+    tableObject = { ...this.getObject() };
     this.columns.forEach((col: string) => {
       if (dayjs.isDayjs(this.get(0, col))) {
         for (let row = 0; row < this.getRowCount(); row += 1) {
@@ -171,12 +171,17 @@ Table.prototype.all = function _all(column?: string): boolean | Table {
 /**
  * Applies a function to each element in a p5.Table.
  *
- * @param {function} func  the function to apply
- * @returns                the transformed table
+ * @param {function} func   the function to apply
+ * @param {string} [column] the column to apply the function
+ * @returns                 the transformed table
  */
-Table.prototype.map = function _map(func: Function): Table {
+Table.prototype.map = function _map(func: Function, column?: string): Table {
   const output: Table = new Table();
-  output.columns = this.columns.slice();
+  if (column && this.columns.includes(column)) {
+    output.columns = [column];
+  } else {
+    output.columns = this.columns.slice();
+  }
   this.rows.forEach((row: TableRow) => {
     const newRow: TableRow = output.addRow();
     output.columns.forEach((col: string) => {

@@ -4,7 +4,6 @@ import {
   range,
 } from './data';
 import { defaultProps, Props, Range } from './props';
-import inferTypes from './table';
 
 export {
   min,
@@ -13,5 +12,4 @@ export {
   Range,
   defaultProps,
   Props,
-  inferTypes,
 };

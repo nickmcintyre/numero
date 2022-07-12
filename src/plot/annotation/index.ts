@@ -5,6 +5,7 @@ import {
   drawXTickLabels,
   drawYLabel,
   drawYTickLabels,
+  drawXDateLabels,
 } from './label';
 import drawMargin from './margin';
 
@@ -15,5 +16,6 @@ export {
   drawXTickLabels,
   drawYLabel,
   drawYTickLabels,
+  drawXDateLabels,
   drawMargin,
 };

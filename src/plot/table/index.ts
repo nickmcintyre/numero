@@ -146,6 +146,7 @@ import 'dayjs/locale/zh';
 import 'dayjs/locale/es-pr';
 import 'dayjs/locale/es-us';
 import 'dayjs/locale/es';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Table, TableRow } from 'p5';
 
 declare module 'p5' {
@@ -165,6 +166,7 @@ declare module 'p5' {
     ): void;
   }
   interface Table {
+    inferTypes(): void;
     getDateTime(
       row: number,
       column: number | string,
@@ -295,5 +297,31 @@ Table.prototype.parseDates = function _parseDates(
   this.rows.forEach((row: TableRow) => {
     const date: dayjs.Dayjs = row.getDateTime(column, format, locale, strict);
     row.setDateTime(column, date);
+  });
+};
+
+/**
+ * Converts the table elements to numbers if possible.
+ *
+ * @param {Table} table   the table to convert
+ * @param {string} column the column to convert
+ */
+const asNum = (table: Table, column: string): void => {
+  table.rows.forEach((row: TableRow) => {
+    const num: number = row.getNum(column);
+    row.setNum(column, num);
+  });
+};
+
+/**
+ * Infers the type of table elements.
+ */
+Table.prototype.inferTypes = function _inferTypes(): void {
+  this.columns.forEach((column: string) => {
+    try {
+      asNum(this, column);
+    } catch (error) {
+      // pass silently
+    }
   });
 };

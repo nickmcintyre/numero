@@ -1,8 +1,9 @@
+import * as dayjs from 'dayjs';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as p5 from 'p5';
 import { BinnedData, SortedData } from '../data';
-import { linspace, scaleXContinuous, scaleYContinuous } from '../scale';
-import { Props, Range, range } from '../utils';
+import { linspace, scaleXContinuous, scaleXDate, scaleYContinuous, timespace } from '../scale';
+import { Props, Range } from '../utils';
 
 const { CENTER, ITALIC, PI } = p5.prototype;
 
@@ -73,6 +74,7 @@ const drawXTickLabels = (props: Props): void => {
     minorTicks,
     tickSize,
     annotationsPalette,
+    xRange,
   } = props;
   pg.push();
   pg.fill(annotationsPalette.fontColor);
@@ -80,9 +82,9 @@ const drawXTickLabels = (props: Props): void => {
   pg.textAlign(pg.CENTER, pg.CENTER);
   pg.translate(originX, originY);
   const sorted: SortedData = dataset.getSorted(x, y);
-  const { xRange } = sorted;
+  const range = xRange || sorted.xRange;
   const xCoord: number[] = scaleXContinuous(props);
-  const xLabel: number[] = linspace(xRange.min, xRange.max, majorTicks + 1);
+  const xLabel: number[] = linspace(range.min, range.max, majorTicks + 1);
   const yCoord: number = 4 * tickSize;
   for (let i = 0; i < xCoord.length; i += 1) {
     if (i % (minorTicks + 1) === 0) {
@@ -99,44 +101,6 @@ const drawXTickLabels = (props: Props): void => {
   pg.pop();
 };
 
-// const drawYTickLabels = (props: Props): void => {
-//   const {
-//     pg,
-//     dataset,
-//     x,
-//     y,
-//     originX,
-//     originY,
-//     majorTicks,
-//     minorTicks,
-//     tickSize,
-//     annotationsPalette,
-//   } = props;
-//   pg.push();
-//   pg.fill(annotationsPalette.fontColor);
-//   pg.noStroke();
-//   pg.textAlign(pg.CENTER, pg.CENTER);
-//   pg.translate(originX, originY);
-//   const sorted: SortedData = dataset.getSorted(x, y);
-//   const { yRange } = sorted;
-//   const yCoord: number[] = scaleYContinuous(props);
-//   const yLabel: number[] = linspace(yRange.min, yRange.max, majorTicks + 1);
-//   const xCoord: number = -5 * tickSize;
-//   for (let i = 0; i < yCoord.length; i += 1) {
-//     if (i % (minorTicks + 1) === 0) {
-//       let label: string;
-//       const n: number = yLabel.shift();
-//       if (n > 100) {
-//         label = `${pg.round(n, 0)}`;
-//       } else {
-//         label = `${pg.round(n, 1)}`;
-//       }
-//       pg.text(label, xCoord, -yCoord[i]);
-//     }
-//   }
-//   pg.pop();
-// };
-
 const drawYTickLabels = (props: Props): void => {
   const {
     pg,
@@ -150,22 +114,25 @@ const drawYTickLabels = (props: Props): void => {
     tickSize,
     annotationsPalette,
     numBins,
+    yRange,
   } = props;
   pg.push();
   pg.fill(annotationsPalette.fontColor);
   pg.noStroke();
   pg.textAlign(pg.CENTER, pg.CENTER);
   pg.translate(originX, originY);
-  let yRange: Range;
-  if (numBins > 0) {
+  let range: Range;
+  if (yRange) {
+    range = yRange;
+  } else if (numBins > 0) {
     const binned: BinnedData = dataset.getBinned(x, numBins);
-    yRange = binned.xRange;
+    range = binned.xRange;
   } else {
     const sorted: SortedData = dataset.getSorted(x, y);
-    yRange = sorted.yRange;
+    range = sorted.yRange;
   }
   const yCoord: number[] = scaleYContinuous(props);
-  const yLabel: number[] = linspace(yRange.min, yRange.max, majorTicks + 1);
+  const yLabel: number[] = linspace(range.min, range.max, majorTicks + 1);
   const xCoord: number = -5 * tickSize;
   for (let i = 0; i < yCoord.length; i += 1) {
     if (i % (minorTicks + 1) === 0) {
@@ -182,10 +149,52 @@ const drawYTickLabels = (props: Props): void => {
   pg.pop();
 };
 
+const drawXDateLabels = (props: Props): void => {
+  const {
+    pg,
+    dataset,
+    x,
+    y,
+    originX,
+    originY,
+    majorTicks,
+    minorTicks,
+    tickSize,
+    annotationsPalette,
+  } = props;
+  pg.push();
+  pg.fill(annotationsPalette.fontColor);
+  pg.noStroke();
+  pg.textAlign(pg.CENTER, pg.CENTER);
+  pg.translate(originX, originY);
+  const sorted: SortedData = dataset.getSorted(x, y);
+  const isTime: boolean = dataset.raw.time.includes(x);
+  const { xRange } = sorted;
+  const xCoord: number[] = scaleXDate(props);
+  const xLabel: number[] = timespace(xRange.min, xRange.max, majorTicks + 1);
+  const yCoord: number = 4 * tickSize;
+  for (let i = 0; i < xCoord.length; i += 1) {
+    if (i % (minorTicks + 1) === 0) {
+      let label: string;
+      const n: number = xLabel.shift();
+      if (isTime) {
+        label = dayjs(n).format('MMM-DD-YYYY');
+      } else if (n > 100) {
+        label = `${pg.round(n, 0)}`;
+      } else {
+        label = `${pg.round(n, 1)}`;
+      }
+      pg.text(label, xCoord[i], yCoord);
+    }
+  }
+  pg.pop();
+};
+
 export {
   drawTitle,
   drawXLabel,
   drawXTickLabels,
   drawYLabel,
   drawYTickLabels,
+  drawXDateLabels,
 };

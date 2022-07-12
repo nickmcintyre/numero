@@ -13,6 +13,8 @@ export default (props: Props) => {
     width,
     height,
     layersPalette,
+    xRange,
+    yRange,
   } = props;
   pg.push();
   pg.translate(originX, originY);
@@ -23,13 +25,18 @@ export default (props: Props) => {
   pg.translate(dx, -dy);
   pg.stroke(layersPalette[0]);
   const sorted: SortedData = dataset.getSorted(x, y);
-  const { data, xRange, yRange } = sorted;
-  for (let i = 0; i < data.x.length - 1; i += 1) {
-    const x1 = pg.map(data.x[i], xRange.min, xRange.max, 0, width - 2 * dx);
-    const y1 = -pg.map(data.y[i], yRange.min, yRange.max, 0, height - 2 * dy);
-    const x2 = pg.map(data.x[i + 1], xRange.min, xRange.max, 0, width - 2 * dx);
-    const y2 = -pg.map(data.y[i + 1], yRange.min, yRange.max, 0, height - 2 * dy);
-    pg.line(x1, y1, x2, y2);
+  const { data } = sorted;
+  const range = {
+    x: xRange || sorted.xRange,
+    y: yRange || sorted.yRange,
+  };
+  pg.noFill();
+  pg.beginShape();
+  for (let i = 0; i < data.x.length; i += 1) {
+    const px = pg.map(data.x[i], range.x.min, range.x.max, 0, width - 2 * dx);
+    const py = -pg.map(data.y[i], range.y.min, range.y.max, 0, height - 2 * dy);
+    pg.vertex(px, py);
   }
+  pg.endShape();
   pg.pop();
 };

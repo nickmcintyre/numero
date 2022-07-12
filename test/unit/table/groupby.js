@@ -55,6 +55,29 @@ describe('Grouping', function () {
       expect(t2.get(1, 'Max Speed')).to.eql(2);
     });
 
+    it('Should calculate the sum per group', function () {
+      const t1 = new p5.Table();
+      t1.columns = ['Animal', 'Max Speed'];
+      let row = t1.addRow();
+      row.setString('Animal', 'Falcon');
+      row.setNum('Max Speed', 380);
+      row = t1.addRow();
+      row.setString('Animal', 'Falcon');
+      row.setNum('Max Speed', 370);
+      row = t1.addRow();
+      row.setString('Animal', 'Parrot');
+      row.setNum('Max Speed', 24);
+      row = t1.addRow();
+      row.setString('Animal', 'Parrot');
+      row.setNum('Max Speed', 26);
+      const t2 = t1.groupby('Animal').sum();
+      expect(t2.columns).to.eql(['Max Speed', 'Animal']);
+      expect(t2.get(0, 'Animal')).to.eql('Falcon');
+      expect(t2.get(0, 'Max Speed')).to.eql(750);
+      expect(t2.get(1, 'Animal')).to.eql('Parrot');
+      expect(t2.get(1, 'Max Speed')).to.eql(50);
+    });
+
     it('Should calculate the mean per group', function () {
       const t1 = new p5.Table();
       t1.columns = ['Animal', 'Max Speed'];

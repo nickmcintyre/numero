@@ -12,6 +12,15 @@ describe('Wrangling', function () {
     pInst.remove();
   });
 
+  describe('rename()', function () {
+    it('Should rename columns in place', function () {
+      const t = new p5.Table();
+      t.columns = ['a', 'b', 'c'];
+      t.rename('a', 'A');
+      expect(t.columns).to.eql(['A', 'b', 'c']);
+    });
+  });
+
   describe('concat()', function () {
     it('Should concatenate two tables vertically', function () {
       const t1 = new p5.Table();

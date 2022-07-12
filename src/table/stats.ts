@@ -4,6 +4,7 @@ import { Table, TableRow } from 'p5';
 declare module 'p5' {
   interface Table {
     count(column: string): number | Table;
+    sum(column: string): number | Table;
     mean(column: string): number | Table;
     median(column: string): number | Table;
     max(column: string): number | Table;
@@ -70,15 +71,33 @@ Table.prototype.count = function _count(column: string): number | Table {
 };
 
 /**
+ * Computes the sum of an array.
+ *
+ * @param {number[]} array the array of numbers
+ * @returns                the sum
+ */
+const sum = (array: number[]): number => {
+  const defined: number[] = array.filter((x) => x);
+  return defined.reduce((a, b) => a + b);
+};
+
+/**
+ * Computes the sum of a column or set of columns.
+ *
+ * @param {string} [column] the name of the column to analyze
+ * @returns                 the sum, either as a number or as a table
+ */
+Table.prototype.sum = function _sum(column: string): number | Table {
+  return computeStat(this, column, sum, []);
+};
+
+/**
  * Computes the arithmetic mean of an array.
  *
  * @param {number[]} array the array of numbers
  * @returns                the mean
  */
-const mean = (array: number[]): number => {
-  const sum: number = array.reduce((a, b) => a + b);
-  return sum / array.length;
-};
+const mean = (array: number[]): number => sum(array) / array.length;
 
 /**
  * Computes the mean of a column or set of columns.
