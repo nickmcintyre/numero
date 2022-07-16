@@ -5,6 +5,8 @@ import { Table, TableRow } from 'p5';
 declare module 'p5' {
   interface Table {
     print(column?: string): void;
+    head(numRows?: number, column?: string): void;
+    tail(numRows?: number, column?: string): void;
     inferTypes(): void;
     isNull(): Table;
     notNull(): Table;
@@ -37,6 +39,69 @@ Table.prototype.print = function _print(column?: string): void {
         }
       }
     });
+  }
+  // eslint-disable-next-line no-console
+  console.table(tableObject);
+};
+
+/**
+ * Prints the first n rows of a p5.Table to the console.
+ *
+ * @param {number} [numRows] the number of rows to print
+ * @param {string} [column]  the column to print
+ */
+Table.prototype.head = function _head(numRows?: number, column?: string): void {
+  let tableObject: object;
+  const n: number = numRows || 10;
+  if (column && dayjs.isDayjs(this.get(0, column))) {
+    tableObject = {};
+    for (let row = 0; row < n; row += 1) {
+      tableObject[row] = {};
+      tableObject[row][column] = this.get(row, column).toString();
+    }
+  } else {
+    tableObject = {};
+    for (let row = 0; row < n; row += 1) {
+      tableObject[row] = {};
+      this.columns.forEach((col: string) => {
+        tableObject[row][col] = this.get(row, col);
+        if (dayjs.isDayjs(tableObject[row][col])) {
+          tableObject[row][col] = tableObject[row][col].toString();
+        }
+      });
+    }
+  }
+  // eslint-disable-next-line no-console
+  console.table(tableObject);
+};
+
+/**
+ * Prints the last n rows of a p5.Table to the console.
+ *
+ * @param {number} [numRows] the number of rows to print
+ * @param {string} [column]  the column to print
+ */
+Table.prototype.tail = function _tail(numRows?: number, column?: string): void {
+  let tableObject: object;
+  const last: number = this.rows.length - 1;
+  const n: number = numRows || 10;
+  if (column && dayjs.isDayjs(this.get(0, column))) {
+    tableObject = {};
+    for (let row = last; row > last - n; row -= 1) {
+      tableObject[row] = {};
+      tableObject[row][column] = this.get(row, column).toString();
+    }
+  } else {
+    tableObject = {};
+    for (let row = last; row > last - n; row -= 1) {
+      tableObject[row] = {};
+      this.columns.forEach((col: string) => {
+        tableObject[row][col] = this.get(row, col);
+        if (dayjs.isDayjs(tableObject[row][col])) {
+          tableObject[row][col] = tableObject[row][col].toString();
+        }
+      });
+    }
   }
   // eslint-disable-next-line no-console
   console.table(tableObject);
@@ -217,5 +282,31 @@ Table.prototype.isin = function _isin(values: any[]): Table {
       });
     });
   });
+  return output;
+};
+
+// eslint-disable-next-line import/prefer-default-export
+export const createTable = (data: TableRow[] | object): Table => {
+  let output: Table;
+  if (data instanceof Array && data[0] instanceof TableRow) {
+    output = new Table(data);
+  } else if (data instanceof Object) {
+    output = new Table();
+    output.columns = Object.keys(data);
+    let n: number;
+    const firstColumn: any = data[output.columns[0]];
+    if (firstColumn instanceof Array) {
+      n = firstColumn.length;
+    } else if (firstColumn instanceof Object) {
+      n = Object.keys(firstColumn).length;
+    }
+    for (let i = 0; i < n; i += 1) {
+      const row: TableRow = output.addRow();
+      output.columns.forEach((col: string) => {
+        const value: number | string = data[col][i];
+        row.set(col, value);
+      });
+    }
+  }
   return output;
 };

@@ -10,8 +10,8 @@
 This addon library for p5.js turns the "software sketchbook" into a beginner-friendly environment for technical computing. It provides the following features:
 
 - A tensor object (similar to [NumPy](https://numpy.org/) arrays)
-- A computer algebra system (similar to [SymPy](https://www.sympy.org/en/index.html))
-- A grammar of graphics (similar to [ggplot2](https://ggplot2.tidyverse.org/))
+- A computer algebra system (similar to [SymPy](https://www.sympy.org/en/index.html) -- in progress)
+- A grammar of graphics (similar to [ggplot2](https://ggplot2.tidyverse.org/) -- in progress)
 - A supercharged p5.Table (similar to [pandas](https://pandas.pydata.org/) DataFrames)
 - A machine learning API (similar to [scikit-learn](https://scikit-learn.org/stable/index.html) -- coming soon!)
 - A drawing turtle (because they're awesome)
@@ -33,6 +33,7 @@ function preload() {
 function setup() {
   createCanvas(400, 400);
 
+  iris.inferTypes();
   plot = createPlot(iris);
 
   noLoop();
@@ -51,25 +52,23 @@ function draw() {
 ```
 
 ### Tables
-View the [tables example](/examples/tables/).
+View the [Mauna Loa example](/examples/mauna-loa/).
 ```javascript
-let iris;
+let co2;
 
 function preload() {
-  iris = loadTable('iris.csv', 'csv', 'header');
+  co2 = loadTable('co2.csv', 'csv', 'header', wrangle);
 }
 
 function setup() {
   noCanvas();
-  iris.inferTypes();
-  // print('The iris dataset');
-  // iris.print();
-  print('Iris dataset summary by column');
-  let summary = iris.describe();
-  summary.print();
-  print('Mean by species');
-  let mean = iris.groupby('Species').mean();
-  mean.print();
+  print('Atmospheric Carbon Dioxide at Mauna Loa');
+  co2.head();
+}
+
+function wrangle(table) {
+  table.parseDates('date');
+  table.inferTypes();
 }
 ```
 

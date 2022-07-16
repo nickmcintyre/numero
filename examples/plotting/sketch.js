@@ -8,6 +8,7 @@ function preload() {
 function setup() {
   createCanvas(400, 400);
 
+  iris.inferTypes();
   plot = createPlot(iris);
 
   noLoop();

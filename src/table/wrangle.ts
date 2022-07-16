@@ -3,6 +3,7 @@ import { Table, TableRow } from 'p5';
 declare module 'p5' {
   interface Table {
     rename(from: string, to: string): void;
+    slice(columns: string[]): Table;
     concat(other: Table, axis: number): Table;
     merge(other: Table, key: string): Table;
   }
@@ -28,6 +29,28 @@ Table.prototype.rename = function _rename(from: string, to: string): void {
     // eslint-disable-next-line no-param-reassign
     delete row.obj[from];
   });
+};
+
+/**
+ * Copies a subset of the columns from an existing p5.Table.
+ *
+ * @param {string[]} columns the column(s) to extract from the table
+ * @returns                  the new table
+ */
+Table.prototype.slice = function _slice(columns: string[]): Table {
+  const output: Table = new Table();
+  output.columns = [];
+  const all: Set<string> = new Set(this.columns);
+  columns.forEach((col: string) => {
+    if (all.has(col)) output.columns.push(col);
+  });
+  this.rows.forEach((row: TableRow) => {
+    const newRow: TableRow = output.addRow();
+    output.columns.forEach((col: string) => {
+      newRow.set(col, row.get(col));
+    });
+  });
+  return output;
 };
 
 /**

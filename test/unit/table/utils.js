@@ -185,4 +185,40 @@ describe('Utilities', function () {
       expect(t2.getColumn('c')).to.eql([true]);
     });
   });
+
+  describe('createTable()', function () {
+    it('Should create a p5.Table from an object', function () {
+      const t = pInst.createTable({
+        x: [1, 2, 3],
+        y: [4, 5, 6],
+      });
+      expect(t.get(0, 'x')).to.eq(1);
+      expect(t.get(1, 'x')).to.eq(2);
+      expect(t.get(2, 'x')).to.eq(3);
+      expect(t.get(0, 'y')).to.eq(4);
+      expect(t.get(1, 'y')).to.eq(5);
+      expect(t.get(2, 'y')).to.eq(6);
+    });
+
+    it('Should create a p5.Table from JSON', function () {
+      const t = pInst.createTable({
+        x: {
+          0: 1,
+          1: 2,
+          2: 3,
+        },
+        y: {
+          0: 4,
+          1: 5,
+          2: 6,
+        },
+      });
+      expect(t.get(0, 'x')).to.eq(1);
+      expect(t.get(1, 'x')).to.eq(2);
+      expect(t.get(2, 'x')).to.eq(3);
+      expect(t.get(0, 'y')).to.eq(4);
+      expect(t.get(1, 'y')).to.eq(5);
+      expect(t.get(2, 'y')).to.eq(6);
+    });
+  });
 });

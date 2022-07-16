@@ -21,6 +21,21 @@ describe('Wrangling', function () {
     });
   });
 
+  describe('slice()', function () {
+    it('Should create a new p5.Table', function () {
+      const t1 = new p5.Table();
+      t1.columns = ['a', 'b', 'c'];
+      const r = t1.addRow();
+      r.set('a', 1);
+      r.set('b', 2);
+      r.set('c', 3);
+      const t2 = t1.slice(['a', 'b']);
+      expect(t2.columns).to.eql(['a', 'b']);
+      expect(t2.get(0, 'a')).to.eq(1);
+      expect(t2.get(0, 'b')).to.eq(2);
+    });
+  });
+
   describe('concat()', function () {
     it('Should concatenate two tables vertically', function () {
       const t1 = new p5.Table();
