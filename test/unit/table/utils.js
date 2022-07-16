@@ -187,6 +187,13 @@ describe('Utilities', function () {
   });
 
   describe('createTable()', function () {
+    it('Should create a p5.Table with empty columns', function () {
+      const columns = ['a', 'b', 'c'];
+      const t = pInst.createTable(columns);
+      expect(t.columns).to.eql(columns);
+      expect(t.getRowCount()).to.eq(0);
+    });
+
     it('Should create a p5.Table from an object', function () {
       const t = pInst.createTable({
         x: [1, 2, 3],

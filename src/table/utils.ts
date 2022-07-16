@@ -286,10 +286,15 @@ Table.prototype.isin = function _isin(values: any[]): Table {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const createTable = (data: TableRow[] | object): Table => {
+export const createTable = (data: TableRow[] | string[] | object): Table => {
   let output: Table;
   if (data instanceof Array && data[0] instanceof TableRow) {
+    // @ts-ignore
     output = new Table(data);
+  } else if (data instanceof Array && typeof data[0] === 'string') {
+    output = new Table();
+    // @ts-ignore
+    output.columns = data.slice();
   } else if (data instanceof Object) {
     output = new Table();
     output.columns = Object.keys(data);
