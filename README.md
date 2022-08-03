@@ -9,14 +9,14 @@
 
 This addon library for p5.js turns the "software sketchbook" into a beginner-friendly environment for technical computing. It provides the following features:
 
-- A tensor object (similar to [NumPy](https://numpy.org/) arrays)
-- A computer algebra system (similar to [SymPy](https://www.sympy.org/en/index.html) -- in progress)
-- A grammar of graphics (similar to [ggplot2](https://ggplot2.tidyverse.org/) -- in progress)
-- A supercharged p5.Table (similar to [pandas](https://pandas.pydata.org/) DataFrames)
-- A machine learning API (similar to [scikit-learn](https://scikit-learn.org/stable/index.html) -- coming soon!)
-- A drawing turtle (because they're awesome)
+- A tensor object similar to [NumPy](https://numpy.org/) arrays
+- A computer algebra system similar to [SymPy](https://www.sympy.org/en/index.html) (in progress)
+- A grammar of graphics similar to [ggplot2](https://ggplot2.tidyverse.org/) (in progress)
+- A grammar of data manipulation similar to [dplyr](https://dplyr.tidyverse.org/)
+- A machine learning API similar to [scikit-learn](https://scikit-learn.org/stable/index.html) (coming soon!)
+- A drawing turtle
 
-The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [Day.js](https://day.js.org/), [Math.js](https://mathjs.org/), and [TensorFlow.js](https://js.tensorflow.org/api/latest/) under the hood. It bundles [p5.dataframe](https://github.com/nickmcintyre/p5.dataframe), [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX), and [wildflower](https://github.com/nickmcintyre/wildflower).
+The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [Day.js](https://day.js.org/), [Math.js](https://mathjs.org/), [TensorFlow.js](https://js.tensorflow.org/api/latest/), and [tidy.js](https://pbeshai.github.io/tidy/) under the hood. It bundles [p5.tidy](https://github.com/nickmcintyre/p5.tidy), [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX), and [wildflower](https://github.com/nickmcintyre/wildflower).
 
 ## Usage
 
@@ -51,24 +51,22 @@ function draw() {
 }
 ```
 
-### Tables
+### Data Wrangling
 View the [Mauna Loa example](/examples/mauna-loa/).
 ```javascript
-let co2;
+let data;
 
 function preload() {
-  co2 = loadTable('co2.csv', 'csv', 'header', wrangle);
+  data = loadTable('co2.csv', 'csv', 'header');
 }
 
 function setup() {
-  noCanvas();
-  print('Atmospheric Carbon Dioxide at Mauna Loa');
-  co2.head();
-}
-
-function wrangle(table) {
-  table.parseDates('date');
-  table.inferTypes();
+  noCanvas()
+  const results = tidy(
+    data,
+    filter((d) => d.mean > 400),
+  );
+  tidy(results, debug('Observations greater than 400ppm CO2'));
 }
 ```
 

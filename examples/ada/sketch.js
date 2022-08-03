@@ -40,7 +40,7 @@ function rescalePortrait(points) {
 }
 
 function fft(points) {
-  const X = num.tidy(() => {
+  const X = num.scope(() => {
     const x = num.complex(points.x, points.y);
     const X = num.fft(x);
     let re = X.real();

@@ -60,7 +60,7 @@ import {
 } from './tensor/ufunc';
 import {
   memory,
-  tidy,
+  scope,
   startScope,
   endScope,
   keep,
@@ -157,7 +157,7 @@ export {
   sort,
   fft,
   memory,
-  tidy,
+  scope,
   startScope,
   endScope,
   keep,

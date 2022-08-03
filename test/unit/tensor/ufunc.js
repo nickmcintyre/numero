@@ -15,7 +15,7 @@ describe('Universal Functions', function () {
   describe('Calculation', function () {
     describe('add()', function () {
       it('Should add a Tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2]);
           const t2 = pInst.createTensor([3, 4]);
           const t3 = pInst.createTensor([4, 6]);
@@ -25,7 +25,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should add a p5.Vector', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2, 3]);
           const v = pInst.createVector(4, 5, 6);
           const t2 = pInst.createTensor([5, 7, 9]);
@@ -35,7 +35,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should add a Number', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(1);
           const n = 1;
           const t2 = pInst.createTensor(2);
@@ -45,7 +45,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should broadcast addition when maintaining rank', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2]);
           const t2 = pInst.createTensor(1);
           const t3 = pInst.createTensor([2, 3]);
@@ -55,7 +55,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should broadcast addition when increasing rank', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(1);
           const t2 = pInst.createTensor([1, 2]);
           const t3 = pInst.createTensor([2, 3]);
@@ -65,7 +65,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should work with complex tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const z1 = num.Tensor.complex(2, 5);
           const z2 = num.Tensor.complex(1, 3);
           const z3 = num.Tensor.complex(3, 8);
@@ -77,7 +77,7 @@ describe('Universal Functions', function () {
 
     describe('sub()', function () {
       it('Should subtract a Tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([3, 4]);
           const t2 = pInst.createTensor([1, 2]);
           const t3 = pInst.createTensor([2, 2]);
@@ -87,7 +87,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should subtract a p5.Vector', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([4, 5, 6]);
           const v = pInst.createVector(1, 2);
           const t2 = pInst.createTensor([3, 3, 6]);
@@ -97,7 +97,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should subtract a Number', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(1);
           const n = 1;
           const t2 = pInst.createTensor(0);
@@ -107,7 +107,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should broadcast subtraction when maintaining rank', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([2, 3]);
           const t2 = pInst.createTensor(1);
           const t3 = pInst.createTensor([1, 2]);
@@ -117,7 +117,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should broadcast subtraction when increasing rank', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(1);
           const t2 = pInst.createTensor([2, 3]);
           const t3 = pInst.createTensor([-1, -2]);
@@ -127,7 +127,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should work with complex tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const z1 = num.Tensor.complex(2, 5);
           const z2 = num.Tensor.complex(1, 3);
           const z3 = num.Tensor.complex(1, 2);
@@ -139,7 +139,7 @@ describe('Universal Functions', function () {
 
     describe('mult()', function () {
       it('Should multiply by a Tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4]]);
           const t2 = pInst.createTensor([[2, 2], [2, 2]]);
           const t3 = pInst.createTensor([[2, 4], [6, 8]]);
@@ -149,7 +149,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should multiply by a p5.Vector', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([3, 4, 5]);
           const v = pInst.createVector(1, 2);
           const t2 = pInst.createTensor([3, 8, 0]);
@@ -159,7 +159,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should multiply by a Number', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(1);
           const n = 2;
           const t2 = pInst.createTensor(2);
@@ -169,7 +169,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should broadcast multiplication when maintaining rank', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4]]);
           const t2 = pInst.createTensor(2);
           const t3 = pInst.createTensor([[2, 4], [6, 8]]);
@@ -179,7 +179,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should broadcast multiplication when increasing rank', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(2);
           const t2 = pInst.createTensor([[1, 2], [3, 4]]);
           const t3 = pInst.createTensor([[2, 4], [6, 8]]);
@@ -189,7 +189,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should work with complex tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const z1 = num.Tensor.complex(2, 5);
           const z2 = num.Tensor.complex(3, -2);
           const z3 = num.Tensor.complex(16, 11);
@@ -201,7 +201,7 @@ describe('Universal Functions', function () {
 
     describe('div()', function () {
       it('Should divide by a Tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4]]);
           const t2 = pInst.createTensor([[2, 2], [2, 2]]);
           const t3 = pInst.createTensor([[0.5, 1], [1.5, 2]]);
@@ -211,7 +211,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should divide by a p5.Vector', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([2, 4, 6]);
           const v = pInst.createVector(2, 2, 2);
           const t2 = pInst.createTensor([1, 2, 3]);
@@ -221,7 +221,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should divide by a Number', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([2, 4]);
           const n = 2;
           const t2 = pInst.createTensor([1, 2]);
@@ -231,7 +231,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should broadcast division when maintaining rank', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4]]);
           const t2 = pInst.createTensor(2);
           const t3 = pInst.createTensor([[0.5, 1], [1.5, 2]]);
@@ -241,7 +241,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should broadcast division when increasing rank', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(10);
           const t2 = pInst.createTensor([[1, 2], [4, 5]]);
           const t3 = pInst.createTensor([[10, 5], [2.5, 2]]);
@@ -253,7 +253,7 @@ describe('Universal Functions', function () {
 
     describe('dot()', function () {
       it('Should dot with a Tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 0], [0, 1]]);
           const t2 = pInst.createTensor([1, 2]);
           const t3 = num.dot(t1, t2);
@@ -262,7 +262,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should dot with a p5.Vector', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = pInst.createTensor([[2, 0, 0], [0, 2, 0], [0, 0, 2]]);
           const x = pInst.createVector(1, 2, 0);
           const b = pInst.createTensor([2, 4, 0]);
@@ -274,7 +274,7 @@ describe('Universal Functions', function () {
 
     describe('abs()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([-2, 0, 1]);
           const t2 = pInst.createTensor([2, 0, 1]);
           const t3 = num.abs(t1);
@@ -285,7 +285,7 @@ describe('Universal Functions', function () {
 
     describe('ceil()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([0, 0.1, 1.5]);
           const t2 = pInst.createTensor([0, 1, 2]);
           const t3 = num.ceil(t1);
@@ -296,7 +296,7 @@ describe('Universal Functions', function () {
 
     describe('constrain()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([-2, 0, 1, 5]);
           const t2 = pInst.createTensor([-1, 0, 1, 3]);
           const t3 = num.constrain(t1, -1, 3);
@@ -307,7 +307,7 @@ describe('Universal Functions', function () {
 
     describe('exp()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = [-2, 0, 1, 5];
           const t1 = pInst.createTensor(a);
           const t2 = pInst.createTensor(a.map((x) => Math.exp(x)));
@@ -319,7 +319,7 @@ describe('Universal Functions', function () {
 
     describe('floor()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([0, 0.1, 1.5]);
           const t2 = pInst.createTensor([0, 0, 1]);
           const t3 = num.floor(t1);
@@ -330,7 +330,7 @@ describe('Universal Functions', function () {
 
     describe('log()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = [1, 2, 3];
           const t1 = pInst.createTensor(a);
           const t2 = pInst.createTensor(a.map((x) => Math.log(x)));
@@ -342,7 +342,7 @@ describe('Universal Functions', function () {
 
     describe('max()', function () {
       it('Should return a number', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t = pInst.createTensor([1, 2, 3]);
           expect(num.max(t)).to.equal(3);
         });
@@ -351,7 +351,7 @@ describe('Universal Functions', function () {
 
     describe('min()', function () {
       it('Should return a number', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t = pInst.createTensor([1, 2, 3]);
           expect(num.min(t)).to.equal(1);
         });
@@ -360,7 +360,7 @@ describe('Universal Functions', function () {
 
     describe('mod()', function () {
       it('Should accept Number arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([2, 4, 5]);
           const t2 = pInst.createTensor([0, 0, 1]);
           const t3 = num.mod(t1, 2);
@@ -369,7 +369,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should accept Tensor arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([2, 4, 5]);
           const t2 = pInst.createTensor([2, 2, 2]);
           const t3 = pInst.createTensor([0, 0, 1]);
@@ -381,7 +381,7 @@ describe('Universal Functions', function () {
 
     describe('pow()', function () {
       it('Should accept Number arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = [1, 2, 3];
           const t1 = pInst.createTensor(a);
           const t2 = pInst.createTensor(a.map((x) => x ** 2));
@@ -391,7 +391,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should accept Tensor arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2, 3]);
           const t2 = pInst.createTensor([1, 2, 3]);
           const t3 = num.pow(t1, t2);
@@ -403,7 +403,7 @@ describe('Universal Functions', function () {
 
     describe('round()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([2.2, 0.3, -1.4]);
           const t2 = pInst.createTensor([2, 0, -1]);
           const t3 = num.round(t1);
@@ -414,7 +414,7 @@ describe('Universal Functions', function () {
 
     describe('sq()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2, 3]);
           const t2 = pInst.createTensor([1, 4, 9]);
           const t3 = num.sq(t1);
@@ -425,7 +425,7 @@ describe('Universal Functions', function () {
 
     describe('sqrt()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 4, 9]);
           const t2 = pInst.createTensor([1, 2, 3]);
           const t3 = num.sqrt(t1);
@@ -456,7 +456,7 @@ describe('Universal Functions', function () {
   describe('Trigonometry', function () {
     describe('acos()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(0);
           const t2 = pInst.createTensor(Math.PI / 2);
           const t3 = num.acos(t1);
@@ -472,7 +472,7 @@ describe('Universal Functions', function () {
 
     describe('asin()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(1);
           const t2 = pInst.createTensor(Math.PI / 2);
           const t3 = num.asin(t1);
@@ -488,7 +488,7 @@ describe('Universal Functions', function () {
 
     describe('atan()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = Math.PI + Math.PI / 3;
           const t1 = pInst.createTensor(a);
           const t2 = pInst.createTensor(Math.atan(a));
@@ -500,7 +500,7 @@ describe('Universal Functions', function () {
 
     describe('atan2()', function () {
       it('Should accept Number arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const x = 15;
           const y = 90;
           const t1 = pInst.createTensor(y);
@@ -511,7 +511,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should accept Tensor arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const x = 15;
           const y = 90;
           const t1 = pInst.createTensor(y);
@@ -525,7 +525,7 @@ describe('Universal Functions', function () {
 
     describe('cos()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(Math.PI);
           const t2 = pInst.createTensor(-1);
           const t3 = num.cos(t1);
@@ -536,7 +536,7 @@ describe('Universal Functions', function () {
 
     describe('sin()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor(Math.PI / 2);
           const t2 = pInst.createTensor(1);
           const t3 = num.sin(t1);
@@ -547,7 +547,7 @@ describe('Universal Functions', function () {
 
     describe('tan()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = 1;
           const t1 = pInst.createTensor(a);
           const t2 = pInst.createTensor(Math.tan(a));
@@ -561,7 +561,7 @@ describe('Universal Functions', function () {
   describe('Creation Methods', function () {
     describe('complex()', function () {
       it('Should accept two Number arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const real = 2;
           const imag = 5;
           const z = num.complex(real, imag);
@@ -581,7 +581,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should accept two tensor arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const real = pInst.createTensor(2);
           const imag = pInst.createTensor(5);
           const z = num.complex(real, imag);
@@ -591,7 +591,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should reject garbage arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const real = '2';
           const imag = '5';
           expect(() => num.complex(real, imag)).to.throw(Error);
@@ -601,7 +601,7 @@ describe('Universal Functions', function () {
 
     describe('copy()', function () {
       it('Should return a copy of the calling tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2, 3]);
           const t2 = num.copy(t1);
           expect(t1.equals(t2)).to.equal(true);
@@ -611,7 +611,7 @@ describe('Universal Functions', function () {
 
     describe('eye()', function () {
       it('Should return an identity matrix', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const eye = [[1, 0], [0, 1]];
           const t = num.eye(2);
           const x = t.arraySync();
@@ -620,7 +620,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should allow for rectangular identity matrices', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const eye = [[1, 0, 0], [0, 1, 0]];
           const t = num.eye(2, 3);
           const x = t.arraySync();
@@ -631,7 +631,7 @@ describe('Universal Functions', function () {
 
     describe('fill()', function () {
       it('Should return a tensor filled with a number', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = [[2, 2], [2, 2]];
           const t = num.fill([2, 2], 2);
           const x = t.arraySync();
@@ -642,7 +642,7 @@ describe('Universal Functions', function () {
 
     describe('linspace()', function () {
       it('Should return a tensor filled with evenly spaced numbers', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
           const t = num.linspace(0, 9, 10);
           const x = t.arraySync();
@@ -653,7 +653,7 @@ describe('Universal Functions', function () {
 
     describe('ones()', function () {
       it('Should return a tensor filled with ones', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = [[1, 1], [1, 1]];
           const t = num.ones([2, 2]);
           const x = t.arraySync();
@@ -664,7 +664,7 @@ describe('Universal Functions', function () {
 
     describe('random()', function () {
       it('Should return a uniformly distributed tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const n = 100000;
           const t = num.random([n]);
           const x = t.arraySync();
@@ -676,7 +676,7 @@ describe('Universal Functions', function () {
 
     describe('randomGaussian()', function () {
       it('Should return a normally distributed tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const n = 100000;
           const t = num.Tensor.randomGaussian([n]);
           const x = t.arraySync();
@@ -686,7 +686,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should accept mean as an argument', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const n = 100000;
           const t = num.Tensor.randomGaussian([n], 5);
           const x = t.arraySync();
@@ -696,7 +696,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should accept mean and sd as arguments', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const n = 100000;
           const t = num.Tensor.randomGaussian([n], 5, 1);
           const x = t.arraySync();
@@ -710,7 +710,7 @@ describe('Universal Functions', function () {
 
     describe('range()', function () {
       it('Should return a tensor filled with evenly spaced numbers', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = [0, 1, 2, 3, 4, 5, 6, 7, 8];
           const t = num.range(0, 9);
           const x = t.arraySync();
@@ -719,7 +719,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should control space between numbers', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = [0, 2, 4, 6, 8];
           const t = num.range(0, 9, 2);
           const x = t.arraySync();
@@ -730,7 +730,7 @@ describe('Universal Functions', function () {
 
     describe('zeros()', function () {
       it('Should return a tensor filled with zeros', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const a = [[0, 0], [0, 0]];
           const t = num.Tensor.zeros([2, 2]);
           const x = t.arraySync();
@@ -743,7 +743,7 @@ describe('Universal Functions', function () {
   describe('Transformations', function () {
     describe('flatten()', function () {
       it('Should return a 1d tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4]]);
           const t2 = pInst.createTensor([1, 2, 3, 4]);
           const t3 = num.flatten(t1);
@@ -754,7 +754,7 @@ describe('Universal Functions', function () {
 
     describe('pad()', function () {
       it('Should pad with zeros', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2, 3, 4]);
           const t2 = pInst.createTensor([0, 1, 2, 3, 4, 0, 0]);
           const t3 = num.pad(t1, [[1, 2]]);
@@ -763,7 +763,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should pad with constant values', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2, 3, 4]);
           const t2 = pInst.createTensor([2, 1, 2, 3, 4, 2, 2]);
           const t3 = num.pad(t1, [[1, 2]], 2);
@@ -774,7 +774,7 @@ describe('Universal Functions', function () {
 
     describe('reshape()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2, 3, 4]);
           const t2 = pInst.createTensor([[1, 2], [3, 4]]);
           const t3 = num.reshape(t1, [2, 2]);
@@ -787,14 +787,14 @@ describe('Universal Functions', function () {
   describe('Slicing and Joining', function () {
     describe('concat()', function () {
       it('Should fail with too few tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2]);
           expect(() => num.concat([t1])).to.throw(Error);
         });
       });
 
       it('Should work with 1d tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2]);
           const t2 = pInst.createTensor([3, 4]);
           const t3 = pInst.createTensor([1, 2, 3, 4]);
@@ -804,7 +804,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should work with nd tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [10, 20]]);
           const t2 = pInst.createTensor([[3, 4], [30, 40]]);
           const t3 = pInst.createTensor([[1, 2, 3, 4], [10, 20, 30, 40]]);
@@ -816,7 +816,7 @@ describe('Universal Functions', function () {
 
     describe('reverse()', function () {
       it('Should work with 1d tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2, 3]);
           const t2 = pInst.createTensor([3, 2, 1]);
           const t3 = num.reverse(t1);
@@ -825,7 +825,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should work with nd tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4]]);
           const t2 = pInst.createTensor([[2, 1], [4, 3]]);
           const t3 = num.reverse(t1, 1);
@@ -836,7 +836,7 @@ describe('Universal Functions', function () {
 
     describe('slice()', function () {
       it('Should work with 1d tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2, 3, 4]);
           const t2 = pInst.createTensor([2, 3]);
           const t3 = num.slice(t1, [1], [2]);
@@ -845,7 +845,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should work with nd tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4]]);
           const t2 = pInst.createTensor([[3, 4]]);
           const t3 = num.slice(t1, [1, 0], [1, 2]);
@@ -856,7 +856,7 @@ describe('Universal Functions', function () {
 
     describe('split()', function () {
       it('Should return an array of tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2, 3, 4], [5, 6, 7, 8]]);
           const t2 = pInst.createTensor([[1, 2], [5, 6]]);
           const t3 = pInst.createTensor([[3, 4], [7, 8]]);
@@ -867,7 +867,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should allow axes to be specified', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2, 3, 4], [5, 6, 7, 8]]);
           const t2 = pInst.createTensor([[1], [5]]);
           const t3 = pInst.createTensor([[2, 3], [6, 7]]);
@@ -882,7 +882,7 @@ describe('Universal Functions', function () {
 
     describe('stack()', function () {
       it('Should return a tensor', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2]);
           const t2 = pInst.createTensor([3, 4]);
           const t3 = pInst.createTensor([5, 6]);
@@ -893,7 +893,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should allow axes to be specified', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([1, 2]);
           const t2 = pInst.createTensor([3, 4]);
           const t3 = pInst.createTensor([5, 6]);
@@ -906,7 +906,7 @@ describe('Universal Functions', function () {
 
     describe('unstack()', function () {
       it('Should return an array of tensors', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4]]);
           const t2 = pInst.createTensor([1, 2]);
           const t3 = pInst.createTensor([3, 4]);
@@ -918,7 +918,7 @@ describe('Universal Functions', function () {
       });
 
       it('Should allow axes to be specified', function () {
-        num.tidy(() => {
+        num.scope(() => {
           const t1 = pInst.createTensor([[1, 2], [3, 4]]);
           const t2 = pInst.createTensor([1, 3]);
           const t3 = pInst.createTensor([2, 4]);

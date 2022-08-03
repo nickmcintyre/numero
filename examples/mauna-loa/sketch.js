@@ -1,16 +1,14 @@
-let co2;
+let data;
 
 function preload() {
-  co2 = loadTable('co2.csv', 'csv', 'header', wrangle);
+  data = loadTable('co2.csv', 'csv', 'header');
 }
 
 function setup() {
-  noCanvas();
-  print('Atmospheric Carbon Dioxide at Mauna Loa');
-  co2.head();
-}
-
-function wrangle(table) {
-  table.parseDates('date');
-  table.inferTypes();
+  noCanvas()
+  const results = tidy(
+    data,
+    filter((d) => d.mean > 400),
+  );
+  tidy(results, debug('Observations greater than 400ppm CO2'));
 }

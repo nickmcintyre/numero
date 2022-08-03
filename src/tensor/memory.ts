@@ -21,7 +21,7 @@ export const { memory } = tf;
  * @param fn        (optional) the function to execute
  * @returns         (optional) tensors
  */
-export const { tidy } = tf;
+export const scope = tf.tidy;
 
 /**
  * Start a scope. Use this with endScope() to

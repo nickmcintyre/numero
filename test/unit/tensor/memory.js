@@ -36,7 +36,7 @@ describe('Memory', function () {
   describe('tidy()', function () {
     it('Should clean up memory', function () {
       const start = num.tf.memory().numTensors;
-      num.tidy(() => {
+      num.scope(() => {
         const t = num.tf.tensor([1, 2, 3]);
       });
       const end = num.tf.memory().numTensors;
@@ -44,7 +44,7 @@ describe('Memory', function () {
     });
 
     it('Should return tensors', function () {
-      const t = num.tidy(() => pInst.createTensor([1, 2, 3]));
+      const t = num.scope(() => pInst.createTensor([1, 2, 3]));
       expect(t).to.be.an.instanceof(num.Tensor);
     });
   });
