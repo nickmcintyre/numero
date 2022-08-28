@@ -6,9 +6,9 @@ function preload() {
 
 function setup() {
   noCanvas()
-  const results = tidy(
+  tidy(
     data,
     filter((d) => d.mean > 400),
+    debug('Observations greater than 400ppm CO2'),
   );
-  tidy(results, debug('Observations greater than 400ppm CO2'));
 }

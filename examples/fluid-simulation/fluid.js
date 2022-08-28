@@ -31,21 +31,21 @@ class Fluid {
   setTensors() {
     const shape = [this.params.m, this.params.n];
     // Microscopic density
-    this.state.n0 = Fluid.fragment(num.ones(shape));
-    this.state.nN = Fluid.fragment(num.ones(shape));
-    this.state.nS = Fluid.fragment(num.ones(shape));
-    this.state.nE = Fluid.fragment(num.ones(shape));
-    this.state.nW = Fluid.fragment(num.ones(shape));
-    this.state.nNE = Fluid.fragment(num.ones(shape));
-    this.state.nSE = Fluid.fragment(num.ones(shape));
-    this.state.nNW = Fluid.fragment(num.ones(shape));
-    this.state.nSW = Fluid.fragment(num.ones(shape));
+    this.state.n0 = Fluid.fragment(ten.ones(shape));
+    this.state.nN = Fluid.fragment(ten.ones(shape));
+    this.state.nS = Fluid.fragment(ten.ones(shape));
+    this.state.nE = Fluid.fragment(ten.ones(shape));
+    this.state.nW = Fluid.fragment(ten.ones(shape));
+    this.state.nNE = Fluid.fragment(ten.ones(shape));
+    this.state.nSE = Fluid.fragment(ten.ones(shape));
+    this.state.nNW = Fluid.fragment(ten.ones(shape));
+    this.state.nSW = Fluid.fragment(ten.ones(shape));
     // Macroscopic properties
-    this.state.rho = Fluid.fragment(num.ones(shape));
-    this.state.ux = Fluid.fragment(num.zeros(shape));
-    this.state.uy = Fluid.fragment(num.ones(shape).mult(this.params.u0));
+    this.state.rho = Fluid.fragment(ten.ones(shape));
+    this.state.ux = Fluid.fragment(ten.zeros(shape));
+    this.state.uy = Fluid.fragment(ten.ones(shape).mult(this.params.u0));
     // Barriers
-    this.state.bar = Fluid.fragment(num.zeros(shape));
+    this.state.bar = Fluid.fragment(ten.zeros(shape));
   }
 
   // Break up a 2D tensor into pieces
@@ -89,7 +89,7 @@ class Fluid {
     const result = {};
     // Helpful values
     const { one36th, one9th, four9ths } = this.params;
-    const ones = num.ones(this.state.n0[piece].shape);
+    const ones = ten.ones(this.state.n0[piece].shape);
     const ux3 = newux * 3;
     const uy3 = newuy * 3;
     const ux2 = newux ** 2;
@@ -247,7 +247,7 @@ class Fluid {
 
     // Helpful values
     const shape = [this.params.m - 2, this.params.n - 2];
-    const ones = num.ones(shape);
+    const ones = ten.ones(shape);
     const omega = 1 / (3 * this.params.viscosity + 0.5);
     const { one36th, one9th, four9ths } = this.params;
     const one36thrho = rho.middle.mult(one36th);
@@ -367,7 +367,7 @@ class Fluid {
   outlet() {
     const result = {};
     const { m } = this.params;
-    const eye = num.eye(m);
+    const eye = ten.eye(m);
     const shiftBottom = eye.slice([0], [m - 1])
       .concat(eye.slice([m - 2], [1]));
     result.nS = Fluid.fuse(this.state.nS);
@@ -407,7 +407,7 @@ class Fluid {
 
     const result = {};
     const m = this.params.m - 2;
-    const eye = num.eye(m - 1);
+    const eye = ten.eye(m - 1);
     const upperShift = eye.pad([[0, 1], [1, 0]]);
     const lowerShift = eye.pad([[1, 0], [0, 1]]);
 
@@ -477,7 +477,7 @@ class Fluid {
   keepState() {
     ['n0', 'nE', 'nW', 'nN', 'nS', 'nNE', 'nSE', 'nNW', 'nSW'].forEach((quantity) => {
       ['top', 'bottom', 'left', 'right', 'middle', 'tlc', 'trc', 'blc', 'brc'].forEach((piece) => {
-        num.keep(this.state[quantity][piece]);
+        ten.keep(this.state[quantity][piece]);
       });
     });
   }

@@ -11,11 +11,11 @@ function preload() {
 function setup() {
   createCanvas(480, 480);
 
-  const tensorFromImg = num.fromImage(original);
+  const tensorFromImg = ten.fromImage(original);
   print('Tensor representation');
   print(tensorFromImg);
 
-  imgFromTensor = num.toImage(tensorFromImg).then((img) => {
+  imgFromTensor = ten.toImage(tensorFromImg).then((img) => {
     print('p5.Image representation');
     print(img);
 
@@ -23,11 +23,11 @@ function setup() {
   });
 
   const r = createTensor([1, 0, 0]);
-  redFilter = num.toImage(tensorFromImg.mult(r));
+  redFilter = ten.toImage(tensorFromImg.mult(r));
   const g = createTensor([0, 1, 0]);
-  greenFilter = num.toImage(tensorFromImg.mult(g));
+  greenFilter = ten.toImage(tensorFromImg.mult(g));
   const b = createTensor([0, 0, 1]);
-  blueFilter = num.toImage(tensorFromImg.mult(b));
+  blueFilter = ten.toImage(tensorFromImg.mult(b));
 }
 
 function draw() {

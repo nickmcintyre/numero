@@ -1,6 +1,6 @@
 import * as tf from '@tensorflow/tfjs';
 
-import { Tensor } from '../tensor/index';
+import { Tensor } from './tensor';
 
 // ===== Order Statistics =====
 

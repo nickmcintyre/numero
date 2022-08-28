@@ -152,6 +152,8 @@ dayjs.localeData();
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
 
+declare const p5: any;
+
 /**
  * Parse a date and convert it to a datetime object.
  *
@@ -161,7 +163,7 @@ dayjs.extend(localizedFormat);
  * @param strict (optional) flag to enforce strict parsing
  * @returns      a datetime object
  */
-export const toDateTime = function parseDatetime(
+p5.prototype.toDateTime = function _toDateTime(
   date: string | number | dayjs.Dayjs | Date,
   format?: dayjs.OptionType,
   locale?: string,

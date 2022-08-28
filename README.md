@@ -16,7 +16,7 @@ This addon library for p5.js turns the "software sketchbook" into a beginner-fri
 - A machine learning API similar to [scikit-learn](https://scikit-learn.org/stable/index.html) (coming soon!)
 - A drawing turtle
 
-The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [Day.js](https://day.js.org/), [Math.js](https://mathjs.org/), [TensorFlow.js](https://js.tensorflow.org/api/latest/), and [tidy.js](https://pbeshai.github.io/tidy/) under the hood. It bundles [p5.tidy](https://github.com/nickmcintyre/p5.tidy), [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX), and [wildflower](https://github.com/nickmcintyre/wildflower).
+The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [Day.js](https://day.js.org/), [Math.js](https://mathjs.org/), [TensorFlow.js](https://js.tensorflow.org/api/latest/), and [tidy.js](https://pbeshai.github.io/tidy/) under the hood. It bundles [p5.ten](https://github.com/nickmcintyre/p5.ten), [p5.tidy](https://github.com/nickmcintyre/p5.tidy), [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX), and [wildflower](https://github.com/nickmcintyre/wildflower).
 
 ## Usage
 
@@ -62,11 +62,11 @@ function preload() {
 
 function setup() {
   noCanvas()
-  const results = tidy(
+  tidy(
     data,
     filter((d) => d.mean > 400),
+    debug('Observations greater than 400ppm CO2'),
   );
-  tidy(results, debug('Observations greater than 400ppm CO2'));
 }
 ```
 

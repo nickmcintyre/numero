@@ -1,6 +1,6 @@
 import * as tf from '@tensorflow/tfjs';
 
-import { Tensor } from './index';
+import { Tensor } from './tensor';
 
 // ===== Profiling and Management =====
 

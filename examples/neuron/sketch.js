@@ -2,8 +2,8 @@ function setup() {
   createCanvas(400, 400);
   generateData();
   const err = '0.5 * (W * x + b - y)^2';
-  grad.W = num.derivative(err, 'W'); // (W * x + b - y) * x
-  grad.b = num.derivative(err, 'b'); // W * x + b - y
+  grad.W = derivative(err, 'W'); // (W * x + b - y) * x
+  grad.b = derivative(err, 'b'); // W * x + b - y
 
   drawData();
   const neuronDisplay = drawNeuron();

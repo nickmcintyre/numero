@@ -4,6 +4,10 @@
 describe('Image', function () {
   let pInst;
 
+  before(function () {
+    ten.setBackend('cpu');
+  });
+
   beforeEach(function () {
     pInst = new p5(function () { });
   });
@@ -14,27 +18,27 @@ describe('Image', function () {
 
   describe('fromImage()', function () {
     it('Should require an argument', function () {
-      expect(num.fromImage).to.throw(Error);
+      expect(ten.fromImage).to.throw(Error);
     });
 
     it('Should accept a p5.Image argument', function () {
-      num.scope(() => {
+      ten.scope(() => {
         const img = pInst.createImage(100, 100);
-        const t = num.fromImage(img);
-        expect(t).to.be.an.instanceof(num.Tensor);
+        const t = ten.fromImage(img);
+        expect(t).to.be.an.instanceof(ten.Tensor);
       });
     });
   });
 
   describe('toImage()', function () {
     it('Should require an argument', function () {
-      expect(num.toImage).to.throw(Error);
+      expect(ten.toImage).to.throw(Error);
     });
 
     it('Should accept a Tensor argument', function () {
-      num.scope(() => {
-        const t = num.random([512, 512, 3]);
-        num.toImage(t).then((img) => {
+      ten.scope(() => {
+        const t = ten.random([512, 512, 3]);
+        ten.toImage(t).then((img) => {
           expect(img).to.be.an.instanceof(p5.Image);
         });
       });

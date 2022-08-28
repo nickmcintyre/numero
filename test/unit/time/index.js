@@ -14,13 +14,13 @@ describe('Time', function () {
 
   describe('toDatetime()', function () {
     it('Should create valid dates', function () {
-      const t = num.toDateTime('2013-02-25');
+      const t = pInst.toDateTime('2013-02-25');
       expect(t.isValid()).to.be.true;
     });
 
     it('Should allow custom parse formats', function () {
-      const t1 = num.toDateTime('2013 二月 25日', 'YYYY MMMM Do', 'zh-cn');
-      const t2 = num.toDateTime('2013-02-25');
+      const t1 = pInst.toDateTime('2013 二月 25日', 'YYYY MMMM Do', 'zh-cn');
+      const t2 = pInst.toDateTime('2013-02-25');
       expect(t1.valueOf()).to.eql(t2.valueOf());
     });
   });

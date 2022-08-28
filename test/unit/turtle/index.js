@@ -15,7 +15,7 @@ describe('Turtle', function () {
   describe('createTurtle()', function () {
     it('Should create a Turtle', function () {
       const t = pInst.createTurtle();
-      expect(t).to.be.an.instanceof(num.Turtle);
+      expect(t).to.be.an.instanceof(Object);
     });
   });
 });

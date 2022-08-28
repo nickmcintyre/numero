@@ -1,7 +1,8 @@
-import * as tf from '@tensorflow/tfjs';
+/* eslint-disable import/no-extraneous-dependencies */
 import * as p5 from 'p5';
+import * as tf from '@tensorflow/tfjs';
 
-import { createTensor, Tensor } from '../tensor/index';
+import { createTensor, Tensor } from './tensor';
 
 const { createImage } = p5.prototype;
 

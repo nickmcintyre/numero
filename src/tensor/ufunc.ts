@@ -1,6 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import * as p5 from 'p5';
 
-import { Tensor } from './index';
+import { Tensor } from './tensor';
 
 // ===== Calculation =====
 

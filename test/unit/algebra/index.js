@@ -14,7 +14,7 @@ describe('Algebra', function () {
 
   describe('derivative()', function () {
     it('Should handle quadratics', function () {
-      const dx = num.derivative('x^2', 'x');
+      const dx = pInst.derivative('x^2', 'x');
       expect(dx.toString()).to.equal('2 * x');
     });
   });
