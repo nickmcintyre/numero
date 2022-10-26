@@ -1,7 +1,7 @@
 let data;
 
 function preload() {
-  data = loadTable('../plotting/iris.csv', 'csv', 'header');
+  data = loadTable('iris.csv', 'csv', 'header');
 }
 
 function setup() {

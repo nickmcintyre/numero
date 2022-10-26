@@ -1,6 +1,4 @@
 import 'd3-array';
-import * as dayjs from 'dayjs';
-import * as utc from 'dayjs/plugin/utc';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Table, TableRow } from 'p5';
 import {
@@ -265,9 +263,3 @@ p5.prototype.matches = matches;
 p5.prototype.negate = negate;
 p5.prototype.numRange = numRange;
 p5.prototype.startsWith = startsWith;
-// time
-dayjs.extend(utc);
-p5.prototype.utc = function _utc(...args) {
-  // @ts-ignore
-  return dayjs.utc(...args);
-};

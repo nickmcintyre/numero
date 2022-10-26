@@ -1,6 +1,6 @@
 {
   "name": "numero",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A friendly and intuitive math library for p5.js",
   "main": "index.js",
   "scripts": {
@@ -39,8 +39,6 @@
     "@tensorflow/tfjs": "^4.0.0",
     "@tidyjs/tidy": "^2.5.1",
     "d3-array": "^3.2.0",
-    "dayjs": "^1.11.5",
-    "mathjs": "^11.0.1",
     "ts-toolbelt": "^9.6.0"
   }
 }

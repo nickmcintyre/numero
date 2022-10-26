@@ -10,46 +10,12 @@
 This addon library for p5.js turns the "software sketchbook" into a beginner-friendly environment for technical computing. It provides the following features:
 
 - A tensor object similar to [NumPy](https://numpy.org/) arrays
-- A computer algebra system similar to [SymPy](https://www.sympy.org/en/index.html) (in progress)
-- A grammar of graphics similar to [ggplot2](https://ggplot2.tidyverse.org/) (in progress)
 - A grammar of data manipulation similar to [dplyr](https://dplyr.tidyverse.org/)
-- A machine learning API similar to [scikit-learn](https://scikit-learn.org/stable/index.html) (coming soon!)
-- A drawing turtle
+- A drawing turtle 🐢
 
-The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [Day.js](https://day.js.org/), [Math.js](https://mathjs.org/), [TensorFlow.js](https://js.tensorflow.org/api/latest/), and [tidy.js](https://pbeshai.github.io/tidy/) under the hood. It bundles [p5.ten](https://github.com/nickmcintyre/p5.ten), [p5.tidy](https://github.com/nickmcintyre/p5.tidy), [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX), and [wildflower](https://github.com/nickmcintyre/wildflower).
+The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/) and [tidy.js](https://pbeshai.github.io/tidy/) under the hood. It bundles [p5.ten](https://github.com/nickmcintyre/p5.ten), [p5.tidy](https://github.com/nickmcintyre/p5.tidy), and [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX).
 
 ## Usage
-
-### Plots
-View the [plotting example](/examples/plotting/).
-```javascript
-let iris;
-let plot;
-
-function preload() {
-  iris = loadTable('iris.csv', 'csv', 'header');
-}
-
-function setup() {
-  createCanvas(400, 400);
-
-  iris.inferTypes();
-  plot = createPlot(iris);
-
-  noLoop();
-}
-
-function draw() {
-  plot.title('Iris sepals');
-  plot.xlabel('Width (cm)');
-  plot.ylabel('Height (cm)');
-  plot.point({
-    x: 'SepalWidth',
-    y: 'SepalLength',
-  });
-  plot.render();
-}
-```
 
 ### Data Wrangling
 View the [Mauna Loa example](/examples/mauna-loa/).
