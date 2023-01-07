@@ -36,9 +36,9 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "@tensorflow/tfjs": "^4.0.0",
-    "@tidyjs/tidy": "^2.5.1",
-    "d3-array": "^3.2.0",
+    "@tensorflow/tfjs": "^4.2.0",
+    "@tidyjs/tidy": "^2.5.2",
+    "d3-array": "^3.2.1",
     "ts-toolbelt": "^9.6.0"
   }
 }

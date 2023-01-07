@@ -34,16 +34,48 @@ function setup() {
     debug('Observations greater than 400ppm CO2'),
   );
 }
+
+/**
+[tidy.debug] Observations greater than 400ppm CO2 -----------------------------
+console.table()
+(index) date        mean    unc
+0       2013-05-01  400.02  0.13
+1       2014-04-01  401.51  0.19
+2       2014-05-01  401.96  0.21
+**/
 ```
 
 ### Tensors
 View the [matrix-vector example](/examples/matrix-vector/).
 ```javascript
-const a = createTensor([[1, 2], [3, 4]]);
-const x = createTensor([5, 6]);
+print("---\n A \n---\n");
+const a = createTensor([[1, 0], [0, 2]]);
+a.print();
+print("---\n x \n---\n");
+const x = createTensor([3, 4]);
+x.print();
+print("--------\n Ax = b \n--------\n");
 const b = a.dot(x);
-
 b.print();
+
+/**
+---
+ A 
+---
+Tensor
+    [[1, 0],
+     [0, 2]]
+---
+ x 
+---
+Tensor
+    [3, 4]
+--------
+ Ax = b 
+--------
+Tensor
+    [3, 8]
+**/
 ```
 
 ## Demo
