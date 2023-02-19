@@ -5,7 +5,7 @@ function preload() {
 }
 
 function setup() {
-  noCanvas()
+  noCanvas();
   tidy(
     data,
     filter((d) => d.mean > 400),

@@ -5,7 +5,7 @@
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
-[![Build Status](https://app.travis-ci.com/nickmcintyre/numero.svg?branch=main)](https://app.travis-ci.com/nickmcintyre/numero)
+[![Build Status](https://github.com/nickmcintyre/numero/actions/workflows/ci.yml/badge.svg)](https://github.com/nickmcintyre/numero/actions/workflows/ci.yml)
 
 This addon library for p5.js turns the "software sketchbook" into a beginner-friendly environment for technical computing. It provides the following features:
 
@@ -27,7 +27,7 @@ function preload() {
 }
 
 function setup() {
-  noCanvas()
+  noCanvas();
   tidy(
     data,
     filter((d) => d.mean > 400),
@@ -48,15 +48,18 @@ console.table()
 ### Tensors
 View the [matrix-vector example](/examples/matrix-vector/).
 ```javascript
-print("---\n A \n---\n");
-const a = createTensor([[1, 0], [0, 2]]);
-a.print();
-print("---\n x \n---\n");
-const x = createTensor([3, 4]);
-x.print();
-print("--------\n Ax = b \n--------\n");
-const b = a.dot(x);
-b.print();
+function setup() {
+  noCanvas();
+  print("---\n A \n---\n");
+  const a = createTensor([[1, 0], [0, 2]]);
+  a.print();
+  print("---\n x \n---\n");
+  const x = createTensor([3, 4]);
+  x.print();
+  print("--------\n Ax = b \n--------\n");
+  const b = a.dot(x);
+  b.print();
+}
 
 /**
 ---
