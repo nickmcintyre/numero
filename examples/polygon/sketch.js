@@ -1,29 +1,21 @@
-let sidesSlider;
-let button;
+let numSides;
 
 function setup() {
   createCanvas(400, 400);
-  noLoop();
   angleMode(DEGREES);
 
-  sidesSlider = createSlider(3, 20, 3, 1);
-  sidesSlider.position(100, 300);
-  sidesSlider.style('width', '200px');
-  button = createButton('Redraw');
-  button.style('width', '100px');
-  button.position(150, 350);
-  button.mousePressed(() => {
-    redraw();
-  });
+  numSides = createSlider(3, 50, 3, 1);
+  numSides.position(100, 300);
+  numSides.style('width', '200px');
 }
 
 function draw() {
   background('darkorchid');
-  polygon(100, sidesSlider.value());
+  polygon(100, numSides.value());
   fill('darkturquoise');
   noStroke();
   text('3', 100, 330);
-  text('20', 290, 330);
+  text('50', 290, 330);
 }
 
 function polygon(diameter, n) {
