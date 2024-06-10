@@ -1,129 +1,84 @@
 # número
-
-![número](numero.png)
 > A friendly and intuitive math library for p5.js
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
 [![Build Status](https://github.com/nickmcintyre/numero/actions/workflows/ci.yml/badge.svg)](https://github.com/nickmcintyre/numero/actions/workflows/ci.yml)
 
-This addon library for p5.js turns the "software sketchbook" into a beginner-friendly environment for technical computing. It provides the following features:
-
-- A tensor object similar to [NumPy](https://numpy.org/) arrays
-- A grammar of data manipulation similar to [dplyr](https://dplyr.tidyverse.org/)
-- A drawing turtle 🐢
-
-The library is written in [TypeScript](http://www.typescriptlang.org/) and uses [TensorFlow.js](https://js.tensorflow.org/api/latest/) and [tidy.js](https://pbeshai.github.io/tidy/) under the hood. It bundles [p5.ten](https://github.com/nickmcintyre/p5.ten), [p5.tidy](https://github.com/nickmcintyre/p5.tidy), and [TurtleGFX](https://github.com/CodeGuppyPrograms/TurtleGFX).
+This p5.js addon library provides a beginner-friendly `Tensor` class that's similar to a [NumPy](https://numpy.org/) array. It builds on the linear algebra engine from [TensorFlow.js](https://js.tensorflow.org/api/latest/) and adapts it for sketching. You can view número's source code along with examples on [GitHub](https://github.com/nickmcintyre/numero).
 
 ## Usage
 
-### Turtle Geometry
-View the [Polygon example](/examples/polygon/).
-```javascript
-let numSides;
+número's `Tensor` class is a generalization of numbers (scalars), vectors, and matrices. `Tensor`s are used heavily in fields ranging from physics to machine learning. Here are a few examples of `Tensor`s you may recognize:
 
+```javascript
+// The age of a cat in years.
+// Rank-0 (Scalar)
+let age = createTensor(5);
+
+// The position of a cat in space.
+// Rank-1 (Vector)
+let position = createTensor([10, 20, 30]);
+
+// The grayscale values of the pixels in a 2x2 cat picture.
+// Rank-2 (Matrix)
+let grayscale = createTensor([[100, 187],
+                              [123, 182]]);
+
+// The RGB values of the pixels in a 2x2 cat picture.
+// Rank-3 (Array of Matrices)
+let rgb = createTensor([
+                        // Red.
+                        [[100, 187],
+                        [123, 182]],
+                        // Green.
+                        [[80, 205],
+                        [20, 133]],
+                        // Blue.
+                        [[201, 72],
+                        [209, 247]],
+                      ]);
+```
+
+The following example multiplies a rank-1 `Tensor` (vector) by a rank-2 `Tensor` (matrix):
+
+```javascript
 function setup() {
   createCanvas(400, 400);
-  angleMode(DEGREES);
 
-  numSides = createSlider(3, 50, 3, 1);
-  numSides.position(100, 300);
-  numSides.style('width', '200px');
-}
+  background(220);
 
-function draw() {
-  background('darkorchid');
-  polygon(100, numSides.value());
-  fill('darkturquoise');
-  noStroke();
-  text('3', 100, 330);
-  text('50', 290, 330);
-}
+  // Translate the origin to the center.
+  translate(200, 200);
+  
+  // Create the rotation matrix.
+  let R = createTensor([[cos(HALF_PI), -sin(HALF_PI)],
+                        [sin(HALF_PI), cos(HALF_PI)]]);
 
-function polygon(diameter, n) {
-  const interiorAngle = 180 * (n - 2) / n;
-  const turnAngle = 180 - interiorAngle;
-  const sideLength = 0.5 * diameter * sin(interiorAngle);
-  const x = 0.5 * (width - diameter * sin(0.5 * interiorAngle));
-  const y = 0.5 * height;
-  setposition(x, y);
-  pencolor('darkturquoise');
-  for (let i = 0; i < n; i += 1) {
-    forward(sideLength);
-    right(turnAngle);
-  }
+  // Create the vector.
+  let v = createTensor([100, 0]);
+
+  // Get the vector's components.
+  let [x1, y1] = v.arraySync();
+
+  // Draw the vector in red.
+  stroke('red');
+  line(0, 0, x1, y1);
+
+  // Rotate the vector using matrix-vector multiplication,
+  // also called the "inner" or "dot" product.
+  v = R.dot(v);
+
+  // Get the rotated vector's components.
+  let [x2, y2] = v.arraySync();
+
+  // Draw the rotated vector in blue.
+  stroke('blue');
+  line(0, 0, x2, y2);
+
+  describe('Two lines extend from the center of a gray square. A red line extends to the right. A blue line extends downward.');
 }
 ```
-
-### Data Wrangling
-View the [Mauna Loa example](/examples/mauna-loa/).
-```javascript
-let data;
-
-function preload() {
-  data = loadTable('co2.csv', 'csv', 'header');
-}
-
-function setup() {
-  noCanvas();
-  tidy(
-    data,
-    filter((d) => d.mean > 400),
-    debug('Observations greater than 400ppm CO2'),
-  );
-}
-
-/**
-[tidy.debug] Observations greater than 400ppm CO2 -----------------------------
-console.table()
-(index) date        mean    unc
-0       2013-05-01  400.02  0.13
-1       2014-04-01  401.51  0.19
-2       2014-05-01  401.96  0.21
-**/
-```
-
-### Tensors
-View the [matrix-vector example](/examples/matrix-vector/).
-```javascript
-function setup() {
-  noCanvas();
-  print("---\n A \n---\n");
-  const a = createTensor([[1, 0], [0, 2]]);
-  a.print();
-  print("---\n x \n---\n");
-  const x = createTensor([3, 4]);
-  x.print();
-  print("--------\n Ax = b \n--------\n");
-  const b = a.dot(x);
-  b.print();
-}
-
-/**
----
- A 
----
-Tensor
-    [[1, 0],
-     [0, 2]]
----
- x 
----
-Tensor
-    [3, 4]
---------
- Ax = b 
---------
-Tensor
-    [3, 8]
-**/
-```
-
-## Demo
-
-The [fluid simulation](/examples/fluid-simulation/) below was created using a 2-dimensional [lattice Boltzmann method](https://en.wikipedia.org/wiki/Lattice_Boltzmann_methods).
-
-![A fluid simulation](examples/fluid-simulation/lbm.gif)
 
 ## Contributing
 

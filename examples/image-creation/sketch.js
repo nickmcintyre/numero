@@ -4,11 +4,11 @@ function setup() {
 }
 
 function randomImage() {
-  const a = ten.random([width, height, 3]);
+  const a = num.random([width, height, 3]);
   const b = a.mult(255);
-  ten.toImage(b).then((img) => {
+  num.toImage(b).then((img) => {
     image(img, 0, 0);
-    ten.dispose([a, b]);
+    num.dispose([a, b]);
     randomImage();
   });
 }

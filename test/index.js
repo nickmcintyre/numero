@@ -5,7 +5,7 @@ describe('hello, número', function () {
   let pInst;
 
   before(function () {
-    ten.setBackend('cpu');
+    num.setBackend('cpu');
   });
 
   beforeEach(function () {
@@ -18,7 +18,7 @@ describe('hello, número', function () {
 
   describe('the math is mathing', function () {
     it('sure is', function () {
-      const c = ten.scope(() => {
+      const c = num.tidy(() => {
         const a = pInst.createTensor([0, 1, 2, 3]);
         const b = pInst.createTensor(2);
         return a.mult(b).arraySync();

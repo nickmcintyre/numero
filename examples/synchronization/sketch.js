@@ -15,11 +15,11 @@ let arrangement = 'Press a key 1-5';
 
 function setup() {
   createCanvas(400, 400);
-  naturalFrequency = ten.random([networkSize]).mult(PI);
-  phase = ten.random([networkSize]).mult(TWO_PI);
-  velocity = ten.zeros([networkSize]);
-  acceleration = ten.zeros([networkSize]);
-  coupling = ten.zeros([networkSize, networkSize]);
+  naturalFrequency = num.random([networkSize]).mult(PI);
+  phase = num.random([networkSize]).mult(TWO_PI);
+  velocity = num.zeros([networkSize]);
+  acceleration = num.zeros([networkSize]);
+  coupling = num.zeros([networkSize, networkSize]);
 }
 
 function draw() {
@@ -190,7 +190,7 @@ function keyPressed() {
     }
   }
 
-  ten.keep(coupling);
+  num.keep(coupling);
 }
 
 /**
@@ -205,7 +205,7 @@ function step() {
   const oldPhase = phase.copy();
   const oldVelocity = velocity.copy();
 
-  const zeros = ten.zeros([networkSize]);
+  const zeros = num.zeros([networkSize]);
   const k1 = diff(zeros, zeta).mult(dt);
   const k2 = diff(k1.div(2), zeta).mult(dt);
   const k3 = diff(k2.div(2), zeta).mult(dt);
@@ -215,11 +215,11 @@ function step() {
   const newPhase = phase.add(solution).mod(TWO_PI);
   const newVelocity = phase.sub(oldPhase).div(dt);
   const newAcceleration = velocity.sub(oldVelocity).div(dt);
-  ten.dispose([phase, velocity, acceleration]);
+  num.dispose([phase, velocity, acceleration]);
   phase = newPhase;
   velocity = newVelocity;
   acceleration = newAcceleration;
-  ten.keep([phase, velocity, acceleration]);
+  num.keep([phase, velocity, acceleration]);
 }
 
 /**
@@ -233,7 +233,7 @@ function diff(increment, zeta) {
     dTheta[i] = phase.sub(increment);
   }
 
-  dTheta = ten.stack(dTheta);
+  dTheta = num.stack(dTheta);
   const t = dTheta.sin()
     .mult(coupling)
     .sum(1)

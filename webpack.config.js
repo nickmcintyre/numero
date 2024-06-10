@@ -17,6 +17,7 @@ module.exports = {
   },
   output: {
     filename: 'numero.js',
+    library: 'num',
     path: path.resolve(__dirname, 'dist'),
   },
   externals: ['p5'],

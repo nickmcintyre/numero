@@ -46,11 +46,11 @@ function setup() {
   a.print();
 
   print('Row 1 *= 2');
-  a = a.mulRow(1, 2);
+  a = a.multRow(1, 2);
   a.print();
 
   print('Row 2 *= -1');
-  a = a.mulRow(2, -1);
+  a = a.multRow(2, -1);
   a.print();
 
   print('Row 0 -= Row 1');
@@ -58,7 +58,7 @@ function setup() {
   a.print();
 
   print('Row 0 *= 0.5');
-  a = a.mulRow(0, 0.5);
+  a = a.multRow(0, 0.5);
   a.print();
 
   tex = createTeX('=');
