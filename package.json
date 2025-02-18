@@ -27,7 +27,7 @@
     "karma-chrome-launcher": "^3.2.0",
     "karma-mocha": "^2.0.1",
     "katex": "^0.16.21",
-    "mocha": "^10.4.0",
+    "mocha": "^10.8.2",
     "p5": "^1.9.4",
     "ts-loader": "^9.5.1",
     "typedoc": "^0.25.13",
