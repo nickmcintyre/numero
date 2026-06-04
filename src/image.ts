@@ -1,10 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import * as p5 from 'p5';
+import p5 from 'p5';
 import * as tf from '@tensorflow/tfjs-core';
 
 import { createTensor, Tensor } from './tensor';
 
-const { createImage } = p5.prototype;
+// const { createImage } = p5.prototype;
 
 /**
  * Creates a Tensor object from an existing p5.Image.
@@ -33,7 +33,7 @@ export const toImage = function drawTensorToImage(t: Tensor): Promise<p5.Image> 
   const height: number = shape[0];
   const width: number = shape[1];
   const depth: number = shape[2];
-  const img: any = createImage(width, height);
+  const img: any = new p5.Image(width, height);
   const intensor: tf.Tensor = tf.cast(t.tensor, 'int32');
   const t3D: tf.Tensor3D = tf.reshape(intensor, [height, width, depth]);
 

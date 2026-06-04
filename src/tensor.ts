@@ -1,8 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import * as p5 from "p5";
+import p5 from "p5";
 import * as tf from "@tensorflow/tfjs-core";
-
-const { createVector } = p5.prototype;
 
 /**
  * A class to describe a tensor, a generalization of vectors and matrices.
@@ -108,7 +106,7 @@ export class Tensor {
     const shape = JSON.stringify(this.shape);
     if (shape === "[2]" || shape === "[3]") {
       const a = this.arraySync();
-      const v = createVector();
+      const v = new p5.Vector();
       return v.set(a);
     }
 
