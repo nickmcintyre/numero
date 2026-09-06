@@ -2,9 +2,7 @@
 // Portrait by Catherine Stroud
 // Thanks Juan Carlos and Coding Train!
 // CC-BY-NC 4.0
-const ada = {
-  x: [], y: [],
-};
+let ada;
 let path = [];
 const drawSpeed = 10;
 const bufferSize = 10;
@@ -12,16 +10,8 @@ const scaleFactor = 0.00002;
 let timeStep = 0;
 let fourierX;
 
-function preload() {
-  loadJSON('ada-lovelace.json', (points) => {
-    for (const p of points) {
-      ada.x.push(p.x);
-      ada.y.push(p.y);
-    }
-  });
-}
-
-function setup() {
+async function setup() {
+  ada = await loadJSON('ada-lovelace.json');
   createCanvas(900, 500);
   rescalePortrait(ada);
   fourierX = fft(ada);

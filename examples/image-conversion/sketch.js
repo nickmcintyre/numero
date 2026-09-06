@@ -1,10 +1,5 @@
-let original;
-
-function preload() {
-  original = loadImage('assets/svanen.jpg');
-}
-
-function setup() {
+async function setup() {
+  let original = await loadImage('assets/svanen.jpg');
   createCanvas(400, 400);
 
   background(220);

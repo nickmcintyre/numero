@@ -19,8 +19,7 @@ function setup() {
 
   const z = num.complex(2, 5);
   const c = num.complex(-0.4, 0.6);
-  const f = z.mult(z)
-    .add(c);
+  const f = z.mult(z).add(c);
 
   fill(240);
   noStroke();

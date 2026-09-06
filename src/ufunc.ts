@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import * as p5 from 'p5';
+import p5 from 'p5';
 import * as tf from '@tensorflow/tfjs-core';
 
 import { Tensor } from './tensor';

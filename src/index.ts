@@ -92,7 +92,20 @@ declare const p5: any;
 // ====================
 
 p5.prototype.createTensor = createTensor;
-p5.prototype.registerMethod('init', beginScope);
-p5.prototype.registerMethod('pre', beginScope);
-p5.prototype.registerMethod('post', endScope);
-p5.prototype.registerMethod('remove', endScope);
+
+const numeroAddon = function _numeroAddon(p5, fn, lifecycles) {
+  lifecycles.presetup = function () {
+    beginScope();
+  };
+  lifecycles.remove = function () {
+    endScope();
+  };
+  lifecycles.predraw = function () {
+    beginScope();
+  };
+  lifecycles.postdraw = function () {
+    endScope();
+  };
+};
+
+p5.registerAddon(numeroAddon);

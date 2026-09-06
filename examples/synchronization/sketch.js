@@ -40,7 +40,7 @@ function draw() {
     pop();
   }
 
-  step();
+  takeStep();
 }
 
 function keyPressed() {
@@ -199,7 +199,7 @@ function keyPressed() {
  *
  * https://en.wikipedia.org/wiki/Runge-Kutta_methods
  */
-function step() {
+function takeStep() {
   time += dt;
   const zeta = noiseLevel * noise(time);
   const oldPhase = phase.copy();
